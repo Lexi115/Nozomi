@@ -1,6 +1,6 @@
 name: project-nozomi
 version: '1.0.0'
-main: io.github.lexi115.projectNozomi.Main
+main: io.github.lexi115.projectNozomi.ProjectNozomi
 api-version: '1.21'
 authors: [ Lexi115 ]
 description: Selling system
