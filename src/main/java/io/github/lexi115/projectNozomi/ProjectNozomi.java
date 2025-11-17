@@ -1,5 +1,6 @@
 package io.github.lexi115.projectNozomi;
 
+import io.github.lexi115.projectNozomi.commands.PluginCommands;
 import io.github.lexi115.projectNozomi.commands.ShopCommands;
 import io.github.lexi115.projectNozomi.shop.Shop;
 import io.github.lexi115.projectNozomi.shop.ShopService;
@@ -34,8 +35,16 @@ public final class ProjectNozomi extends JavaPlugin {
         log.info("ProjectNozomi is disabled!");
     }
 
+    public void reloadConfigs() {
+        reloadConfig();
+        loadConfigs();
+        loadShop();
+        log.info("Reloaded configs");
+    }
+
     private void loadConfigs() {
         saveDefaultConfig();
+        log.info("Loaded main config");
         shopConfig = loadCustomConfig("shop.yml");
         log.info("Loaded shop config");
         messagesConfig = loadCustomConfig("messages.yml");
@@ -52,9 +61,13 @@ public final class ProjectNozomi extends JavaPlugin {
     }
 
     private void loadShop() {
-        shopService = new ShopService();
-        shop = shopService.loadShopFromConfig(shopConfig);
+        if (shopService == null) {
+            shopService = new ShopService(this);
+        }
+        shop = shopService.loadShopFromConfig(shop, shopConfig);
         log.info("Loaded shop with {} items", shop.getTotalItems());
+        shopService.refreshDailyItems(shop);
+        log.info("Refreshed daily items");
     }
 
     private void registerCommands() {
@@ -63,6 +76,7 @@ public final class ProjectNozomi extends JavaPlugin {
                 .dependency(ShopService.class, shopService)
                 .dependency(Shop.class, shop)
                 .build();
+        lamp.register(new PluginCommands(this));
         lamp.register(new ShopCommands());
     }
 }

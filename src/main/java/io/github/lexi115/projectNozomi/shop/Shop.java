@@ -20,6 +20,10 @@ public class Shop {
         items.add(item);
     }
 
+    public void clearItems() {
+        items.clear();
+    }
+
     public int getTotalItems() {
         return items.size();
     }

@@ -1,2 +1,1 @@
-test:
-  conf: true
+max-daily-items: 3
