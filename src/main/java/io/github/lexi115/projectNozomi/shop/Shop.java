@@ -27,19 +27,4 @@ public class Shop {
     public int getTotalItems() {
         return items.size();
     }
-
-    public Collection<ShopItem> refreshDailyItems(final Integer amount) {
-        var totalItems = items.size();
-        if (totalItems < amount) {
-            throw new NotEnoughItemsException();
-        }
-        var randomizer = new Random();
-        ShopItem randomItem;
-        dailyItems.clear();
-        while (dailyItems.size() < amount) {
-            randomItem = items.get(randomizer.nextInt(totalItems));
-            dailyItems.add(randomItem);
-        }
-        return dailyItems;
-    }
 }

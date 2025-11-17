@@ -62,11 +62,11 @@ public final class ProjectNozomi extends JavaPlugin {
 
     private void loadShop() {
         if (shopService == null) {
-            shopService = new ShopService(this);
+            shopService = new ShopService(this, new Shop());
         }
-        shop = shopService.loadShopFromConfig(shop, shopConfig);
+        shop = shopService.loadShopFromConfig(shopConfig);
         log.info("Loaded shop with {} items", shop.getTotalItems());
-        shopService.refreshDailyItems(shop);
+        shopService.refreshDailyItems();
         log.info("Refreshed daily items");
     }
 
@@ -74,7 +74,6 @@ public final class ProjectNozomi extends JavaPlugin {
         var lamp = BukkitLamp.builder(this)
                 .dependency(Logger.class, log)
                 .dependency(ShopService.class, shopService)
-                .dependency(Shop.class, shop)
                 .build();
         lamp.register(new PluginCommands(this));
         lamp.register(new ShopCommands());
