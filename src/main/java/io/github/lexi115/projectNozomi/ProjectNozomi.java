@@ -76,6 +76,6 @@ public final class ProjectNozomi extends JavaPlugin {
                 .dependency(ShopService.class, shopService)
                 .build();
         lamp.register(new PluginCommands(this));
-        lamp.register(new ShopCommands());
+        lamp.register(new ShopCommands(this));
     }
 }

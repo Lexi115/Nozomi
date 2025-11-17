@@ -1,15 +1,13 @@
 package io.github.lexi115.projectNozomi.shop;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.*;
 
 @Getter
-@Setter
 public class Shop {
-    private List<ShopItem> items;
-    private Set<ShopItem> dailyItems;
+    private final List<ShopItem> items;
+    private final Set<ShopItem> dailyItems;
 
     public Shop() {
         this.items = new ArrayList<>();
