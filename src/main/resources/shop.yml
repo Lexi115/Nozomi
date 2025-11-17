@@ -1,0 +1,70 @@
+items:
+  1:
+    name: STONE
+    amount: 16
+    rewards:
+      - tell %player% Hai venduto stone, bravo guagliò!
+      - give %player% minecraft:iron_ingot 2
+
+  2:
+    name: OAK_LOG
+    amount: 8
+    rewards:
+      - tell %player% Hai spacciato legna, sei un boscaiolo ormai.
+      - xp add %player% 5 points
+
+  3:
+    name: IRON_INGOT
+    amount: 4
+    rewards:
+      - tell %player% Ferro fresco fresco!
+      - give %player% minecraft:emerald 1
+
+  4:
+    name: GOLD_INGOT
+    amount: 2
+    rewards:
+      - tell %player% Uè, oro pesante!
+      - gamemode adventure
+
+  5:
+    name: DIAMOND
+    amount: 1
+    rewards:
+      - tell %player% O compà, vendi i diamanti? Sei pazzo?
+      - give %player% minecraft:experience_bottle 3
+
+  6:
+    name: COAL
+    amount: 10
+    rewards:
+      - tell %player% Carbone venduto, mo puoi accendere il fuoco.
+      - xp add %player% 3 points
+
+  7:
+    name: SAND
+    amount: 12
+    rewards:
+      - tell %player% Sabbia fresca dalla spiaggia.
+      - give %player% minecraft:glass 2
+
+  8:
+    name: COBBLESTONE
+    amount: 20
+    rewards:
+      - tell %player% Cobblestone, classico dei classici.
+      - give %player% minecraft:stone 5
+
+  9:
+    name: LAPIS_LAZULI
+    amount: 6
+    rewards:
+      - tell %player% Lapis venduti, si colora?
+      - xp add %player% 8 points
+
+  10:
+    name: REDSTONE
+    amount: 5
+    rewards:
+      - tell %player% Elettricista in azione!
+      - give %player% minecraft:repeater 1
