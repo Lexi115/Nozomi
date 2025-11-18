@@ -1,9 +1,8 @@
 package io.github.lexi115.projectNozomi.commands;
 
 import io.github.lexi115.projectNozomi.ProjectNozomi;
-import io.github.lexi115.projectNozomi.shop.ItemMapper;
-import io.github.lexi115.projectNozomi.shop.ShopGui;
 import io.github.lexi115.projectNozomi.shop.ShopService;
+import io.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Dependency;
@@ -19,6 +18,9 @@ public class ShopCommands {
     @Dependency
     private ShopService shopService;
 
+    @Dependency
+    private ShopGuiManager shopGuiManager;
+
     public ShopCommands(final ProjectNozomi plugin) {
         this.plugin = plugin;
     }
@@ -29,13 +31,13 @@ public class ShopCommands {
         sender.sendMessage("This is daily");
         var dailyItems = shopService.getDailyItems();
         dailyItems.forEach(item -> sender.sendMessage(item.getName()));
-        var shopGui = new ShopGui(plugin, shopService, new ItemMapper());
-        shopGui.openInventory(sender);
+        shopGuiManager.open(sender);
     }
 
     @Subcommand("refresh")
     @CommandPermission("nozomi.refresh")
     public void refresh(final BukkitCommandActor sender) {
+        shopGuiManager.closeAll();
         shopService.refreshDailyItems();
         shopService.saveDailyItemsInConfig(plugin.getDailyItemsConfig());
     }

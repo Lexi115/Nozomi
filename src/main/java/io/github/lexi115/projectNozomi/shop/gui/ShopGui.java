@@ -1,5 +1,7 @@
-package io.github.lexi115.projectNozomi.shop;
+package io.github.lexi115.projectNozomi.shop.gui;
 
+import io.github.lexi115.projectNozomi.shop.ShopItem;
+import io.github.lexi115.projectNozomi.shop.ShopService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,16 +28,32 @@ public class ShopGui implements Listener {
 
     private final Map<Integer, ShopItem> slotsMap = new HashMap<>();
 
-    public ShopGui(final JavaPlugin plugin, final ShopService shopService, final ItemMapper itemMapper) {
+    private final Player player;
+
+    private final ShopGuiManager manager;
+
+    public ShopGui(
+            final JavaPlugin plugin,
+            final ShopService shopService,
+            final ItemMapper itemMapper,
+            final Player player,
+            final ShopGuiManager manager
+    ) {
         this.plugin = plugin;
         this.shopService = shopService;
         this.itemMapper = itemMapper;
+        this.player = player;
+        this.manager = manager;
         this.shopInventory = createShopInventory();
         registerEvents();
     }
 
-    public void openInventory(final Player player) {
+    public void openInventory() {
         player.openInventory(shopInventory);
+    }
+
+    public void closeInventory() {
+        player.closeInventory();
     }
 
     public void registerEvents() {
@@ -76,6 +94,7 @@ public class ShopGui implements Listener {
     public void onInventoryClose(final InventoryCloseEvent event) {
         if (event.getInventory().equals(this.shopInventory)) {
             HandlerList.unregisterAll(this);
+            manager.close(this);
         }
     }
 }

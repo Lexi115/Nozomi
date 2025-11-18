@@ -1,5 +1,7 @@
-package io.github.lexi115.projectNozomi.shop;
+package io.github.lexi115.projectNozomi.shop.gui;
 
+import io.github.lexi115.projectNozomi.shop.InvalidMappingException;
+import io.github.lexi115.projectNozomi.shop.ShopItem;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

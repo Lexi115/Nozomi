@@ -1,8 +1,9 @@
 package io.github.lexi115.projectNozomi.shop;
 
 import io.github.lexi115.projectNozomi.ProjectNozomi;
+import io.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import lombok.NoArgsConstructor;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -16,13 +17,20 @@ public class DailyItemRefreshTask implements Job {
 
     private ShopService shopService;
 
+    private ShopGuiManager shopGuiManager;
+
     private Scheduler scheduler;
 
     private final String TRIGGER_NAME = "daily-refresh-task-trigger";
 
-    public DailyItemRefreshTask(final ProjectNozomi plugin, final ShopService shopService) {
+    public DailyItemRefreshTask(
+            final ProjectNozomi plugin,
+            final ShopService shopService,
+            final ShopGuiManager shopGuiManager
+    ) {
         this.plugin = plugin;
         this.shopService = shopService;
+        this.shopGuiManager = shopGuiManager;
     }
 
     public void start() {
@@ -35,6 +43,7 @@ public class DailyItemRefreshTask implements Job {
             var dataMap = dailyRefreshJob.getJobDataMap();
             dataMap.put("plugin", plugin);
             dataMap.put("shopService", shopService);
+            dataMap.put("shopGuiManager", shopGuiManager);
             var cronTrigger = TriggerBuilder.newTrigger()
                     .withIdentity(TRIGGER_NAME)
                     .withSchedule(cronSchedule(getCronExpression()))
@@ -67,6 +76,13 @@ public class DailyItemRefreshTask implements Job {
         var dataMap = context.getJobDetail().getJobDataMap();
         var plugin = (ProjectNozomi) dataMap.get("plugin");
         var shopService = (ShopService) dataMap.get("shopService");
+        var shopGuiManager = (ShopGuiManager) dataMap.get("shopGuiManager");
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                shopGuiManager.closeAll();
+            }
+        }.runTask(plugin);
         shopService.refreshDailyItems();
         shopService.saveDailyItemsInConfig(plugin.getDailyItemsConfig());
         plugin.getLogger().info("[TIMER] Refreshed items");
