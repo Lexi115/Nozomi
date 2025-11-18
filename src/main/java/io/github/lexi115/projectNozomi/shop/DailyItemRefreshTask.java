@@ -1,5 +1,6 @@
 package io.github.lexi115.projectNozomi.shop;
 
+import io.github.lexi115.projectNozomi.ProjectNozomi;
 import lombok.NoArgsConstructor;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.quartz.*;
@@ -11,7 +12,7 @@ import static org.quartz.JobBuilder.newJob;
 @NoArgsConstructor
 public class DailyItemRefreshTask implements Job {
 
-    private JavaPlugin plugin;
+    private ProjectNozomi plugin;
 
     private ShopService shopService;
 
@@ -19,7 +20,7 @@ public class DailyItemRefreshTask implements Job {
 
     private final String TRIGGER_NAME = "daily-refresh-task-trigger";
 
-    public DailyItemRefreshTask(final JavaPlugin plugin, final ShopService shopService) {
+    public DailyItemRefreshTask(final ProjectNozomi plugin, final ShopService shopService) {
         this.plugin = plugin;
         this.shopService = shopService;
     }
@@ -64,9 +65,10 @@ public class DailyItemRefreshTask implements Job {
     @Override
     public void execute(final JobExecutionContext context) {
         var dataMap = context.getJobDetail().getJobDataMap();
-        var plugin = (JavaPlugin) dataMap.get("plugin");
+        var plugin = (ProjectNozomi) dataMap.get("plugin");
         var shopService = (ShopService) dataMap.get("shopService");
         shopService.refreshDailyItems();
+        shopService.saveDailyItemsInConfig(plugin.getDailyItemsConfig());
         plugin.getLogger().info("[TIMER] Refreshed items");
     }
 

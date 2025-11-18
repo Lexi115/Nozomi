@@ -3,6 +3,7 @@ package io.github.lexi115.projectNozomi.shop;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Random;
 
@@ -18,19 +19,46 @@ public class ShopService {
     }
 
     public Shop loadShopFromConfig(final FileConfiguration shopConfig) {
-        var itemsSection = shopConfig.getConfigurationSection("items");
-        if (itemsSection == null) {
+        var section = shopConfig.getConfigurationSection("items");
+        if (section == null) {
             throw new ShopNotFoundException();
         }
         shop.clearItems();
-        itemsSection.getKeys(false).forEach(key -> {
+        section.getKeys(false).forEach(key -> {
             var item = ShopItem.builder()
-                    .name(itemsSection.getString(key + ".name"))
-                    .amount(itemsSection.getInt(key + ".amount"))
+                    .id(key)
+                    .name(section.getString(key + ".name"))
+                    .amount(section.getInt(key + ".amount"))
                     .build();
             shop.addItem(item);
         });
         return shop;
+    }
+
+    public Collection<ShopItem> loadDailyItemsFromConfig(final FileConfiguration dailyItemsConfig) {
+        var dailyItemsList = dailyItemsConfig.getStringList("daily-items");
+        if (dailyItemsList.isEmpty()) {
+            var dailyItems = refreshDailyItems();
+            saveDailyItemsInConfig(dailyItemsConfig);
+            return dailyItems;
+        }
+        shop.clearDailyItems();
+        shop.getItems().forEach(item -> {
+            if (dailyItemsList.contains(item.getId())) {
+                shop.addDailyItem(item);
+            }
+        });
+        return shop.getDailyItems();
+    }
+
+    public void saveDailyItemsInConfig(final FileConfiguration dailyItemsConfig) {
+        var idList = shop.getDailyItems().stream().map(ShopItem::getId).toList();
+        dailyItemsConfig.set("daily-items", idList);
+        try {
+            dailyItemsConfig.save(plugin.getDataFolder() + "/daily.yml");
+        } catch (IOException e) {
+            throw new SaveFileException(e);
+        }
     }
 
     public Collection<ShopItem> getDailyItems() {

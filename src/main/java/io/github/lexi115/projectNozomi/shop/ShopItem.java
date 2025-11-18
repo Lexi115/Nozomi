@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class ShopItem {
+    private final String id;
     private final String name;
     private final Integer amount;
     private final List<Reward> rewards;

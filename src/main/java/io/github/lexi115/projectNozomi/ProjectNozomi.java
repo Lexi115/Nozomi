@@ -19,6 +19,7 @@ import java.io.File;
 @Getter
 public final class ProjectNozomi extends JavaPlugin {
     private final Logger log = LoggerFactory.getLogger(ProjectNozomi.class);
+    private FileConfiguration dailyItemsConfig;
     private FileConfiguration shopConfig;
     private FileConfiguration messagesConfig;
     private ShopService shopService;
@@ -52,6 +53,8 @@ public final class ProjectNozomi extends JavaPlugin {
     private void loadConfigs() {
         saveDefaultConfig();
         log.info("Loaded main config");
+        dailyItemsConfig = loadCustomConfig("daily.yml");
+        log.info("Loaded daily config");
         shopConfig = loadCustomConfig("shop.yml");
         log.info("Loaded shop config");
         messagesConfig = loadCustomConfig("messages.yml");
@@ -72,7 +75,9 @@ public final class ProjectNozomi extends JavaPlugin {
             shopService = new ShopService(this, new Shop());
         }
         shop = shopService.loadShopFromConfig(shopConfig);
+        var dailyItems = shopService.loadDailyItemsFromConfig(dailyItemsConfig);
         log.info("Loaded shop with {} items", shop.getTotalItems());
+        log.info("Loaded {} daily items", dailyItems.size());
     }
 
     private void registerCommands() {
