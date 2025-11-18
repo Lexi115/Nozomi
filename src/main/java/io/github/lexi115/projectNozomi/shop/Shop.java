@@ -11,7 +11,7 @@ public class Shop {
 
     public Shop() {
         this.items = new ArrayList<>();
-        this.dailyItems = new HashSet<>();
+        this.dailyItems = new LinkedHashSet<>();
     }
 
     public ShopItem getItem(final int index) {

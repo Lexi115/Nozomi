@@ -43,9 +43,13 @@ public class ShopService {
             return dailyItems;
         }
         shop.clearDailyItems();
-        shop.getItems().forEach(item -> {
-            if (dailyItemsList.contains(item.getId())) {
-                shop.addDailyItem(item);
+        var shopItems = shop.getItems();
+        dailyItemsList.forEach(itemId -> {
+            for (var item : shopItems) {
+                if (item.getId().equals(itemId)) {
+                    shop.addDailyItem(item);
+                    break;
+                }
             }
         });
         return shop.getDailyItems();
