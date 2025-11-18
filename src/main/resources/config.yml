@@ -1,1 +1,3 @@
-daily-items-amount: 3
+daily-items:
+  amount: 3
+  refresh-time: 00:00:00

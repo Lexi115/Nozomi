@@ -38,7 +38,7 @@ public class ShopService {
     }
 
     public Collection<ShopItem> refreshDailyItems() {
-        int dailyItemsAmount = plugin.getConfig().getInt("daily-items-amount", 3);
+        int dailyItemsAmount = plugin.getConfig().getInt("daily-items.amount", 3);
         var totalItems = shop.getTotalItems();
         if (totalItems < dailyItemsAmount) {
             throw new NotEnoughItemsException();

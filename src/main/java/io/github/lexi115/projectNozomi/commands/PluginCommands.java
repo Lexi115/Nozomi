@@ -11,10 +11,10 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 @Command({"nozomi", "noz"})
 public class PluginCommands {
 
+    private final ProjectNozomi plugin;
+
     @Dependency
     private Logger log;
-
-    private final ProjectNozomi plugin;
 
     public PluginCommands(final ProjectNozomi plugin) {
         this.plugin = plugin;
