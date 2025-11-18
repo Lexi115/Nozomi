@@ -39,19 +39,17 @@ public class ShopService {
 
     public Collection<ShopItem> refreshDailyItems() {
         int dailyItemsAmount = plugin.getConfig().getInt("daily-items-amount", 3);
-        var items = shop.getItems();
-        var dailyItems = shop.getDailyItems();
         var totalItems = shop.getTotalItems();
         if (totalItems < dailyItemsAmount) {
             throw new NotEnoughItemsException();
         }
         var randomizer = new Random();
         ShopItem randomItem;
-        dailyItems.clear();
-        while (dailyItems.size() < dailyItemsAmount) {
-            randomItem = items.get(randomizer.nextInt(totalItems));
-            dailyItems.add(randomItem);
+        shop.clearDailyItems();
+        while (shop.getTotalDailyItems() < dailyItemsAmount) {
+            randomItem = shop.getItem(randomizer.nextInt(totalItems));
+            shop.addDailyItem(randomItem);
         }
-        return dailyItems;
+        return shop.getDailyItems();
     }
 }

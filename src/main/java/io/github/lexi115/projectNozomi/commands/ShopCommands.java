@@ -14,7 +14,7 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 @Command({"nozomi", "noz"})
 public class ShopCommands {
 
-    private JavaPlugin plugin;
+    private final JavaPlugin plugin;
 
     @Dependency
     private ShopService shopService;

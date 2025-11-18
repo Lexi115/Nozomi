@@ -22,15 +22,15 @@ public class ShopGui implements Listener {
 
     private final ShopService shopService;
 
-    private final ItemMapper mapper;
+    private final ItemMapper itemMapper;
 
     private final Map<Integer, ShopItem> slotsMap = new HashMap<>();
 
-    public ShopGui(final JavaPlugin plugin, final ShopService shopService, final ItemMapper mapper) {
+    public ShopGui(final JavaPlugin plugin, final ShopService shopService, final ItemMapper itemMapper) {
         this.plugin = plugin;
         this.shopService = shopService;
-        this.mapper = mapper;
-        shopInventory = createShopInventory();
+        this.itemMapper = itemMapper;
+        this.shopInventory = createShopInventory();
         registerEvents();
     }
 
@@ -39,9 +39,8 @@ public class ShopGui implements Listener {
     }
 
     public void registerEvents() {
-        var pluginManager = Bukkit.getServer().getPluginManager();
+        var pluginManager = plugin.getServer().getPluginManager();
         pluginManager.registerEvents(this, plugin);
-        plugin.getLogger().info("registered event");
     }
 
     private Inventory createShopInventory() {
@@ -49,7 +48,7 @@ public class ShopGui implements Listener {
         var dailyItems = shopService.getDailyItems();
         int slotIndex = 0;
         for (var dailyItem : dailyItems) {
-            inventory.addItem(mapper.toItemStack(dailyItem));
+            inventory.addItem(itemMapper.toItemStack(dailyItem));
             slotsMap.put(slotIndex++, dailyItem);
         }
         return inventory;
@@ -67,6 +66,7 @@ public class ShopGui implements Listener {
         if (!event.getInventory().equals(this.shopInventory)) {
             return;
         }
+        // todo ricordarsi di gestire caso in cui si clicchi slot vuoto (o fuori) --> eccezione out of bounds
         event.setCancelled(true);
         plugin.getLogger().info("clicked on " + event.getRawSlot());
         plugin.getLogger().info("shopitem: " + slotsMap.get(event.getRawSlot()).getName());
@@ -76,7 +76,6 @@ public class ShopGui implements Listener {
     public void onInventoryClose(final InventoryCloseEvent event) {
         if (event.getInventory().equals(this.shopInventory)) {
             HandlerList.unregisterAll(this);
-            plugin.getLogger().info("unregistered event");
         }
     }
 }

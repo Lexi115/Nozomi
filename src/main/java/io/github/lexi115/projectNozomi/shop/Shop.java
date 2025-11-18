@@ -14,15 +14,31 @@ public class Shop {
         this.dailyItems = new HashSet<>();
     }
 
+    public ShopItem getItem(final int index) {
+        return items.get(index);
+    }
+
     public void addItem(final ShopItem item) {
         items.add(item);
+    }
+
+    public void addDailyItem(final ShopItem item) {
+        dailyItems.add(item);
     }
 
     public void clearItems() {
         items.clear();
     }
 
+    public void clearDailyItems() {
+        dailyItems.clear();
+    }
+
     public int getTotalItems() {
         return items.size();
+    }
+
+    public int getTotalDailyItems() {
+        return dailyItems.size();
     }
 }
