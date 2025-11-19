@@ -1,7 +1,7 @@
 package io.github.lexi115.projectNozomi.shop;
 
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
+import com.google.inject.Inject;
+import io.github.lexi115.projectNozomi.ProjectNozomi;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -9,17 +9,18 @@ import java.util.Random;
 
 public class ShopService {
 
-    private final JavaPlugin plugin;
+    private final ProjectNozomi plugin;
 
     private final Shop shop;
 
-    public ShopService(final JavaPlugin plugin, final Shop shop) {
+    @Inject
+    public ShopService(final ProjectNozomi plugin, final Shop shop) {
         this.plugin = plugin;
         this.shop = shop;
     }
 
-    public Shop loadShopFromConfig(final FileConfiguration shopConfig) {
-        var section = shopConfig.getConfigurationSection("items");
+    public Shop loadShopFromConfig() {
+        var section = plugin.getShopConfig().getConfigurationSection("items");
         if (section == null) {
             throw new ShopNotFoundException();
         }
@@ -35,11 +36,11 @@ public class ShopService {
         return shop;
     }
 
-    public Collection<ShopItem> loadDailyItemsFromConfig(final FileConfiguration dailyItemsConfig) {
-        var dailyItemsList = dailyItemsConfig.getStringList("daily-items");
+    public Collection<ShopItem> loadDailyItemsFromConfig() {
+        var dailyItemsList = plugin.getDailyItemsConfig().getStringList("daily-items");
         if (dailyItemsList.isEmpty()) {
             var dailyItems = refreshDailyItems();
-            saveDailyItemsInConfig(dailyItemsConfig);
+            saveDailyItemsInConfig();
             return dailyItems;
         }
         shop.clearDailyItems();
@@ -55,8 +56,9 @@ public class ShopService {
         return shop.getDailyItems();
     }
 
-    public void saveDailyItemsInConfig(final FileConfiguration dailyItemsConfig) {
+    public void saveDailyItemsInConfig() {
         var idList = shop.getDailyItems().stream().map(ShopItem::getId).toList();
+        var dailyItemsConfig = plugin.getDailyItemsConfig();
         dailyItemsConfig.set("daily-items", idList);
         try {
             dailyItemsConfig.save(plugin.getDataFolder() + "/daily.yml");

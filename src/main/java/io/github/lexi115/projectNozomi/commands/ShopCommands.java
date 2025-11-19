@@ -37,6 +37,6 @@ public class ShopCommands {
     public void refresh(final BukkitCommandActor sender) {
         shopGuiManager.closeAll();
         shopService.refreshDailyItems();
-        shopService.saveDailyItemsInConfig(plugin.getDailyItemsConfig());
+        shopService.saveDailyItemsInConfig();
     }
 }

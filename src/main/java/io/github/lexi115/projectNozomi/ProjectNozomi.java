@@ -1,46 +1,65 @@
 package io.github.lexi115.projectNozomi;
 
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import io.github.lexi115.projectNozomi.commands.PluginCommands;
 import io.github.lexi115.projectNozomi.commands.ShopCommands;
+import io.github.lexi115.projectNozomi.injection.SimpleBinderModule;
 import io.github.lexi115.projectNozomi.shop.DailyItemRefreshTask;
 import io.github.lexi115.projectNozomi.shop.Shop;
 import io.github.lexi115.projectNozomi.shop.ShopService;
-import io.github.lexi115.projectNozomi.shop.gui.ItemMapper;
 import io.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import revxrsal.commands.bukkit.BukkitLamp;
 
 import java.io.File;
 
 @Getter
 public final class ProjectNozomi extends JavaPlugin {
-    private final Logger log = LoggerFactory.getLogger(ProjectNozomi.class);
+
+    private Injector injector;
+
     private FileConfiguration dailyItemsConfig;
+
     private FileConfiguration shopConfig;
+
     private FileConfiguration messagesConfig;
+
+    @Inject
+    private Logger log;
+
+    @Inject
     private ShopService shopService;
+
+    @Inject
     private ShopGuiManager shopGuiManager;
+
+    @Inject
     private Shop shop;
+
+    @Inject
     private DailyItemRefreshTask dailyRefreshTask;
 
     @Override
     public void onEnable() {
+        var module = new SimpleBinderModule(this);
+        injector = module.createInjector();
+        injector.injectMembers(this);
         loadConfigs();
         loadShop();
         loadDailyRefreshTask();
         registerCommands();
-        log.info("ProjectNozomi is enabled!");
+        log.info("ProjectNozomi is enabled!!!");
     }
 
     @Override
     public void onDisable() {
         dailyRefreshTask.stop();
-        log.info("ProjectNozomi is disabled!");
+        log.info("ProjectNozomi is disabled!!!");
     }
 
     public void reloadConfigs() {
@@ -73,21 +92,21 @@ public final class ProjectNozomi extends JavaPlugin {
 
     private void loadShop() {
         if (shopService == null) {
-            shopService = new ShopService(this, new Shop());
+            System.out.println("shop service is null!");
         }
         if (shopGuiManager == null) {
-            shopGuiManager = new ShopGuiManager(this, shopService, new ItemMapper());
+            System.out.println("shopGuiManager is null!");
         }
-        shop = shopService.loadShopFromConfig(shopConfig);
+        shop = shopService.loadShopFromConfig();
         shopGuiManager.closeAll();
-        var dailyItems = shopService.loadDailyItemsFromConfig(dailyItemsConfig);
+        var dailyItems = shopService.loadDailyItemsFromConfig();
         log.info("Loaded shop with {} items", shop.getTotalItems());
         log.info("Loaded {} daily items", dailyItems.size());
     }
 
     private void loadDailyRefreshTask() {
         if (dailyRefreshTask == null) {
-            dailyRefreshTask = new DailyItemRefreshTask(this, shopService, shopGuiManager);
+            System.out.println("daily refresh task is null!");
         }
         if (getConfig().getBoolean("daily-items.auto-refresh.enabled")) {
             dailyRefreshTask.restart();

@@ -1,5 +1,6 @@
 package io.github.lexi115.projectNozomi.shop;
 
+import com.google.inject.Inject;
 import lombok.Getter;
 
 import java.util.*;
@@ -11,6 +12,7 @@ public class Shop {
 
     private final Set<ShopItem> dailyItems;
 
+    @Inject
     public Shop() {
         this.items = new ArrayList<>();
         this.dailyItems = new LinkedHashSet<>();

@@ -1,5 +1,6 @@
 package io.github.lexi115.projectNozomi.shop;
 
+import com.google.inject.Inject;
 import io.github.lexi115.projectNozomi.ProjectNozomi;
 import io.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class DailyItemRefreshTask implements Job {
 
     private final String TRIGGER_NAME = "daily-refresh-task-trigger";
 
+    @Inject
     public DailyItemRefreshTask(
             final ProjectNozomi plugin,
             final ShopService shopService,
@@ -89,7 +91,7 @@ public class DailyItemRefreshTask implements Job {
             }
         }.runTask(plugin);
         shopService.refreshDailyItems();
-        shopService.saveDailyItemsInConfig(plugin.getDailyItemsConfig());
+        shopService.saveDailyItemsInConfig();
         plugin.getLogger().info("[TIMER] Refreshed items");
     }
 
