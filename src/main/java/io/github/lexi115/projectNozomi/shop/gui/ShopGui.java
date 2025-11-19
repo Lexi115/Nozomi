@@ -30,19 +30,28 @@ public class ShopGui implements Listener {
 
     private final Player player;
 
+    private final Integer page;
+
     private final ShopGuiManager manager;
+
+    private Integer totalPages = 0;
+
+    private final int PREVIOUS_PAGE_SLOT = 45;
+    private final int NEXT_PAGE_SLOT = 53;
 
     public ShopGui(
             final JavaPlugin plugin,
             final ShopService shopService,
             final ItemMapper itemMapper,
             final Player player,
+            final Integer page,
             final ShopGuiManager manager
     ) {
         this.plugin = plugin;
         this.shopService = shopService;
         this.itemMapper = itemMapper;
         this.player = player;
+        this.page = page;
         this.manager = manager;
         this.shopInventory = createShopInventory();
         registerEvents();
@@ -64,10 +73,21 @@ public class ShopGui implements Listener {
     private Inventory createShopInventory() {
         var inventory = Bukkit.createInventory(null, 54, "Yo");
         var dailyItems = shopService.getDailyItems();
-        int slotIndex = 0;
-        for (var dailyItem : dailyItems) {
-            inventory.addItem(itemMapper.toItemStack(dailyItem));
-            slotsMap.put(slotIndex++, dailyItem);
+        var dailyItemsSize = dailyItems.size();
+        var pageSize = 2;
+        totalPages = (int) Math.ceil(dailyItemsSize / (double) pageSize);
+        if (page > totalPages) {
+            throw new InvalidPageException();
+        }
+        var startIndex = (page - 1) * pageSize;
+        var it = dailyItems.iterator();
+        ShopItem shopItem;
+        for (int i = 0, slotIndex = 0; it.hasNext() && i < (page * pageSize); i++) {
+            shopItem = it.next();
+            if (i >= startIndex) {
+                inventory.addItem(itemMapper.toItemStack(shopItem));
+                slotsMap.put(slotIndex++, shopItem);
+            }
         }
         return inventory;
     }
@@ -84,10 +104,15 @@ public class ShopGui implements Listener {
         if (!event.getInventory().equals(this.shopInventory)) {
             return;
         }
-        // todo ricordarsi di gestire caso in cui si clicchi slot vuoto (o fuori) --> eccezione out of bounds
         event.setCancelled(true);
-        plugin.getLogger().info("clicked on " + event.getRawSlot());
-        plugin.getLogger().info("shopitem: " + slotsMap.get(event.getRawSlot()).getName());
+        var slotClicked = event.getRawSlot();
+        if (slotClicked == PREVIOUS_PAGE_SLOT && page > 1) {
+            closeInventory();
+            manager.open(player, page - 1);
+        } else if (slotClicked == NEXT_PAGE_SLOT && page < totalPages) {
+            closeInventory();
+            manager.open(player, page + 1);
+        }
     }
 
     @EventHandler

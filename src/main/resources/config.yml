@@ -1,3 +1,5 @@
 daily-items:
   amount: 3
-  refresh-time: '0 0 0 ? * *'
+  auto-refresh:
+    enabled: true
+    refresh-time: '0 0 0 ? * *'

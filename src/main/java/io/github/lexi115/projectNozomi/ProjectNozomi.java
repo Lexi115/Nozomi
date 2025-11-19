@@ -32,8 +32,7 @@ public final class ProjectNozomi extends JavaPlugin {
     public void onEnable() {
         loadConfigs();
         loadShop();
-        dailyRefreshTask = new DailyItemRefreshTask(this, shopService, shopGuiManager);
-        dailyRefreshTask.start();
+        loadDailyRefreshTask();
         registerCommands();
         log.info("ProjectNozomi is enabled!");
     }
@@ -48,7 +47,7 @@ public final class ProjectNozomi extends JavaPlugin {
         reloadConfig();
         loadConfigs();
         loadShop();
-        dailyRefreshTask.restart();
+        loadDailyRefreshTask();
         log.info("Reloaded configs");
     }
 
@@ -84,6 +83,19 @@ public final class ProjectNozomi extends JavaPlugin {
         var dailyItems = shopService.loadDailyItemsFromConfig(dailyItemsConfig);
         log.info("Loaded shop with {} items", shop.getTotalItems());
         log.info("Loaded {} daily items", dailyItems.size());
+    }
+
+    private void loadDailyRefreshTask() {
+        if (dailyRefreshTask == null) {
+            dailyRefreshTask = new DailyItemRefreshTask(this, shopService, shopGuiManager);
+        }
+        if (getConfig().getBoolean("daily-items.auto-refresh.enabled")) {
+            dailyRefreshTask.restart();
+            log.info("Restarted auto refresh task");
+        } else {
+            dailyRefreshTask.stop();
+            log.info("Stopped auto refresh task");
+        }
     }
 
     private void registerCommands() {

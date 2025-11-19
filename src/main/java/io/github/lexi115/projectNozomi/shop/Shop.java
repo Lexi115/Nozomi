@@ -6,7 +6,9 @@ import java.util.*;
 
 @Getter
 public class Shop {
+
     private final List<ShopItem> items;
+
     private final Set<ShopItem> dailyItems;
 
     public Shop() {

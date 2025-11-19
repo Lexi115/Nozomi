@@ -9,6 +9,7 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
+import static org.quartz.TriggerBuilder.newTrigger;
 
 @NoArgsConstructor
 public class DailyItemRefreshTask implements Job {
@@ -44,7 +45,7 @@ public class DailyItemRefreshTask implements Job {
             dataMap.put("plugin", plugin);
             dataMap.put("shopService", shopService);
             dataMap.put("shopGuiManager", shopGuiManager);
-            var cronTrigger = TriggerBuilder.newTrigger()
+            var cronTrigger = newTrigger()
                     .withIdentity(TRIGGER_NAME)
                     .withSchedule(cronSchedule(getCronExpression()))
                     .build();
@@ -56,7 +57,9 @@ public class DailyItemRefreshTask implements Job {
 
     public void stop() {
         try {
-            scheduler.shutdown();
+            if (scheduler != null && !scheduler.isShutdown()) {
+                scheduler.shutdown();
+            }
         } catch (SchedulerException e) {
             throw new TaskException(e);
         }
@@ -64,7 +67,9 @@ public class DailyItemRefreshTask implements Job {
 
     public void restart() {
         try {
-            scheduler.unscheduleJob(new TriggerKey(TRIGGER_NAME));
+            if (scheduler != null && !scheduler.isShutdown()) {
+                scheduler.unscheduleJob(new TriggerKey(TRIGGER_NAME));
+            }
             start();
         } catch (SchedulerException e) {
             throw new TaskException(e);
@@ -89,6 +94,6 @@ public class DailyItemRefreshTask implements Job {
     }
 
     private String getCronExpression() {
-        return plugin.getConfig().getString("daily-items.refresh-time", "0 0 0 ? * *");
+        return plugin.getConfig().getString("daily-items.auto-refresh.refresh-time", "0 0 0 ? * *");
     }
 }

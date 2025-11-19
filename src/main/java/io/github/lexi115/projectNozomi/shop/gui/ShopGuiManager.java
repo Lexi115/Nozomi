@@ -23,8 +23,8 @@ public class ShopGuiManager {
         this.itemMapper = itemMapper;
     }
 
-    public void open(final Player player) {
-        var shopGui = new ShopGui(plugin, shopService, itemMapper, player, this);
+    public void open(final Player player, final Integer page) {
+        var shopGui = new ShopGui(plugin, shopService, itemMapper, player, page, this);
         shopGui.openInventory();
         openGuis.add(shopGui);
     }
