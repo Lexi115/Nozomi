@@ -55,13 +55,13 @@ public final class ProjectNozomi extends JavaPlugin {
         loadShop();
         loadDailyRefreshTask();
         registerCommands();
-        log.info("ProjectNozomi is enabled!!!");
+        log.info("ProjectNozomi is enabled!");
     }
 
     @Override
     public void onDisable() {
         dailyRefreshTask.stop();
-        log.info("ProjectNozomi is disabled!!!");
+        log.info("ProjectNozomi is disabled!");
     }
 
     public void reloadPlugin() {

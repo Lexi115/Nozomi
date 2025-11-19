@@ -32,9 +32,6 @@ public class ShopCommands {
     @Subcommand("daily <page>")
     @CommandPermission("nozomi.daily")
     public void daily(final Player sender, @Default("1") @Range(min = 1) final Integer page) {
-        sender.sendMessage("This is daily");
-        var dailyItems = shopService.getDailyItems();
-        dailyItems.forEach(item -> sender.sendMessage(item.getName()));
         shopGuiManager.open(sender, page);
     }
 

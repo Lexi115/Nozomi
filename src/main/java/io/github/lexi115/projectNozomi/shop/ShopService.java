@@ -3,6 +3,7 @@ package io.github.lexi115.projectNozomi.shop;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.github.lexi115.projectNozomi.ProjectNozomi;
+import org.bukkit.Material;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,7 +23,7 @@ public class ShopService {
     }
 
     public Shop loadShopFromConfig() {
-        var section = plugin.getShopConfig().getConfigurationSection("items");
+        var section = plugin.getShopConfig().getConfigurationSection("shop.items");
         if (section == null) {
             throw new ShopNotFoundException();
         }
@@ -31,6 +32,7 @@ public class ShopService {
             var item = ShopItem.builder()
                     .id(key)
                     .name(section.getString(key + ".name"))
+                    .material(Material.matchMaterial(section.getString(key + ".material", Material.AIR.name())))
                     .amount(section.getInt(key + ".amount"))
                     .build();
             shop.addItem(item);

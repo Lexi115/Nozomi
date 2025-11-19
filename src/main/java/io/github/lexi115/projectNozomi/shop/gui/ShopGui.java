@@ -1,5 +1,6 @@
 package io.github.lexi115.projectNozomi.shop.gui;
 
+import io.github.lexi115.projectNozomi.ProjectNozomi;
 import io.github.lexi115.projectNozomi.shop.ShopItem;
 import io.github.lexi115.projectNozomi.shop.ShopService;
 import org.bukkit.Bukkit;
@@ -11,14 +12,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ShopGui implements Listener {
 
-    private final JavaPlugin plugin;
+    private final ProjectNozomi plugin;
 
     private final Inventory shopInventory;
 
@@ -34,19 +34,24 @@ public class ShopGui implements Listener {
 
     private final ShopGuiManager manager;
 
+    private final ShopGuiDetails guiDetails;
+
     private Integer totalPages = 0;
 
-    private final int PREVIOUS_PAGE_SLOT = 45;
+    private final GuiElement previousPageElement;
 
-    private final int NEXT_PAGE_SLOT = 53;
+    private final GuiElement nextPageElement;
+
+    private final GuiElement currentPageElement;
 
     public ShopGui(
-            final JavaPlugin plugin,
+            final ProjectNozomi plugin,
             final ShopService shopService,
             final ItemMapper itemMapper,
             final Player player,
             final Integer page,
-            final ShopGuiManager manager
+            final ShopGuiManager manager,
+            final ShopGuiDetails guiDetails
     ) {
         this.plugin = plugin;
         this.shopService = shopService;
@@ -54,6 +59,10 @@ public class ShopGui implements Listener {
         this.player = player;
         this.page = page;
         this.manager = manager;
+        this.guiDetails = guiDetails;
+        this.previousPageElement = guiDetails.getPreviousPage();
+        this.nextPageElement = guiDetails.getNextPage();
+        this.currentPageElement = guiDetails.getCurrentPage();
         this.shopInventory = createShopInventory();
         registerEvents();
     }
@@ -72,10 +81,11 @@ public class ShopGui implements Listener {
     }
 
     private Inventory createShopInventory() {
-        var inventory = Bukkit.createInventory(null, 54, "Yo");
+        var guiSize = guiDetails.getSize();
+        var inventory = Bukkit.createInventory(null, guiSize, guiDetails.getTitle());
         var dailyItems = shopService.getDailyItems();
         var dailyItemsSize = dailyItems.size();
-        var pageSize = 2;
+        var pageSize = guiSize - 9;
         totalPages = (int) Math.ceil(dailyItemsSize / (double) pageSize);
         if (page > totalPages) {
             throw new InvalidPageException();
@@ -90,6 +100,14 @@ public class ShopGui implements Listener {
                 slotsMap.put(slotIndex++, shopItem);
             }
         }
+        // Navigation elements
+        currentPageElement.setName(currentPageElement.getName()
+                .replaceAll("%page%", String.valueOf(page))
+                .replaceAll("%totalPages%", String.valueOf(totalPages))
+        );
+        inventory.setItem(previousPageElement.getSlot(), itemMapper.toItemStack(previousPageElement));
+        inventory.setItem(nextPageElement.getSlot(), itemMapper.toItemStack(nextPageElement));
+        inventory.setItem(currentPageElement.getSlot(), itemMapper.toItemStack(currentPageElement));
         return inventory;
     }
 
@@ -106,14 +124,7 @@ public class ShopGui implements Listener {
             return;
         }
         event.setCancelled(true);
-        var slotClicked = event.getRawSlot();
-        if (slotClicked == PREVIOUS_PAGE_SLOT && page > 1) {
-            closeInventory();
-            manager.open(player, page - 1);
-        } else if (slotClicked == NEXT_PAGE_SLOT && page < totalPages) {
-            closeInventory();
-            manager.open(player, page + 1);
-        }
+        checkForNavigationButtonClick(event.getRawSlot());
     }
 
     @EventHandler
@@ -121,6 +132,16 @@ public class ShopGui implements Listener {
         if (event.getInventory().equals(this.shopInventory)) {
             HandlerList.unregisterAll(this);
             manager.close(this);
+        }
+    }
+
+    private void checkForNavigationButtonClick(final int slotClicked) {
+        if (slotClicked == previousPageElement.getSlot() && page > 1) {
+            closeInventory();
+            manager.open(player, page - 1);
+        } else if (slotClicked == nextPageElement.getSlot() && page < totalPages) {
+            closeInventory();
+            manager.open(player, page + 1);
         }
     }
 }
