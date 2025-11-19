@@ -1,12 +1,14 @@
 package io.github.lexi115.projectNozomi.shop;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.lexi115.projectNozomi.ProjectNozomi;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Random;
 
+@Singleton
 public class ShopService {
 
     private final ProjectNozomi plugin;

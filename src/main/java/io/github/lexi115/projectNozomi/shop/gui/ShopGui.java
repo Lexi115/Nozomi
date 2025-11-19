@@ -37,6 +37,7 @@ public class ShopGui implements Listener {
     private Integer totalPages = 0;
 
     private final int PREVIOUS_PAGE_SLOT = 45;
+
     private final int NEXT_PAGE_SLOT = 53;
 
     public ShopGui(

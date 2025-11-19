@@ -1,5 +1,6 @@
 package io.github.lexi115.projectNozomi.commands;
 
+import com.google.inject.Inject;
 import io.github.lexi115.projectNozomi.ProjectNozomi;
 import io.github.lexi115.projectNozomi.shop.ShopService;
 import io.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
@@ -13,17 +14,22 @@ public class ShopCommands {
 
     private final ProjectNozomi plugin;
 
-    @Dependency
     private ShopService shopService;
 
-    @Dependency
     private ShopGuiManager shopGuiManager;
 
-    public ShopCommands(final ProjectNozomi plugin) {
+    @Inject
+    public ShopCommands(
+            final ProjectNozomi plugin,
+            final ShopService shopService,
+            final ShopGuiManager shopGuiManager
+    ) {
         this.plugin = plugin;
+        this.shopService = shopService;
+        this.shopGuiManager = shopGuiManager;
     }
 
-    @Subcommand("daily")
+    @Subcommand("daily <page>")
     @CommandPermission("nozomi.daily")
     public void daily(final Player sender, @Default("1") @Range(min = 1) final Integer page) {
         sender.sendMessage("This is daily");

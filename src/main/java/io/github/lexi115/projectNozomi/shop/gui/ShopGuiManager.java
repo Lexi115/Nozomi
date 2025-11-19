@@ -1,6 +1,7 @@
 package io.github.lexi115.projectNozomi.shop.gui;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.lexi115.projectNozomi.ProjectNozomi;
 import io.github.lexi115.projectNozomi.shop.ShopService;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.HashSet;
 import java.util.Set;
 
+@Singleton
 public class ShopGuiManager {
 
     private final ProjectNozomi plugin;

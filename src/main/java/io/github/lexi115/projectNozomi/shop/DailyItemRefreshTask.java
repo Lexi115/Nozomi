@@ -1,17 +1,20 @@
 package io.github.lexi115.projectNozomi.shop;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.github.lexi115.projectNozomi.ProjectNozomi;
 import io.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import lombok.NoArgsConstructor;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
+import org.slf4j.Logger;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.TriggerBuilder.newTrigger;
 
+@Singleton
 @NoArgsConstructor
 public class DailyItemRefreshTask implements Job {
 
@@ -23,17 +26,21 @@ public class DailyItemRefreshTask implements Job {
 
     private Scheduler scheduler;
 
+    private Logger log;
+
     private final String TRIGGER_NAME = "daily-refresh-task-trigger";
 
     @Inject
     public DailyItemRefreshTask(
             final ProjectNozomi plugin,
             final ShopService shopService,
-            final ShopGuiManager shopGuiManager
+            final ShopGuiManager shopGuiManager,
+            final Logger log
     ) {
         this.plugin = plugin;
         this.shopService = shopService;
         this.shopGuiManager = shopGuiManager;
+        this.log = log;
     }
 
     public void start() {
@@ -47,6 +54,7 @@ public class DailyItemRefreshTask implements Job {
             dataMap.put("plugin", plugin);
             dataMap.put("shopService", shopService);
             dataMap.put("shopGuiManager", shopGuiManager);
+            dataMap.put("log", log);
             var cronTrigger = newTrigger()
                     .withIdentity(TRIGGER_NAME)
                     .withSchedule(cronSchedule(getCronExpression()))
@@ -84,6 +92,7 @@ public class DailyItemRefreshTask implements Job {
         var plugin = (ProjectNozomi) dataMap.get("plugin");
         var shopService = (ShopService) dataMap.get("shopService");
         var shopGuiManager = (ShopGuiManager) dataMap.get("shopGuiManager");
+        var log = (Logger) dataMap.get("log");
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -92,7 +101,7 @@ public class DailyItemRefreshTask implements Job {
         }.runTask(plugin);
         shopService.refreshDailyItems();
         shopService.saveDailyItemsInConfig();
-        plugin.getLogger().info("[TIMER] Refreshed items");
+        log.info("[TIMER] Refreshed items");
     }
 
     private String getCronExpression() {

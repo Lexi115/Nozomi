@@ -2,6 +2,7 @@ package io.github.lexi115.projectNozomi;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
 import io.github.lexi115.projectNozomi.commands.PluginCommands;
 import io.github.lexi115.projectNozomi.commands.ShopCommands;
 import io.github.lexi115.projectNozomi.injection.SimpleBinderModule;
@@ -18,6 +19,7 @@ import revxrsal.commands.bukkit.BukkitLamp;
 
 import java.io.File;
 
+@Singleton
 @Getter
 public final class ProjectNozomi extends JavaPlugin {
 
@@ -62,23 +64,20 @@ public final class ProjectNozomi extends JavaPlugin {
         log.info("ProjectNozomi is disabled!!!");
     }
 
-    public void reloadConfigs() {
+    public void reloadPlugin() {
         reloadConfig();
         loadConfigs();
         loadShop();
         loadDailyRefreshTask();
-        log.info("Reloaded configs");
+        log.info("Reloaded plugin");
     }
 
     private void loadConfigs() {
         saveDefaultConfig();
-        log.info("Loaded main config");
         dailyItemsConfig = loadCustomConfig("daily.yml");
-        log.info("Loaded daily config");
         shopConfig = loadCustomConfig("shop.yml");
-        log.info("Loaded shop config");
         messagesConfig = loadCustomConfig("messages.yml");
-        log.info("Loaded messages config");
+        log.info("Loaded configs");
     }
 
     private FileConfiguration loadCustomConfig(final String filename) {
@@ -91,23 +90,14 @@ public final class ProjectNozomi extends JavaPlugin {
     }
 
     private void loadShop() {
-        if (shopService == null) {
-            System.out.println("shop service is null!");
-        }
-        if (shopGuiManager == null) {
-            System.out.println("shopGuiManager is null!");
-        }
-        shop = shopService.loadShopFromConfig();
         shopGuiManager.closeAll();
+        shop = shopService.loadShopFromConfig();
         var dailyItems = shopService.loadDailyItemsFromConfig();
         log.info("Loaded shop with {} items", shop.getTotalItems());
         log.info("Loaded {} daily items", dailyItems.size());
     }
 
     private void loadDailyRefreshTask() {
-        if (dailyRefreshTask == null) {
-            System.out.println("daily refresh task is null!");
-        }
         if (getConfig().getBoolean("daily-items.auto-refresh.enabled")) {
             dailyRefreshTask.restart();
             log.info("Restarted auto refresh task");
@@ -118,12 +108,8 @@ public final class ProjectNozomi extends JavaPlugin {
     }
 
     private void registerCommands() {
-        var lamp = BukkitLamp.builder(this)
-                .dependency(Logger.class, log)
-                .dependency(ShopService.class, shopService)
-                .dependency(ShopGuiManager.class, shopGuiManager)
-                .build();
-        lamp.register(new PluginCommands(this));
-        lamp.register(new ShopCommands(this));
+        var lamp = BukkitLamp.builder(this).build();
+        lamp.register(injector.getInstance(PluginCommands.class));
+        lamp.register(injector.getInstance(ShopCommands.class));
     }
 }

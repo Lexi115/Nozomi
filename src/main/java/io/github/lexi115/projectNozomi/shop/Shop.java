@@ -1,10 +1,12 @@
 package io.github.lexi115.projectNozomi.shop;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import lombok.Getter;
 
 import java.util.*;
 
+@Singleton
 @Getter
 public class Shop {
 

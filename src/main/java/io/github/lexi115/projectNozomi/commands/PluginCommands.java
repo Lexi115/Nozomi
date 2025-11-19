@@ -1,9 +1,9 @@
 package io.github.lexi115.projectNozomi.commands;
 
+import com.google.inject.Inject;
 import io.github.lexi115.projectNozomi.ProjectNozomi;
 import org.slf4j.Logger;
 import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Dependency;
 import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
@@ -13,11 +13,12 @@ public class PluginCommands {
 
     private final ProjectNozomi plugin;
 
-    @Dependency
-    private Logger log;
+    private final Logger log;
 
-    public PluginCommands(final ProjectNozomi plugin) {
+    @Inject
+    public PluginCommands(final ProjectNozomi plugin, final Logger log) {
         this.plugin = plugin;
+        this.log = log;
     }
 
     @Subcommand("info")
@@ -30,7 +31,7 @@ public class PluginCommands {
     @Subcommand("reload")
     @CommandPermission("nozomi.reload")
     public void reload(final BukkitCommandActor sender) {
-        plugin.reloadConfigs();
+        plugin.reloadPlugin();
         sender.reply("Reloaded plugin!");
     }
 }
