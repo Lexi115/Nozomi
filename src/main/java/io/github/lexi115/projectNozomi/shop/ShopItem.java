@@ -1,0 +1,24 @@
+package io.github.lexi115.projectNozomi.shop;
+
+import lombok.Builder;
+import lombok.Getter;
+import org.bukkit.Material;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Builder
+public class ShopItem implements Item {
+
+    private final String id;
+
+    private final String name;
+
+    private final Material material;
+
+    private final Integer amount;
+
+    @Builder.Default
+    private final List<Reward> rewards = new ArrayList<>();
+}

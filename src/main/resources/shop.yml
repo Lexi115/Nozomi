@@ -1,0 +1,259 @@
+shop:
+  gui:
+    title: 'Shupogaki Shop'
+    rows: 1
+    item-slots:
+      - 2
+      - 4
+      - 6
+    navigation:
+      previous-page:
+        name: 'Previous page'
+        material: ARROW
+      next-page:
+        name: 'Next page'
+        material: ARROW
+      current-page:
+        name: 'Page %page% of %totalPages%'
+        material: COMPASS
+
+  items:
+    stone:
+      name: Stone
+      material: STONE
+      amount: 16
+      rewards:
+        - tell %player% Hai venduto stone, bravo guagliò!
+        - give %player% minecraft:iron_ingot 2
+
+    oak-log:
+      name: Oak Log
+      material: OAK_LOG
+      amount: 8
+      rewards:
+        - tell %player% Hai spacciato legna, sei un boscaiolo ormai.
+        - xp add %player% 5 points
+
+    iron-ingot:
+      name: Iron Ingot
+      material: IRON_INGOT
+      amount: 4
+      rewards:
+        - tell %player% Ferro fresco fresco!
+        - give %player% minecraft:emerald 1
+
+    gold-ingot:
+      name: Gold Ingot
+      material: GOLD_INGOT
+      amount: 2
+      rewards:
+        - tell %player% Uè, oro pesante!
+        - gamemode adventure
+
+    diamond:
+      name: Diamond
+      material: DIAMOND
+      amount: 1
+      rewards:
+        - tell %player% O compà, vendi i diamanti? Sei pazzo?
+        - give %player% minecraft:experience_bottle 3
+
+    coal:
+      name: Coal
+      material: COAL
+      amount: 10
+      rewards:
+        - tell %player% Carbone venduto, mo puoi accendere il fuoco.
+        - xp add %player% 3 points
+
+    sand:
+      name: Sand
+      material: SAND
+      amount: 12
+      rewards:
+        - tell %player% Sabbia fresca dalla spiaggia.
+        - give %player% minecraft:glass 2
+
+    cobblestone:
+      name: Cobblestone
+      material: COBBLESTONE
+      amount: 20
+      rewards:
+        - tell %player% Cobblestone, classico dei classici.
+        - give %player% minecraft:stone 5
+
+    lapis-lazuli:
+      name: Lapis Lazuli
+      material: LAPIS_LAZULI
+      amount: 6
+      rewards:
+        - tell %player% Lapis venduti, si colora?
+        - xp add %player% 8 points
+
+    redstone:
+      name: Redstone
+      material: REDSTONE
+      amount: 5
+      rewards:
+        - tell %player% Elettricista in azione!
+        - give %player% minecraft:repeater 1
+
+    gravel:
+      name: Gravel
+      material: GRAVEL
+      amount: 14
+      rewards:
+        - tell %player% Ghiaia venduta, mo non inciampi più.
+        - give %player% minecraft:flint 2
+
+    birch-log:
+      name: Birch Log
+      material: BIRCH_LOG
+      amount: 8
+      rewards:
+        - tell %player% Ohh, legno chiaro, finezza proprio.
+        - xp add %player% 4 points
+
+    spruce-log:
+      name: Spruce Log
+      material: SPRUCE_LOG
+      amount: 8
+      rewards:
+        - tell %player% Legno di montagna, compà.
+        - give %player% minecraft:stick 6
+
+    raw-copper:
+      name: Raw Copper
+      material: RAW_COPPER
+      amount: 10
+      rewards:
+        - tell %player% Cuoppero fresco, bravo o' mastro.
+        - give %player% minecraft:copper_ingot 3
+
+    raw-gold:
+      name: Raw Gold
+      material: RAW_GOLD
+      amount: 4
+      rewards:
+        - tell %player% Oro grezzo, o’ riccone.
+        - xp add %player% 6 points
+
+    raw-iron:
+      name: Raw Iron
+      material: RAW_IRON
+      amount: 6
+      rewards:
+        - tell %player% Ferro grezzo, vai forte oggi.
+        - give %player% minecraft:iron_nugget 8
+
+    clay-ball:
+      name: Clay Ball
+      material: CLAY_BALL
+      amount: 12
+      rewards:
+        - tell %player% Argilla venduta, mo fai il vasaio?
+        - give %player% minecraft:brick 2
+
+    wheat:
+      name: Wheat
+      material: WHEAT
+      amount: 10
+      rewards:
+        - tell %player% Grano buono buono, agricoltore!
+        - give %player% minecraft:bread 2
+
+    sugar-cane:
+      name: Sugar Cane
+      material: SUGAR_CANE
+      amount: 8
+      rewards:
+        - tell %player% Zucchero crudo, dolce dolce compà.
+        - xp add %player% 3 points
+
+    cactus:
+      name: Cactus
+      material: CACTUS
+      amount: 6
+      rewards:
+        - tell %player% Attento a non pungerti, guagliò.
+        - give %player% minecraft:green_dye 1
+
+    bamboo:
+      name: Bamboo
+      material: BAMBOO
+      amount: 12
+      rewards:
+        - tell %player% Bambù? Stai diventando un panda?
+        - xp add %player% 4 points
+
+    nether-quartz:
+      name: Nether Quartz
+      material: QUARTZ
+      amount: 6
+      rewards:
+        - tell %player% Quarzo del Nether, che coraggio!
+        - give %player% minecraft:quartz_block 1
+
+    netherrack:
+      name: Netherrack
+      material: NETHERRACK
+      amount: 20
+      rewards:
+        - tell %player% Pietra infernale, puzza ancora di zolfo.
+        - xp add %player% 2 points
+
+    glowstone-dust:
+      name: Glowstone Dust
+      material: GLOWSTONE_DUST
+      amount: 5
+      rewards:
+        - tell %player% Polvere luminosa! Stai diventando brillante.
+        - give %player% minecraft:glowstone 1
+
+    gunpowder:
+      name: Gunpowder
+      material: GUNPOWDER
+      amount: 4
+      rewards:
+        - tell %player% Polvere da sparo? Attento a non fai boom.
+        - give %player% minecraft:firework_rocket 1
+
+    rotten-flesh:
+      name: Rotten Flesh
+      material: ROTTEN_FLESH
+      amount: 12
+      rewards:
+        - tell %player% Eww, carne marcia… ma che vendi?!
+        - xp add %player% 2 points
+
+    ender-pearl:
+      name: Ender Pearl
+      material: ENDER_PEARL
+      amount: 2
+      rewards:
+        - tell %player% Le perle degli enderman? Sei pazzo forte.
+        - give %player% minecraft:experience_bottle 2
+
+    prismarine-shard:
+      name: Prismarine Shard
+      material: PRISMARINE_SHARD
+      amount: 4
+      rewards:
+        - tell %player% Frammento acquatico, stai subacqueo oggi.
+        - xp add %player% 7 points
+
+    slimeball:
+      name: Slimeball
+      material: SLIME_BALL
+      amount: 6
+      rewards:
+        - tell %player% Slime appiccicoso… bleah.
+        - give %player% minecraft:lead 1
+
+    blaze-rod:
+      name: Blaze Rod
+      material: BLAZE_ROD
+      amount: 2
+      rewards:
+        - tell %player% Sta roba scotta, attento!
+        - give %player% minecraft:blaze_powder 3
