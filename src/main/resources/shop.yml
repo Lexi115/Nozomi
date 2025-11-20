@@ -1,7 +1,7 @@
 shop:
   gui:
     title: 'Shupogaki Shop'
-    size: 18
+    rows: 1
     item-slots:
       - 2
       - 4

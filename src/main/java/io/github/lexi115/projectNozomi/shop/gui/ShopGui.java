@@ -64,37 +64,52 @@ public class ShopGui implements Listener {
         this.previousPageElement = guiDetails.getPreviousPage();
         this.nextPageElement = guiDetails.getNextPage();
         this.currentPageElement = guiDetails.getCurrentPage();
-        this.shopInventory = createShopInventory();
+        this.shopInventory = createInventory();
         registerEvents();
     }
 
-    public void openInventory() {
+    @EventHandler
+    public void onInventoryClick(final InventoryClickEvent event) {
+        if (!event.getInventory().equals(this.shopInventory)) {
+            return;
+        }
+        event.setCancelled(true);
+        checkForNavigationButtonClick(event.getRawSlot());
+    }
+
+    @EventHandler
+    public void onInventoryDrag(final InventoryDragEvent event) {
+        if (event.getInventory().equals(this.shopInventory)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(final InventoryCloseEvent event) {
+        if (event.getInventory().equals(this.shopInventory)) {
+            HandlerList.unregisterAll(this);
+            manager.close(this);
+        }
+    }
+
+    public void open() {
         player.openInventory(shopInventory);
     }
 
-    public void closeInventory() {
+    public void close() {
         player.closeInventory();
     }
 
-    public void registerEvents() {
-        var pluginManager = plugin.getServer().getPluginManager();
-        pluginManager.registerEvents(this, plugin);
-    }
-
-    private Inventory createShopInventory() {
+    private Inventory createInventory() {
         var inventory = Bukkit.createInventory(null, guiDetails.getGuiSize(), guiDetails.getTitle());
         var dailyItems = shopService.getDailyItems();
-        calculateTotalPages(dailyItems.size());
-        putDailyItems(inventory, dailyItems);
-        setUiElements(inventory);
-        return inventory;
-    }
-
-    private void calculateTotalPages(final int totalDailyItems) {
-        totalPages = (int) Math.ceil(totalDailyItems / (double) guiDetails.getPageSize());
+        totalPages = (int) Math.ceil(dailyItems.size() / (double) guiDetails.getPageSize());
         if (page < 1 || page > totalPages) {
             throw new InvalidPageException();
         }
+        putDailyItems(inventory, dailyItems);
+        putUiElements(inventory);
+        return inventory;
     }
 
     private void putDailyItems(final Inventory inventory, final Collection<ShopItem> dailyItems) {
@@ -118,7 +133,16 @@ public class ShopGui implements Listener {
         }
     }
 
-    private void setUiElements(final Inventory inventory) {
+    private void putUiElements(final Inventory inventory) {
+        // Previous page
+        if (page > 1) {
+            inventory.setItem(previousPageElement.getSlot(), itemMapper.toItemStack(previousPageElement));
+        }
+        // Next page
+        if (page < totalPages) {
+            inventory.setItem(nextPageElement.getSlot(), itemMapper.toItemStack(nextPageElement));
+        }
+        // Current page
         var currentPageItemStack = itemMapper.toItemStack(currentPageElement);
         var currentPageItemMeta = currentPageItemStack.getItemMeta();
         if (currentPageItemMeta != null) {
@@ -128,49 +152,21 @@ public class ShopGui implements Listener {
             );
             currentPageItemStack.setItemMeta(currentPageItemMeta);
         }
-        inventory.setItem(previousPageElement.getSlot(), itemMapper.toItemStack(previousPageElement));
-        inventory.setItem(nextPageElement.getSlot(), itemMapper.toItemStack(nextPageElement));
         inventory.setItem(currentPageElement.getSlot(), currentPageItemStack);
-    }
-
-    @EventHandler
-    public void onInventoryDrag(final InventoryDragEvent event) {
-        if (event.getInventory().equals(this.shopInventory)) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onInventoryClick(final InventoryClickEvent event) {
-        if (!event.getInventory().equals(this.shopInventory)) {
-            return;
-        }
-        event.setCancelled(true);
-        System.out.println("slot clicked: " + event.getRawSlot());
-        try {
-        System.out.println("item: " + slotsMap.get(event.getRawSlot()).getName());
-
-        } catch (NullPointerException e) {
-            System.out.println("no item clicked");
-        }
-        checkForNavigationButtonClick(event.getRawSlot());
-    }
-
-    @EventHandler
-    public void onInventoryClose(final InventoryCloseEvent event) {
-        if (event.getInventory().equals(this.shopInventory)) {
-            HandlerList.unregisterAll(this);
-            manager.close(this);
-        }
     }
 
     private void checkForNavigationButtonClick(final int slotClicked) {
         if (slotClicked == previousPageElement.getSlot() && page > 1) {
-            closeInventory();
+            close();
             manager.open(player, page - 1);
         } else if (slotClicked == nextPageElement.getSlot() && page < totalPages) {
-            closeInventory();
+            close();
             manager.open(player, page + 1);
         }
+    }
+
+    private void registerEvents() {
+        var pluginManager = plugin.getServer().getPluginManager();
+        pluginManager.registerEvents(this, plugin);
     }
 }

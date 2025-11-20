@@ -32,7 +32,7 @@ public class ShopGuiManager {
 
     public void open(final Player player, final Integer page) {
         var shopGui = new ShopGui(plugin, shopService, itemMapper, player, page, this, getGuiDetails());
-        shopGui.openInventory();
+        shopGui.open();
         openGuis.add(shopGui);
     }
 
@@ -41,7 +41,7 @@ public class ShopGuiManager {
     }
 
     public void closeAll() {
-        openGuis.forEach(ShopGui::closeInventory);
+        openGuis.forEach(ShopGui::close);
     }
 
     private ShopGuiDetails getGuiDetails() {
@@ -49,9 +49,9 @@ public class ShopGuiManager {
         if (section == null) {
             throw new ShopNotFoundException();
         }
-        // GUI size must be a multiple of 9
-        int guiSize = section.getInt("size", 54);
-        if (guiSize < 18 || guiSize > 54 || guiSize % 9 != 0) {
+        int pageRows = section.getInt("rows", 5);
+        int guiSize = (pageRows + 1) * 9;
+        if (guiSize < 18 || guiSize > 54) {
             throw new InvalidGuiSizeException();
         }
         var itemSlots = (new LinkedHashSet<>(section.getIntegerList("item-slots"))).toArray(new Integer[0]);
