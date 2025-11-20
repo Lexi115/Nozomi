@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,34 +82,55 @@ public class ShopGui implements Listener {
     }
 
     private Inventory createShopInventory() {
-        var guiSize = guiDetails.getSize();
-        var inventory = Bukkit.createInventory(null, guiSize, guiDetails.getTitle());
+        var inventory = Bukkit.createInventory(null, guiDetails.getGuiSize(), guiDetails.getTitle());
         var dailyItems = shopService.getDailyItems();
-        var dailyItemsSize = dailyItems.size();
-        var pageSize = guiSize - 9;
-        totalPages = (int) Math.ceil(dailyItemsSize / (double) pageSize);
-        if (page > totalPages) {
+        calculateTotalPages(dailyItems.size());
+        putDailyItems(inventory, dailyItems);
+        setUiElements(inventory);
+        return inventory;
+    }
+
+    private void calculateTotalPages(final int totalDailyItems) {
+        totalPages = (int) Math.ceil(totalDailyItems / (double) guiDetails.getPageSize());
+        if (page < 1 || page > totalPages) {
             throw new InvalidPageException();
         }
-        var startIndex = (page - 1) * pageSize;
-        var it = dailyItems.iterator();
-        ShopItem shopItem;
-        for (int i = 0, slotIndex = 0; it.hasNext() && i < (page * pageSize); i++) {
-            shopItem = it.next();
-            if (i >= startIndex) {
-                inventory.addItem(itemMapper.toItemStack(shopItem));
-                slotsMap.put(slotIndex++, shopItem);
+    }
+
+    private void putDailyItems(final Inventory inventory, final Collection<ShopItem> dailyItems) {
+        var lastAvailableSlot = guiDetails.getLastAvailableSlot();
+        var pageSize = guiDetails.getPageSize();
+        var itemSlots = guiDetails.getItemSlots();
+        var slotIndex = itemSlots.length == 0 ? -1 : itemSlots[0];
+        var dailyItemsList = dailyItems.stream()
+                .skip((long) (page - 1) * pageSize)
+                .limit(pageSize)
+                .toList();
+        ShopItem currentItem;
+        var iterator = dailyItemsList.iterator();
+        for (int i = 0; iterator.hasNext() && i < (page * pageSize); i++) {
+            currentItem = iterator.next();
+            slotIndex = itemSlots.length == 0 ? slotIndex + 1 : itemSlots[i];
+            if (slotIndex >= 0 && slotIndex <= lastAvailableSlot) {
+                inventory.setItem(slotIndex, itemMapper.toItemStack(currentItem));
+                slotsMap.put(slotIndex, currentItem);
             }
         }
-        // Navigation elements
-        currentPageElement.setName(currentPageElement.getName()
-                .replaceAll("%page%", String.valueOf(page))
-                .replaceAll("%totalPages%", String.valueOf(totalPages))
-        );
+    }
+
+    private void setUiElements(final Inventory inventory) {
+        var currentPageItemStack = itemMapper.toItemStack(currentPageElement);
+        var currentPageItemMeta = currentPageItemStack.getItemMeta();
+        if (currentPageItemMeta != null) {
+            currentPageItemMeta.setItemName(currentPageElement.getName()
+                    .replaceAll("%page%", String.valueOf(page))
+                    .replaceAll("%totalPages%", String.valueOf(totalPages))
+            );
+            currentPageItemStack.setItemMeta(currentPageItemMeta);
+        }
         inventory.setItem(previousPageElement.getSlot(), itemMapper.toItemStack(previousPageElement));
         inventory.setItem(nextPageElement.getSlot(), itemMapper.toItemStack(nextPageElement));
-        inventory.setItem(currentPageElement.getSlot(), itemMapper.toItemStack(currentPageElement));
-        return inventory;
+        inventory.setItem(currentPageElement.getSlot(), currentPageItemStack);
     }
 
     @EventHandler
@@ -124,6 +146,13 @@ public class ShopGui implements Listener {
             return;
         }
         event.setCancelled(true);
+        System.out.println("slot clicked: " + event.getRawSlot());
+        try {
+        System.out.println("item: " + slotsMap.get(event.getRawSlot()).getName());
+
+        } catch (NullPointerException e) {
+            System.out.println("no item clicked");
+        }
         checkForNavigationButtonClick(event.getRawSlot());
     }
 

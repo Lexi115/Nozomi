@@ -3,16 +3,17 @@ package io.github.lexi115.projectNozomi.shop.gui;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Getter
 @Builder
 public class ShopGuiDetails {
 
     private final String title;
 
-    private final Integer size;
+    private final Integer guiSize;
+
+    private final Integer pageSize;
+
+    private final Integer lastAvailableSlot;
 
     private final GuiElement previousPage;
 
@@ -20,6 +21,5 @@ public class ShopGuiDetails {
 
     private final GuiElement currentPage;
 
-    @Builder.Default
-    private final Set<Integer> itemSlots = new LinkedHashSet<>();
+    private final Integer[] itemSlots;
 }

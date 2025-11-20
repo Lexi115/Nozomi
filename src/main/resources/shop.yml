@@ -1,8 +1,11 @@
 shop:
   gui:
     title: 'Shupogaki Shop'
-    size: 54
-    item-slots: []
+    size: 18
+    item-slots:
+      - 2
+      - 4
+      - 6
     navigation:
       previous-page:
         name: 'Previous page'
@@ -13,8 +16,9 @@ shop:
       current-page:
         name: 'Page %page% of %totalPages%'
         material: COMPASS
+
   items:
-    1:
+    stone:
       name: Stone
       material: STONE
       amount: 16
@@ -22,7 +26,7 @@ shop:
         - tell %player% Hai venduto stone, bravo guagliò!
         - give %player% minecraft:iron_ingot 2
 
-    2:
+    oak-log:
       name: Oak Log
       material: OAK_LOG
       amount: 8
@@ -30,7 +34,7 @@ shop:
         - tell %player% Hai spacciato legna, sei un boscaiolo ormai.
         - xp add %player% 5 points
 
-    3:
+    iron-ingot:
       name: Iron Ingot
       material: IRON_INGOT
       amount: 4
@@ -38,7 +42,7 @@ shop:
         - tell %player% Ferro fresco fresco!
         - give %player% minecraft:emerald 1
 
-    4:
+    gold-ingot:
       name: Gold Ingot
       material: GOLD_INGOT
       amount: 2
@@ -46,7 +50,7 @@ shop:
         - tell %player% Uè, oro pesante!
         - gamemode adventure
 
-    5:
+    diamond:
       name: Diamond
       material: DIAMOND
       amount: 1
@@ -54,7 +58,7 @@ shop:
         - tell %player% O compà, vendi i diamanti? Sei pazzo?
         - give %player% minecraft:experience_bottle 3
 
-    6:
+    coal:
       name: Coal
       material: COAL
       amount: 10
@@ -62,7 +66,7 @@ shop:
         - tell %player% Carbone venduto, mo puoi accendere il fuoco.
         - xp add %player% 3 points
 
-    7:
+    sand:
       name: Sand
       material: SAND
       amount: 12
@@ -70,7 +74,7 @@ shop:
         - tell %player% Sabbia fresca dalla spiaggia.
         - give %player% minecraft:glass 2
 
-    8:
+    cobblestone:
       name: Cobblestone
       material: COBBLESTONE
       amount: 20
@@ -78,7 +82,7 @@ shop:
         - tell %player% Cobblestone, classico dei classici.
         - give %player% minecraft:stone 5
 
-    9:
+    lapis-lazuli:
       name: Lapis Lazuli
       material: LAPIS_LAZULI
       amount: 6
@@ -86,7 +90,7 @@ shop:
         - tell %player% Lapis venduti, si colora?
         - xp add %player% 8 points
 
-    10:
+    redstone:
       name: Redstone
       material: REDSTONE
       amount: 5
@@ -94,7 +98,7 @@ shop:
         - tell %player% Elettricista in azione!
         - give %player% minecraft:repeater 1
 
-    11:
+    gravel:
       name: Gravel
       material: GRAVEL
       amount: 14
@@ -102,7 +106,7 @@ shop:
         - tell %player% Ghiaia venduta, mo non inciampi più.
         - give %player% minecraft:flint 2
 
-    12:
+    birch-log:
       name: Birch Log
       material: BIRCH_LOG
       amount: 8
@@ -110,7 +114,7 @@ shop:
         - tell %player% Ohh, legno chiaro, finezza proprio.
         - xp add %player% 4 points
 
-    13:
+    spruce-log:
       name: Spruce Log
       material: SPRUCE_LOG
       amount: 8
@@ -118,7 +122,7 @@ shop:
         - tell %player% Legno di montagna, compà.
         - give %player% minecraft:stick 6
 
-    14:
+    raw-copper:
       name: Raw Copper
       material: RAW_COPPER
       amount: 10
@@ -126,7 +130,7 @@ shop:
         - tell %player% Cuoppero fresco, bravo o' mastro.
         - give %player% minecraft:copper_ingot 3
 
-    15:
+    raw-gold:
       name: Raw Gold
       material: RAW_GOLD
       amount: 4
@@ -134,7 +138,7 @@ shop:
         - tell %player% Oro grezzo, o’ riccone.
         - xp add %player% 6 points
 
-    16:
+    raw-iron:
       name: Raw Iron
       material: RAW_IRON
       amount: 6
@@ -142,7 +146,7 @@ shop:
         - tell %player% Ferro grezzo, vai forte oggi.
         - give %player% minecraft:iron_nugget 8
 
-    17:
+    clay-ball:
       name: Clay Ball
       material: CLAY_BALL
       amount: 12
@@ -150,7 +154,7 @@ shop:
         - tell %player% Argilla venduta, mo fai il vasaio?
         - give %player% minecraft:brick 2
 
-    18:
+    wheat:
       name: Wheat
       material: WHEAT
       amount: 10
@@ -158,7 +162,7 @@ shop:
         - tell %player% Grano buono buono, agricoltore!
         - give %player% minecraft:bread 2
 
-    19:
+    sugar-cane:
       name: Sugar Cane
       material: SUGAR_CANE
       amount: 8
@@ -166,7 +170,7 @@ shop:
         - tell %player% Zucchero crudo, dolce dolce compà.
         - xp add %player% 3 points
 
-    20:
+    cactus:
       name: Cactus
       material: CACTUS
       amount: 6
@@ -174,7 +178,7 @@ shop:
         - tell %player% Attento a non pungerti, guagliò.
         - give %player% minecraft:green_dye 1
 
-    21:
+    bamboo:
       name: Bamboo
       material: BAMBOO
       amount: 12
@@ -182,7 +186,7 @@ shop:
         - tell %player% Bambù? Stai diventando un panda?
         - xp add %player% 4 points
 
-    22:
+    nether-quartz:
       name: Nether Quartz
       material: QUARTZ
       amount: 6
@@ -190,7 +194,7 @@ shop:
         - tell %player% Quarzo del Nether, che coraggio!
         - give %player% minecraft:quartz_block 1
 
-    23:
+    netherrack:
       name: Netherrack
       material: NETHERRACK
       amount: 20
@@ -198,7 +202,7 @@ shop:
         - tell %player% Pietra infernale, puzza ancora di zolfo.
         - xp add %player% 2 points
 
-    24:
+    glowstone-dust:
       name: Glowstone Dust
       material: GLOWSTONE_DUST
       amount: 5
@@ -206,7 +210,7 @@ shop:
         - tell %player% Polvere luminosa! Stai diventando brillante.
         - give %player% minecraft:glowstone 1
 
-    25:
+    gunpowder:
       name: Gunpowder
       material: GUNPOWDER
       amount: 4
@@ -214,7 +218,7 @@ shop:
         - tell %player% Polvere da sparo? Attento a non fai boom.
         - give %player% minecraft:firework_rocket 1
 
-    26:
+    rotten-flesh:
       name: Rotten Flesh
       material: ROTTEN_FLESH
       amount: 12
@@ -222,7 +226,7 @@ shop:
         - tell %player% Eww, carne marcia… ma che vendi?!
         - xp add %player% 2 points
 
-    27:
+    ender-pearl:
       name: Ender Pearl
       material: ENDER_PEARL
       amount: 2
@@ -230,7 +234,7 @@ shop:
         - tell %player% Le perle degli enderman? Sei pazzo forte.
         - give %player% minecraft:experience_bottle 2
 
-    28:
+    prismarine-shard:
       name: Prismarine Shard
       material: PRISMARINE_SHARD
       amount: 4
@@ -238,7 +242,7 @@ shop:
         - tell %player% Frammento acquatico, stai subacqueo oggi.
         - xp add %player% 7 points
 
-    29:
+    slimeball:
       name: Slimeball
       material: SLIME_BALL
       amount: 6
@@ -246,7 +250,7 @@ shop:
         - tell %player% Slime appiccicoso… bleah.
         - give %player% minecraft:lead 1
 
-    30:
+    blaze-rod:
       name: Blaze Rod
       material: BLAZE_ROD
       amount: 2

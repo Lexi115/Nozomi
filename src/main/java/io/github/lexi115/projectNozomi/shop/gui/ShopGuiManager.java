@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Singleton
@@ -55,10 +54,16 @@ public class ShopGuiManager {
         if (guiSize < 18 || guiSize > 54 || guiSize % 9 != 0) {
             throw new InvalidGuiSizeException();
         }
+        var itemSlots = (new LinkedHashSet<>(section.getIntegerList("item-slots"))).toArray(new Integer[0]);
+        var lastAvailableSlot = guiSize - 10;
+        var pageSize = itemSlots.length == 0
+                ? lastAvailableSlot + 1 : Math.min(lastAvailableSlot + 1, itemSlots.length);
         return ShopGuiDetails.builder()
                 .title(section.getString("title", "?"))
-                .size(guiSize)
-                .itemSlots(new LinkedHashSet<>(section.getIntegerList("item-slots")))
+                .guiSize(guiSize)
+                .pageSize(pageSize)
+                .lastAvailableSlot(lastAvailableSlot)
+                .itemSlots(itemSlots)
                 .previousPage(GuiElement.builder()
                         .name(section.getString("navigation.previous-page.name", "Previous Page"))
                         .material(Material.matchMaterial(

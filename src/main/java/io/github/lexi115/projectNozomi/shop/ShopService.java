@@ -41,15 +41,10 @@ public class ShopService {
     }
 
     public Collection<ShopItem> loadDailyItemsFromConfig() {
-        var dailyItemsList = plugin.getDailyItemsConfig().getStringList("daily-items");
-        if (dailyItemsList.isEmpty()) {
-            var dailyItems = refreshDailyItems();
-            saveDailyItemsInConfig();
-            return dailyItems;
-        }
-        shop.clearDailyItems();
+        var configDailyItems = plugin.getDailyItemsConfig().getStringList("daily-items");
         var shopItems = shop.getItems();
-        dailyItemsList.forEach(itemId -> {
+        shop.clearDailyItems();
+        configDailyItems.forEach(itemId -> {
             for (var item : shopItems) {
                 if (item.getId().equals(itemId)) {
                     shop.addDailyItem(item);
@@ -57,7 +52,13 @@ public class ShopService {
                 }
             }
         });
-        return shop.getDailyItems();
+        var dailyItems = shop.getDailyItems();
+        if (configDailyItems.isEmpty() || dailyItems.isEmpty()) {
+            refreshDailyItems();
+            saveDailyItemsInConfig();
+            return dailyItems;
+        }
+        return dailyItems;
     }
 
     public void saveDailyItemsInConfig() {
@@ -75,7 +76,7 @@ public class ShopService {
         return shop.getDailyItems();
     }
 
-    public Collection<ShopItem> refreshDailyItems() {
+    public void refreshDailyItems() {
         int dailyItemsAmount = plugin.getConfig().getInt("daily-items.amount", 3);
         var totalItems = shop.getTotalItems();
         if (totalItems < dailyItemsAmount) {
@@ -88,6 +89,5 @@ public class ShopService {
             randomItem = shop.getItem(randomizer.nextInt(totalItems));
             shop.addDailyItem(randomItem);
         }
-        return shop.getDailyItems();
     }
 }
