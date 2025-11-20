@@ -37,13 +37,13 @@ public class ShopGui implements Listener {
 
     private final ShopGuiDetails guiDetails;
 
-    private Integer totalPages = 0;
-
     private final GuiElement previousPageElement;
 
     private final GuiElement nextPageElement;
 
     private final GuiElement currentPageElement;
+
+    private Integer totalPages = 0;
 
     public ShopGui(
             final ProjectNozomi plugin,

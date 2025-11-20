@@ -18,6 +18,8 @@ import static org.quartz.TriggerBuilder.newTrigger;
 @NoArgsConstructor
 public class DailyItemRefreshTask implements Job {
 
+    private final String TRIGGER_NAME = "daily-refresh-task-trigger";
+
     private ProjectNozomi plugin;
 
     private ShopService shopService;
@@ -27,8 +29,6 @@ public class DailyItemRefreshTask implements Job {
     private Scheduler scheduler;
 
     private Logger log;
-
-    private final String TRIGGER_NAME = "daily-refresh-task-trigger";
 
     @Inject
     public DailyItemRefreshTask(

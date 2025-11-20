@@ -72,10 +72,6 @@ public class ShopService {
         }
     }
 
-    public Collection<ShopItem> getDailyItems() {
-        return shop.getDailyItems();
-    }
-
     public void refreshDailyItems() {
         int dailyItemsAmount = plugin.getConfig().getInt("daily-items.amount", 3);
         var totalItems = shop.getTotalItems();
@@ -89,5 +85,9 @@ public class ShopService {
             randomItem = shop.getItem(randomizer.nextInt(totalItems));
             shop.addDailyItem(randomItem);
         }
+    }
+
+    public Collection<ShopItem> getDailyItems() {
+        return shop.getDailyItems();
     }
 }

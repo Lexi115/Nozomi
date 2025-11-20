@@ -68,13 +68,13 @@ public class ShopGuiManager {
                         .name(section.getString("navigation.previous-page.name", "Previous Page"))
                         .material(Material.matchMaterial(
                                 section.getString("navigation.previous-page.material", Material.ARROW.name())))
-                        .slot(guiSize - 9)
+                        .slot(guiSize - 6)
                         .build())
                 .nextPage(GuiElement.builder()
                         .name(section.getString("navigation.next-page.name", "Next Page"))
                         .material(Material.matchMaterial(
                                 section.getString("navigation.next-page.material", Material.ARROW.name())))
-                        .slot(guiSize - 1)
+                        .slot(guiSize - 4)
                         .build())
                 .currentPage(GuiElement.builder()
                         .name(section.getString("navigation.current-page.name",

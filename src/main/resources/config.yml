@@ -1,5 +1,5 @@
 daily-items:
-  amount: 3
+  amount: 9
   auto-refresh:
     enabled: true
     refresh-time: '0 0 0 ? * *'
