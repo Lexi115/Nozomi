@@ -81,11 +81,15 @@ public class ShopGui implements Listener {
             return;
         }
         event.setCancelled(true);
+        var player = (Player) event.getWhoClicked();
         var slotClicked = event.getRawSlot();
         var clickedShopItem = slotsMap.get(slotClicked);
         if (clickedShopItem != null) {
-            shopService.sellItem((Player) event.getWhoClicked(), clickedShopItem);
-            System.out.println("sold item");
+            if (shopService.sellItem(player, clickedShopItem)) {
+                System.out.println("sold item");
+            } else {
+                System.out.println("item not sold");
+            }
         } else {
             checkForNavigationButtonClick(event.getRawSlot());
         }

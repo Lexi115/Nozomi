@@ -5,6 +5,8 @@ import com.google.inject.Singleton;
 import io.github.lexi115.projectNozomi.ProjectNozomi;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.*;
@@ -92,12 +94,19 @@ public class ShopService {
         return shop.getDailyItems();
     }
 
-    public void sellItem(final Player player, final ShopItem shopItem) {
+    public boolean sellItem(final Player player, final ShopItem shopItem) {
+        var playerInventory = player.getInventory();
+        var itemMaterial = shopItem.getMaterial();
+        var itemAmount = shopItem.getAmount();
         var placeholders = new HashMap<String, String>();
+        if (!removeItemsFromInventory(playerInventory, itemMaterial, itemAmount)) {
+            return false;
+        }
         placeholders.put("player", player.getName());
         for (var reward : shopItem.getRewards()) {
             reward.give(player, placeholders);
         }
+        return true;
     }
 
     private List<Reward> parseItemRewards(final List<String> rewardStrings) {
@@ -109,5 +118,17 @@ public class ShopService {
             return new CommandReward(string.replaceFirst("cmd:", "").trim());
         }
         throw new InvalidRewardException();
+    }
+
+    private boolean removeItemsFromInventory(
+            final Inventory inventory,
+            final Material material,
+            final int amount
+    ) {
+        if (!inventory.contains(material, amount)) {
+            return false;
+        }
+        inventory.removeItem(new ItemStack(material, amount));
+        return true;
     }
 }
