@@ -4,10 +4,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.github.lexi115.projectNozomi.ProjectNozomi;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Random;
+import java.util.*;
 
 @Singleton
 public class ShopService {
@@ -34,6 +34,7 @@ public class ShopService {
                     .name(section.getString(key + ".name"))
                     .material(Material.matchMaterial(section.getString(key + ".material", Material.AIR.name())))
                     .amount(section.getInt(key + ".amount"))
+                    .rewards(parseItemRewards(section.getStringList(key + ".rewards")))
                     .build();
             shop.addItem(item);
         });
@@ -89,5 +90,24 @@ public class ShopService {
 
     public Collection<ShopItem> getDailyItems() {
         return shop.getDailyItems();
+    }
+
+    public void sellItem(final Player player, final ShopItem shopItem) {
+        var placeholders = new HashMap<String, String>();
+        placeholders.put("player", player.getName());
+        for (var reward : shopItem.getRewards()) {
+            reward.give(player, placeholders);
+        }
+    }
+
+    private List<Reward> parseItemRewards(final List<String> rewardStrings) {
+        return rewardStrings.stream().map(this::parseRewardFromString).toList();
+    }
+
+    private Reward parseRewardFromString(final String string) {
+        if (string.startsWith("cmd:")) {
+            return new CommandReward(string.replaceFirst("cmd:", "").trim());
+        }
+        throw new InvalidRewardException();
     }
 }

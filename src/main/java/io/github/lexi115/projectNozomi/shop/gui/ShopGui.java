@@ -33,6 +33,8 @@ public class ShopGui implements Listener {
 
     private final Integer page;
 
+    private final Integer totalPages;
+
     private final ShopGuiManager manager;
 
     private final ShopGuiDetails guiDetails;
@@ -43,7 +45,7 @@ public class ShopGui implements Listener {
 
     private final GuiElement currentPageElement;
 
-    private Integer totalPages = 0;
+    private final Collection<ShopItem> dailyItems;
 
     public ShopGui(
             final ProjectNozomi plugin,
@@ -64,7 +66,12 @@ public class ShopGui implements Listener {
         this.previousPageElement = guiDetails.getPreviousPage();
         this.nextPageElement = guiDetails.getNextPage();
         this.currentPageElement = guiDetails.getCurrentPage();
-        this.shopInventory = createInventory();
+        this.dailyItems = shopService.getDailyItems();
+        this.totalPages = (int) Math.ceil(dailyItems.size() / (double) guiDetails.getPageSize());
+        if (page < 1 || page > totalPages) {
+            throw new InvalidPageException();
+        }
+        this.shopInventory = createShopInventory();
         registerEvents();
     }
 
@@ -74,7 +81,14 @@ public class ShopGui implements Listener {
             return;
         }
         event.setCancelled(true);
-        checkForNavigationButtonClick(event.getRawSlot());
+        var slotClicked = event.getRawSlot();
+        var clickedShopItem = slotsMap.get(slotClicked);
+        if (clickedShopItem != null) {
+            shopService.sellItem((Player) event.getWhoClicked(), clickedShopItem);
+            System.out.println("sold item");
+        } else {
+            checkForNavigationButtonClick(event.getRawSlot());
+        }
     }
 
     @EventHandler
@@ -100,13 +114,8 @@ public class ShopGui implements Listener {
         player.closeInventory();
     }
 
-    private Inventory createInventory() {
+    private Inventory createShopInventory() {
         var inventory = Bukkit.createInventory(null, guiDetails.getGuiSize(), guiDetails.getTitle());
-        var dailyItems = shopService.getDailyItems();
-        totalPages = (int) Math.ceil(dailyItems.size() / (double) guiDetails.getPageSize());
-        if (page < 1 || page > totalPages) {
-            throw new InvalidPageException();
-        }
         putDailyItems(inventory, dailyItems);
         putUiElements(inventory);
         return inventory;
