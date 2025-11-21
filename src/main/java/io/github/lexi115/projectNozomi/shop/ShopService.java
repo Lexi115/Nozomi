@@ -125,10 +125,10 @@ public class ShopService {
             final Material material,
             final int amount
     ) {
-        if (!inventory.contains(material, amount)) {
+        var itemStack = new ItemStack(material, 1);
+        if (!inventory.containsAtLeast(itemStack, amount)) {
             return false;
         }
-        inventory.removeItem(new ItemStack(material, amount));
-        return true;
+        return inventory.removeItem(new ItemStack(material, amount)).isEmpty();
     }
 }
