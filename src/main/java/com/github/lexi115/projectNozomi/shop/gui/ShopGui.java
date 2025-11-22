@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
@@ -83,17 +84,19 @@ public class ShopGui implements Listener {
             return;
         }
         event.setCancelled(true);
-        var player = (Player) event.getWhoClicked();
-        var slotClicked = event.getRawSlot();
-        var clickedShopItem = slotsMap.get(slotClicked);
-        if (clickedShopItem != null) {
+        if (event.getClick() == ClickType.LEFT) {
+            var player = (Player) event.getWhoClicked();
+            var slotClicked = event.getRawSlot();
+            var clickedShopItem = slotsMap.get(slotClicked);
+            if (clickedShopItem == null) {
+                checkForNavigationButtonClick(event.getRawSlot());
+                return;
+            }
             if (shopService.sellItem(player, clickedShopItem)) {
                 System.out.println("sold item");
             } else {
                 System.out.println("item not sold");
             }
-        } else {
-            checkForNavigationButtonClick(event.getRawSlot());
         }
     }
 

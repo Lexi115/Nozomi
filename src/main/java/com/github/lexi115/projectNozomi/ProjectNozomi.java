@@ -2,6 +2,7 @@ package com.github.lexi115.projectNozomi;
 
 import com.github.lexi115.projectNozomi.commands.PluginCommands;
 import com.github.lexi115.projectNozomi.commands.ShopCommands;
+import com.github.lexi115.projectNozomi.extensions.VaultExtension;
 import com.github.lexi115.projectNozomi.injection.SimpleBinderModule;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
@@ -44,14 +45,15 @@ public final class ProjectNozomi extends JavaPlugin {
     @Inject @Named("dailyRefreshTask")
     private Task dailyRefreshTask;
 
+    private VaultExtension vaultExtension;
+
     @Override
     public void onEnable() {
-        var module = new SimpleBinderModule(this);
-        injector = module.createInjector();
-        injector.injectMembers(this);
+        injectFields();
+        loadExtensions();
         loadConfigs();
         loadShop();
-        loadDailyRefreshTask();
+        loadTasks();
         registerCommands();
         log.info("ProjectNozomi is enabled!");
     }
@@ -66,8 +68,14 @@ public final class ProjectNozomi extends JavaPlugin {
         reloadConfig();
         loadConfigs();
         loadShop();
-        loadDailyRefreshTask();
+        loadTasks();
         log.info("Reloaded plugin");
+    }
+
+    private void injectFields() {
+        var binderModule = new SimpleBinderModule(this);
+        injector = binderModule.createInjector();
+        injector.injectMembers(this);
     }
 
     private void loadConfigs() {
@@ -86,13 +94,22 @@ public final class ProjectNozomi extends JavaPlugin {
         log.info("Loaded {} daily items", shopService.getTotalDailyItems());
     }
 
-    private void loadDailyRefreshTask() {
+    private void loadTasks() {
+        // Daily item refresh
         if (getConfig().getBoolean("daily-items.auto-refresh.enabled")) {
             dailyRefreshTask.restart();
             log.info("Restarted auto refresh task");
         } else {
             dailyRefreshTask.stop();
             log.info("Stopped auto refresh task");
+        }
+    }
+
+    private void loadExtensions() {
+        // Vault API (used for money rewards)
+        vaultExtension = new VaultExtension(this);
+        if (vaultExtension.setup()) {
+            log.info("Vault loaded");
         }
     }
 

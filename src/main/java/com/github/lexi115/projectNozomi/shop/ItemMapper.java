@@ -2,12 +2,14 @@ package com.github.lexi115.projectNozomi.shop;
 
 import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
 
+@Singleton
 public class ItemMapper {
 
     private final StringUtils stringUtils;

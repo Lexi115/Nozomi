@@ -50,7 +50,7 @@ public class ShopService {
                     .name(section.getString(key + ".name"))
                     .material(Material.matchMaterial(section.getString(key + ".material", Material.AIR.name())))
                     .amount(section.getInt(key + ".amount", 1))
-                    .rewards(rewardUtils.parseRewards(section.getStringList(key + ".rewards")))
+                    .rewards(rewardUtils.parseFrom(section.getStringList(key + ".rewards")))
                     .build();
             shop.addItem(item);
         });
@@ -106,9 +106,11 @@ public class ShopService {
             return false;
         }
         placeholders.put("player", player.getName());
-        for (var reward : shopItem.getRewards()) {
-            reward.give(player, placeholders);
-        }
+        shopItem.getRewards().forEach(reward -> {
+            if (!reward.give(player, placeholders)) {
+                throw new SellItemException("Could not give all rewards!");
+            }
+        });
         return true;
     }
 
