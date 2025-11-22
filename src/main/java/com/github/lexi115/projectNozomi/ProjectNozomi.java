@@ -4,6 +4,7 @@ import com.github.lexi115.projectNozomi.commands.PluginCommands;
 import com.github.lexi115.projectNozomi.commands.ShopCommands;
 import com.github.lexi115.projectNozomi.extensions.VaultExtension;
 import com.github.lexi115.projectNozomi.injection.SimpleBinderModule;
+import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import com.github.lexi115.projectNozomi.misc.ConfigUtils;
@@ -35,6 +36,9 @@ public final class ProjectNozomi extends JavaPlugin {
 
     @Inject
     private ConfigUtils configUtils;
+
+    @Inject
+    private MessageUtils messageUtils;
 
     @Inject
     private ShopService shopService;
@@ -83,6 +87,7 @@ public final class ProjectNozomi extends JavaPlugin {
         dailyItemsConfig = configUtils.loadConfig("daily.yml");
         shopConfig = configUtils.loadConfig("shop.yml");
         messagesConfig = configUtils.loadConfig("messages.yml");
+        messageUtils.loadConfig();
         log.info("Loaded configs");
     }
 

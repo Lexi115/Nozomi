@@ -1,20 +1,22 @@
 package com.github.lexi115.projectNozomi.misc;
 
 import com.google.inject.Singleton;
+import lombok.NonNull;
+import org.bukkit.ChatColor;
 
 import java.util.Map;
 
 @Singleton
 public class StringUtils {
 
-    public String fillPlaceholders(final String text, final Map<String, String> placeholders) {
+    public String fillPlaceholders(final @NonNull String text, final @NonNull Map<String, String> placeholders) {
         return fillPlaceholders(text, placeholders, "%");
     }
 
     public String fillPlaceholders(
-            final String text,
-            final Map<String, String> placeholders,
-            final String delimiter
+            final @NonNull String text,
+            final @NonNull Map<String, String> placeholders,
+            final @NonNull String delimiter
     ) {
         var newText = text;
         StringBuilder sb;
@@ -24,5 +26,9 @@ public class StringUtils {
             newText = newText.replaceAll(placeholder, placeholders.get(key));
         }
         return newText;
+    }
+
+    public String colorize(final @NonNull String text) {
+        return ChatColor.translateAlternateColorCodes('&', text);
     }
 }

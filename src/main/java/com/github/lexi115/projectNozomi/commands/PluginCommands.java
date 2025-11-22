@@ -1,5 +1,6 @@
 package com.github.lexi115.projectNozomi.commands;
 
+import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.google.inject.Inject;
 import com.github.lexi115.projectNozomi.ProjectNozomi;
 import lombok.NonNull;
@@ -16,10 +17,13 @@ public class PluginCommands {
 
     private final Logger log;
 
+    private final MessageUtils messageUtils;
+
     @Inject
-    public PluginCommands(final ProjectNozomi plugin, final Logger log) {
+    public PluginCommands(final ProjectNozomi plugin, final Logger log, final MessageUtils messageUtils) {
         this.plugin = plugin;
         this.log = log;
+        this.messageUtils = messageUtils;
     }
 
     @Subcommand("info")
@@ -27,6 +31,7 @@ public class PluginCommands {
     public void info(final @NonNull BukkitCommandActor sender) {
         log.info(plugin.getMessagesConfig().getString("info"));
         sender.reply("Project Nozomi by Lexi115");
+        sender.reply(messageUtils.get("info"));
     }
 
     @Subcommand("reload")
