@@ -2,7 +2,7 @@ package com.github.lexi115.projectNozomi;
 
 import com.github.lexi115.projectNozomi.commands.PluginCommands;
 import com.github.lexi115.projectNozomi.commands.ShopCommands;
-import com.github.lexi115.projectNozomi.ext.VaultExtension;
+import com.github.lexi115.projectNozomi.extensions.VaultExtension;
 import com.github.lexi115.projectNozomi.injection.SimpleBinderModule;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
@@ -21,8 +21,6 @@ import revxrsal.commands.bukkit.BukkitLamp;
 @Singleton
 @Getter
 public final class ProjectNozomi extends JavaPlugin {
-
-    private SimpleBinderModule binderModule;
 
     private Injector injector;
 
@@ -47,15 +45,15 @@ public final class ProjectNozomi extends JavaPlugin {
     @Inject @Named("dailyRefreshTask")
     private Task dailyRefreshTask;
 
-    private VaultExtension vault;
+    private VaultExtension vaultExtension;
 
     @Override
     public void onEnable() {
         injectFields();
+        loadExtensions();
         loadConfigs();
         loadShop();
-        loadDailyRefreshTask();
-        loadExtensions();
+        loadTasks();
         registerCommands();
         log.info("ProjectNozomi is enabled!");
     }
@@ -70,12 +68,12 @@ public final class ProjectNozomi extends JavaPlugin {
         reloadConfig();
         loadConfigs();
         loadShop();
-        loadDailyRefreshTask();
+        loadTasks();
         log.info("Reloaded plugin");
     }
 
     private void injectFields() {
-        binderModule = new SimpleBinderModule(this);
+        var binderModule = new SimpleBinderModule(this);
         injector = binderModule.createInjector();
         injector.injectMembers(this);
     }
@@ -96,7 +94,8 @@ public final class ProjectNozomi extends JavaPlugin {
         log.info("Loaded {} daily items", shopService.getTotalDailyItems());
     }
 
-    private void loadDailyRefreshTask() {
+    private void loadTasks() {
+        // Daily item refresh
         if (getConfig().getBoolean("daily-items.auto-refresh.enabled")) {
             dailyRefreshTask.restart();
             log.info("Restarted auto refresh task");
@@ -107,11 +106,10 @@ public final class ProjectNozomi extends JavaPlugin {
     }
 
     private void loadExtensions() {
-        vault = new VaultExtension(this);
-        if (!vault.setup()) {
-            log.info("vault not found");
-        } else {
-            log.info("vault loaded!");
+        // Vault API (used for money rewards)
+        vaultExtension = new VaultExtension(this);
+        if (vaultExtension.setup()) {
+            log.info("Vault loaded");
         }
     }
 

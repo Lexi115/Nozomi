@@ -1,9 +1,10 @@
-package com.github.lexi115.projectNozomi.ext;
+package com.github.lexi115.projectNozomi.extensions;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.OfflinePlayer;
 
 @Singleton
 public class VaultExtension implements PluginExtension {
@@ -31,6 +32,20 @@ public class VaultExtension implements PluginExtension {
         } catch (NoClassDefFoundError e) {
             return false;
         }
+    }
+
+    public boolean deposit(final OfflinePlayer player, final double amount) {
+        var transaction = economy.depositPlayer(player, amount);
+        return transaction.transactionSuccess();
+    }
+
+    public boolean withdraw(final OfflinePlayer player, final double amount) {
+        var transaction = economy.withdrawPlayer(player, amount);
+        return transaction.transactionSuccess();
+    }
+
+    public double getBalance(final OfflinePlayer player) {
+        return economy.getBalance(player);
     }
 
     public boolean isEnabled() {

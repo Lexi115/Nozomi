@@ -7,5 +7,5 @@ import java.util.Map;
 
 public interface Reward {
 
-    void give(@NonNull Player player, Map<String, String> placeholders);
+    boolean give(@NonNull Player player, Map<String, String> placeholders);
 }

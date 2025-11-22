@@ -1,4 +1,4 @@
-package com.github.lexi115.projectNozomi.ext;
+package com.github.lexi115.projectNozomi.extensions;
 
 public interface PluginExtension {
     boolean setup();

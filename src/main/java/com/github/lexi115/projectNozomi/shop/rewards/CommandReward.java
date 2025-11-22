@@ -16,14 +16,14 @@ public class CommandReward implements Reward {
     private final String rawCommand;
 
     @Override
-    public void give(final @NonNull Player player, final Map<String, String> placeholders) {
+    public boolean give(final @NonNull Player player, final Map<String, String> placeholders) {
         var command = stringUtils.fillPlaceholders(rawCommand, placeholders);
         // If command starts with a slash, then it is executed by the player rather than the console
         if (command.startsWith("/")) {
-            player.performCommand(command.replaceFirst("/", ""));
+            return player.performCommand(command.replaceFirst("/", ""));
         } else {
             var console = Bukkit.getConsoleSender();
-            Bukkit.dispatchCommand(console, command);
+            return Bukkit.dispatchCommand(console, command);
         }
     }
 }
