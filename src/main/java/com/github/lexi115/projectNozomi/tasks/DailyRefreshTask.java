@@ -1,5 +1,6 @@
-package com.github.lexi115.projectNozomi.shop;
+package com.github.lexi115.projectNozomi.tasks;
 
+import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.github.lexi115.projectNozomi.ProjectNozomi;
@@ -16,7 +17,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 
 @Singleton
 @NoArgsConstructor
-public class DailyItemRefreshTask implements Job {
+public class DailyRefreshTask implements Task {
 
     private final String TRIGGER_NAME = "daily-refresh-task-trigger";
 
@@ -31,7 +32,7 @@ public class DailyItemRefreshTask implements Job {
     private Logger log;
 
     @Inject
-    public DailyItemRefreshTask(
+    public DailyRefreshTask(
             final ProjectNozomi plugin,
             final ShopService shopService,
             final ShopGuiManager shopGuiManager,

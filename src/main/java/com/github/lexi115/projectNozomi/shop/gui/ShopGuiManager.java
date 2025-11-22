@@ -1,5 +1,6 @@
 package com.github.lexi115.projectNozomi.shop.gui;
 
+import com.github.lexi115.projectNozomi.shop.ItemMapper;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.github.lexi115.projectNozomi.ProjectNozomi;

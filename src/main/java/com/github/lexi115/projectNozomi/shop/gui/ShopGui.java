@@ -1,6 +1,7 @@
 package com.github.lexi115.projectNozomi.shop.gui;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
+import com.github.lexi115.projectNozomi.shop.ItemMapper;
 import com.github.lexi115.projectNozomi.shop.ShopItem;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import lombok.NonNull;

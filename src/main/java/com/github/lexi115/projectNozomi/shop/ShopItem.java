@@ -1,5 +1,6 @@
 package com.github.lexi115.projectNozomi.shop;
 
+import com.github.lexi115.projectNozomi.shop.rewards.Reward;
 import lombok.Builder;
 import lombok.Getter;
 import org.bukkit.Material;

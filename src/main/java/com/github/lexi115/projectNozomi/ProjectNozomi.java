@@ -3,13 +3,14 @@ package com.github.lexi115.projectNozomi;
 import com.github.lexi115.projectNozomi.commands.PluginCommands;
 import com.github.lexi115.projectNozomi.commands.ShopCommands;
 import com.github.lexi115.projectNozomi.injection.SimpleBinderModule;
-import com.github.lexi115.projectNozomi.shop.DailyItemRefreshTask;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import com.github.lexi115.projectNozomi.misc.ConfigUtils;
+import com.github.lexi115.projectNozomi.tasks.Task;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,8 +41,8 @@ public final class ProjectNozomi extends JavaPlugin {
     @Inject
     private ShopGuiManager shopGuiManager;
 
-    @Inject
-    private DailyItemRefreshTask dailyRefreshTask;
+    @Inject @Named("dailyRefreshTask")
+    private Task dailyRefreshTask;
 
     @Override
     public void onEnable() {

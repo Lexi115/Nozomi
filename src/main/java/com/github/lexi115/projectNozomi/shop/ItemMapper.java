@@ -1,6 +1,5 @@
-package com.github.lexi115.projectNozomi.shop.gui;
+package com.github.lexi115.projectNozomi.shop;
 
-import com.github.lexi115.projectNozomi.shop.Item;
 import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.google.inject.Inject;
 import lombok.NonNull;
@@ -34,7 +33,10 @@ public class ItemMapper {
         var itemStack = new ItemStack(item.getMaterial(), amount);
         var itemMeta = Bukkit.getItemFactory().getItemMeta(itemStack.getType());
         if (itemMeta != null) {
-            itemMeta.setItemName(stringUtils.fillPlaceholders(item.getName(), placeholders));
+            var name = item.getName();
+            if (name != null) {
+                itemMeta.setItemName(stringUtils.fillPlaceholders(item.getName(), placeholders));
+            }
             itemStack.setItemMeta(itemMeta);
         }
         return itemStack;

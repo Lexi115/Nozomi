@@ -2,6 +2,7 @@ package com.github.lexi115.projectNozomi.shop;
 
 import com.github.lexi115.projectNozomi.misc.InventoryUtils;
 import com.github.lexi115.projectNozomi.misc.SaveFileException;
+import com.github.lexi115.projectNozomi.shop.rewards.RewardUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.github.lexi115.projectNozomi.ProjectNozomi;
@@ -48,7 +49,7 @@ public class ShopService {
                     .id(key)
                     .name(section.getString(key + ".name"))
                     .material(Material.matchMaterial(section.getString(key + ".material", Material.AIR.name())))
-                    .amount(section.getInt(key + ".amount"))
+                    .amount(section.getInt(key + ".amount", 1))
                     .rewards(rewardUtils.parseRewards(section.getStringList(key + ".rewards")))
                     .build();
             shop.addItem(item);

@@ -1,4 +1,4 @@
-package com.github.lexi115.projectNozomi.shop;
+package com.github.lexi115.projectNozomi.shop.rewards;
 
 import lombok.NonNull;
 import org.bukkit.entity.Player;

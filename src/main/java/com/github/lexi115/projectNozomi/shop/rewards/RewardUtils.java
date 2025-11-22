@@ -1,4 +1,4 @@
-package com.github.lexi115.projectNozomi.shop;
+package com.github.lexi115.projectNozomi.shop.rewards;
 
 import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.google.inject.Inject;
