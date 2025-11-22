@@ -1,17 +1,20 @@
 package com.github.lexi115.projectNozomi.shop;
 
+import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.misc.InventoryUtils;
 import com.github.lexi115.projectNozomi.misc.SaveFileException;
 import com.github.lexi115.projectNozomi.shop.rewards.RewardUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.github.lexi115.projectNozomi.ProjectNozomi;
 import lombok.NonNull;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -44,16 +47,7 @@ public class ShopService {
             throw new ShopNotFoundException();
         }
         shop.clearItems();
-        section.getKeys(false).forEach(key -> {
-            var item = ShopItem.builder()
-                    .id(key)
-                    .name(section.getString(key + ".name"))
-                    .material(Material.matchMaterial(section.getString(key + ".material", Material.AIR.name())))
-                    .amount(section.getInt(key + ".amount", 1))
-                    .rewards(rewardUtils.parseFrom(section.getStringList(key + ".rewards")))
-                    .build();
-            shop.addItem(item);
-        });
+        section.getKeys(false).forEach(key -> shop.addItem(parseItemFromConfig(section, key)));
     }
 
     public void loadDailyItemsFromConfig() {
@@ -97,16 +91,13 @@ public class ShopService {
         }
     }
 
-    public boolean sellItem(final @NonNull Player player, final @NonNull ShopItem shopItem) {
-        var playerInventory = player.getInventory();
-        var itemMaterial = shopItem.getMaterial();
-        var itemAmount = shopItem.getAmount();
-        var placeholders = new HashMap<String, String>();
-        if (!inventoryUtils.removeItems(playerInventory, itemMaterial, itemAmount)) {
+    public boolean sellItem(final @NonNull Player player, final @NonNull ShopItem item) {
+        if (!inventoryUtils.removeItems(player.getInventory(), item.getMaterial(), item.getAmount())) {
             return false;
         }
+        var placeholders = new HashMap<String, String>();
         placeholders.put("player", player.getName());
-        shopItem.getRewards().forEach(reward -> {
+        item.getRewards().forEach(reward -> {
             if (!reward.give(player, placeholders)) {
                 throw new SellItemException("Could not give all rewards!");
             }
@@ -128,5 +119,15 @@ public class ShopService {
 
     public int getTotalDailyItems() {
         return shop.getTotalDailyItems();
+    }
+
+    private ShopItem parseItemFromConfig(final @NonNull ConfigurationSection section, final String key) {
+        return ShopItem.builder()
+                .id(key)
+                .name(section.getString(key + ".name"))
+                .material(Material.matchMaterial(section.getString(key + ".material", Material.AIR.name())))
+                .amount(section.getInt(key + ".amount", 1))
+                .rewards(rewardUtils.parseFrom(section.getStringList(key + ".rewards")))
+                .build();
     }
 }

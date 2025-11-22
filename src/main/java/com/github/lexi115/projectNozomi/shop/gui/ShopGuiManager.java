@@ -1,12 +1,12 @@
 package com.github.lexi115.projectNozomi.shop.gui;
 
+import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.github.lexi115.projectNozomi.shop.ItemMapper;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.shop.ShopNotFoundException;
 import com.github.lexi115.projectNozomi.shop.ShopService;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -75,12 +75,12 @@ public class ShopGuiManager {
                 .pageSize(pageSize)
                 .lastAvailableSlot(lastAvailableSlot)
                 .itemSlots(itemSlots)
-                .previousPage(createGuiElement(section, "navigation.previous-page",
-                        guiSize - 6, Material.ARROW))
-                .nextPage(createGuiElement(section, "navigation.next-page",
-                        guiSize - 4, Material.ARROW))
-                .currentPage(createGuiElement(section, "navigation.current-page",
-                        guiSize - 5, Material.COMPASS))
+                .previousPage(createGuiElement(
+                        section, "navigation.previous-page", guiSize - 6, Material.ARROW))
+                .nextPage(createGuiElement(
+                        section, "navigation.next-page", guiSize - 4, Material.ARROW))
+                .currentPage(createGuiElement(
+                        section, "navigation.current-page", guiSize - 5, Material.COMPASS))
                 .build();
     }
 
