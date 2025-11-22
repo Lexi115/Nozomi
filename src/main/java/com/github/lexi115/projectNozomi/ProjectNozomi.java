@@ -2,6 +2,7 @@ package com.github.lexi115.projectNozomi;
 
 import com.github.lexi115.projectNozomi.commands.PluginCommands;
 import com.github.lexi115.projectNozomi.commands.ShopCommands;
+import com.github.lexi115.projectNozomi.ext.VaultExtension;
 import com.github.lexi115.projectNozomi.injection.SimpleBinderModule;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
@@ -20,6 +21,8 @@ import revxrsal.commands.bukkit.BukkitLamp;
 @Singleton
 @Getter
 public final class ProjectNozomi extends JavaPlugin {
+
+    private SimpleBinderModule binderModule;
 
     private Injector injector;
 
@@ -44,14 +47,15 @@ public final class ProjectNozomi extends JavaPlugin {
     @Inject @Named("dailyRefreshTask")
     private Task dailyRefreshTask;
 
+    private VaultExtension vault;
+
     @Override
     public void onEnable() {
-        var module = new SimpleBinderModule(this);
-        injector = module.createInjector();
-        injector.injectMembers(this);
+        injectFields();
         loadConfigs();
         loadShop();
         loadDailyRefreshTask();
+        loadExtensions();
         registerCommands();
         log.info("ProjectNozomi is enabled!");
     }
@@ -68,6 +72,12 @@ public final class ProjectNozomi extends JavaPlugin {
         loadShop();
         loadDailyRefreshTask();
         log.info("Reloaded plugin");
+    }
+
+    private void injectFields() {
+        binderModule = new SimpleBinderModule(this);
+        injector = binderModule.createInjector();
+        injector.injectMembers(this);
     }
 
     private void loadConfigs() {
@@ -93,6 +103,15 @@ public final class ProjectNozomi extends JavaPlugin {
         } else {
             dailyRefreshTask.stop();
             log.info("Stopped auto refresh task");
+        }
+    }
+
+    private void loadExtensions() {
+        vault = new VaultExtension(this);
+        if (!vault.setup()) {
+            log.info("vault not found");
+        } else {
+            log.info("vault loaded!");
         }
     }
 

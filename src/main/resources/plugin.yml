@@ -5,3 +5,4 @@ main: com.github.lexi115.projectNozomi.ProjectNozomi
 api-version: '1.21'
 authors: [ Lexi115 ]
 description: Selling system
+softdepend: [ Vault ]
