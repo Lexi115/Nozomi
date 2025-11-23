@@ -1,33 +1,36 @@
 package com.github.lexi115.projectNozomi.commands;
 
-import com.google.inject.Inject;
-import com.github.lexi115.projectNozomi.ProjectNozomi;
+import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
+import com.google.inject.Inject;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
-import revxrsal.commands.annotation.*;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Default;
+import revxrsal.commands.annotation.Range;
+import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @Command({"nozomi", "noz"})
 public class ShopCommands {
 
-    private final ProjectNozomi plugin;
-
     private final ShopService shopService;
 
     private final ShopGuiManager shopGuiManager;
 
+    private final MessageUtils messageUtils;
+
     @Inject
     public ShopCommands(
-            final ProjectNozomi plugin,
             final ShopService shopService,
-            final ShopGuiManager shopGuiManager
+            final ShopGuiManager shopGuiManager,
+            final MessageUtils messageUtils
     ) {
-        this.plugin = plugin;
         this.shopService = shopService;
         this.shopGuiManager = shopGuiManager;
+        this.messageUtils = messageUtils;
     }
 
     @Subcommand("daily <page>")
@@ -42,5 +45,6 @@ public class ShopCommands {
         shopGuiManager.closeAll();
         shopService.refreshDailyItems();
         shopService.saveDailyItemsInConfig();
+        sender.reply(messageUtils.getPrefix() + messageUtils.get("info.items-refreshed"));
     }
 }

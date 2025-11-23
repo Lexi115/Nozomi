@@ -2,6 +2,7 @@ package com.github.lexi115.projectNozomi.shop;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.misc.InventoryUtils;
+import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
 import com.github.lexi115.projectNozomi.misc.SaveFileException;
 import com.github.lexi115.projectNozomi.shop.rewards.RewardUtils;
 import com.google.inject.Inject;
@@ -14,7 +15,6 @@ import org.bukkit.entity.Player;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -95,8 +95,9 @@ public class ShopService {
         if (!inventoryUtils.removeItems(player.getInventory(), item.getMaterial(), item.getAmount())) {
             return false;
         }
-        var placeholders = new HashMap<String, String>();
-        placeholders.put("player", player.getName());
+        var placeholders = new PlaceholderMap()
+                .set("player", player.getName())
+                .get();
         item.getRewards().forEach(reward -> {
             if (!reward.give(player, placeholders)) {
                 throw new SellItemException("Could not give all rewards!");

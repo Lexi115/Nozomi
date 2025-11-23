@@ -2,12 +2,13 @@ package com.github.lexi115.projectNozomi;
 
 import com.github.lexi115.projectNozomi.commands.PluginCommands;
 import com.github.lexi115.projectNozomi.commands.ShopCommands;
+import com.github.lexi115.projectNozomi.core.ExceptionHandler;
 import com.github.lexi115.projectNozomi.extensions.VaultExtension;
 import com.github.lexi115.projectNozomi.injection.SimpleBinderModule;
+import com.github.lexi115.projectNozomi.misc.ConfigUtils;
 import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
-import com.github.lexi115.projectNozomi.misc.ConfigUtils;
 import com.github.lexi115.projectNozomi.tasks.Task;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -31,8 +32,13 @@ public final class ProjectNozomi extends JavaPlugin {
 
     private FileConfiguration messagesConfig;
 
+    private VaultExtension vaultExtension;
+
     @Inject
     private Logger log;
+
+    @Inject
+    private ExceptionHandler exceptionHandler;
 
     @Inject
     private ConfigUtils configUtils;
@@ -48,8 +54,6 @@ public final class ProjectNozomi extends JavaPlugin {
 
     @Inject @Named("dailyRefreshTask")
     private Task dailyRefreshTask;
-
-    private VaultExtension vaultExtension;
 
     @Override
     public void onEnable() {
@@ -119,7 +123,9 @@ public final class ProjectNozomi extends JavaPlugin {
     }
 
     private void registerCommands() {
-        var lamp = BukkitLamp.builder(this).build();
+        var lamp = BukkitLamp.builder(this)
+                .exceptionHandler(exceptionHandler)
+                .build();
         lamp.register(injector.getInstance(PluginCommands.class));
         lamp.register(injector.getInstance(ShopCommands.class));
     }

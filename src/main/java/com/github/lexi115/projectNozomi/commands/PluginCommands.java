@@ -1,8 +1,8 @@
 package com.github.lexi115.projectNozomi.commands;
 
+import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.google.inject.Inject;
-import com.github.lexi115.projectNozomi.ProjectNozomi;
 import lombok.NonNull;
 import org.slf4j.Logger;
 import revxrsal.commands.annotation.Command;
@@ -29,15 +29,13 @@ public class PluginCommands {
     @Subcommand("info")
     @CommandPermission("nozomi.info")
     public void info(final @NonNull BukkitCommandActor sender) {
-        log.info(plugin.getMessagesConfig().getString("info"));
         sender.reply("Project Nozomi by Lexi115");
-        sender.reply(messageUtils.get("info"));
     }
 
     @Subcommand("reload")
     @CommandPermission("nozomi.reload")
     public void reload(final @NonNull BukkitCommandActor sender) {
         plugin.reloadPlugin();
-        sender.reply("Reloaded plugin!");
+        sender.reply(messageUtils.getPrefix() + messageUtils.get("info.reloaded"));
     }
 }

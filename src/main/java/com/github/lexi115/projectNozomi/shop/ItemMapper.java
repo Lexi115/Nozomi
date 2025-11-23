@@ -37,7 +37,7 @@ public class ItemMapper {
         if (itemMeta != null) {
             var name = item.getName();
             if (name != null) {
-                itemMeta.setItemName(stringUtils.fillPlaceholders(item.getName(), placeholders));
+                itemMeta.setItemName(stringUtils.colorize(stringUtils.fillPlaceholders(item.getName(), placeholders)));
             }
             itemStack.setItemMeta(itemMeta);
         }

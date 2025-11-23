@@ -1,1 +1,10 @@
-info: 'This is a message'
+prefix: '&2[&aNozomi&2] &r'
+info:
+  item-sold: '&7You sold &6%amount% &e%itemName%&7!'
+  items-refreshed: '&7Items refreshed!'
+  reloaded: '&7Plugin reloaded!'
+errors:
+  invalid-page: '&cThis page is invalid (page %page% of %totalPages%)!'
+  not-enough-items: '&cNot enough items!'
+  no-permission: '&cYou do not have the permission to do that!'
+  players-only: '&cYou must be a player to execute this command!'

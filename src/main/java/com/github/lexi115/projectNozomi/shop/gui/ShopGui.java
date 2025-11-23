@@ -1,6 +1,8 @@
 package com.github.lexi115.projectNozomi.shop.gui;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
+import com.github.lexi115.projectNozomi.misc.MessageUtils;
+import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
 import com.github.lexi115.projectNozomi.shop.ItemMapper;
 import com.github.lexi115.projectNozomi.shop.ShopItem;
 import com.github.lexi115.projectNozomi.shop.ShopService;
@@ -30,6 +32,8 @@ public class ShopGui implements Listener {
 
     private final ItemMapper itemMapper;
 
+    private final MessageUtils messageUtils;
+
     private final Map<Integer, ShopItem> slotsMap = new HashMap<>();
 
     private final Player player;
@@ -54,6 +58,7 @@ public class ShopGui implements Listener {
             final ProjectNozomi plugin,
             final @NonNull ShopService shopService,
             final ItemMapper itemMapper,
+            final MessageUtils messageUtils,
             final Player player,
             final int page,
             final ShopGuiManager guiManager,
@@ -62,6 +67,7 @@ public class ShopGui implements Listener {
         this.plugin = plugin;
         this.shopService = shopService;
         this.itemMapper = itemMapper;
+        this.messageUtils = messageUtils;
         this.player = player;
         this.page = page;
         this.guiManager = guiManager;
@@ -72,7 +78,7 @@ public class ShopGui implements Listener {
         this.dailyItems = shopService.getDailyItems();
         this.totalPages = (int) Math.ceil(dailyItems.size() / (double) guiDetails.getPageSize());
         if (page < 1 || page > totalPages) {
-            throw new InvalidPageException();
+            throw new InvalidPageException(page, totalPages);
         }
         this.shopInventory = createShopInventory();
         registerEvents();
@@ -92,11 +98,7 @@ public class ShopGui implements Listener {
                 checkForNavigationButtonClick(event.getRawSlot());
                 return;
             }
-            if (shopService.sellItem(player, clickedShopItem)) {
-                System.out.println("sold item");
-            } else {
-                System.out.println("item not sold");
-            }
+            sellItem(player, clickedShopItem);
         }
     }
 
@@ -164,9 +166,10 @@ public class ShopGui implements Listener {
             inventory.setItem(nextPageElement.getSlot(), itemMapper.toItemStack(nextPageElement));
         }
         // Current page
-        var placeholders = new HashMap<String, String>();
-        placeholders.put("page", String.valueOf(page));
-        placeholders.put("totalPages", String.valueOf(totalPages));
+        var placeholders = new PlaceholderMap()
+                .set("page", page)
+                .set("totalPages", totalPages)
+                .get();
         inventory.setItem(currentPageElement.getSlot(),
                 itemMapper.toItemStack(currentPageElement, 1, placeholders));
     }
@@ -184,5 +187,21 @@ public class ShopGui implements Listener {
     private void registerEvents() {
         var pluginManager = plugin.getServer().getPluginManager();
         pluginManager.registerEvents(this, plugin);
+    }
+
+    private void sellItem(final @NonNull Player player, final @NonNull ShopItem item) {
+        var itemName = item.getName();
+        if (itemName == null) {
+            itemName = item.getMaterial().toString();
+        }
+        var placeholders = new PlaceholderMap()
+                .set("amount", item.getAmount())
+                .set("itemName", itemName)
+                .get();
+        if (shopService.sellItem(player, item)) {
+            player.sendMessage(messageUtils.getPrefix() + messageUtils.get("info.item-sold", placeholders));
+        } else {
+            player.sendMessage(messageUtils.getPrefix() + messageUtils.get("errors.not-enough-items"));
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.github.lexi115.projectNozomi.shop.gui;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
+import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.github.lexi115.projectNozomi.shop.ItemMapper;
 import com.github.lexi115.projectNozomi.shop.ShopNotFoundException;
@@ -24,6 +25,8 @@ public class ShopGuiManager {
 
     private final ItemMapper itemMapper;
 
+    private final MessageUtils messageUtils;
+
     private final StringUtils stringUtils;
 
     private final Set<ShopGui> openGuis = new HashSet<>();
@@ -33,16 +36,19 @@ public class ShopGuiManager {
             final ProjectNozomi plugin,
             final ShopService shopService,
             final ItemMapper itemMapper,
+            final MessageUtils messageUtils,
             final StringUtils stringUtils
     ) {
         this.plugin = plugin;
         this.shopService = shopService;
         this.itemMapper = itemMapper;
+        this.messageUtils = messageUtils;
         this.stringUtils = stringUtils;
     }
 
     public void open(final Player player, final int page) {
-        var shopGui = new ShopGui(plugin, shopService, itemMapper, player, page, this, getGuiDetails());
+        var shopGui = new ShopGui(plugin, shopService, itemMapper, messageUtils,
+                player, page, this, getGuiDetails());
         shopGui.open();
         openGuis.add(shopGui);
     }
