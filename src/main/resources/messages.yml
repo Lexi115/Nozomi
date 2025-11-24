@@ -1,10 +1,21 @@
-prefix: '&2[&aNozomi&2] &r'
+prefix: '&aNozomi &8» &r'
 info:
   item-sold: '&7You sold &6%amount% &e%itemName%&7!'
   items-refreshed: '&7Items refreshed!'
   reloaded: '&7Plugin reloaded!'
+help:
+  header: '&8-&2- &aNozomi Help &2-&8-&r'
+  entry: '&b/%command% &8» &7%description%&r'
+  footer: '&8-&2- &fPage &e%page% &fof &6%totalPages% &2-&8-&r'
+  descriptions:
+    info: 'Prints info about the plugin'
+    reload: 'Reloads the plugin and its configs'
+    refresh: 'Refreshes the daily items'
+    daily: 'Opens the daily shop GUI'
 errors:
   invalid-page: '&cThis page is invalid (page %page% of %totalPages%)!'
   not-enough-items: '&cNot enough items!'
   no-permission: '&cYou do not have the permission to do that!'
   players-only: '&cYou must be a player to execute this command!'
+  unknown-command: '&cUnknown command!'
+  invalid-arguments: '&cOne or more arguments provided are invalid!'

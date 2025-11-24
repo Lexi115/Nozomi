@@ -97,7 +97,7 @@ public class ShopService {
         }
         var placeholders = new PlaceholderMap()
                 .set("player", player.getName())
-                .get();
+                .map();
         item.getRewards().forEach(reward -> {
             if (!reward.give(player, placeholders)) {
                 throw new SellItemException("Could not give all rewards!");

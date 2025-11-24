@@ -4,16 +4,15 @@ import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
-import revxrsal.commands.annotation.Command;
-import revxrsal.commands.annotation.Default;
-import revxrsal.commands.annotation.Range;
-import revxrsal.commands.annotation.Subcommand;
+import revxrsal.commands.annotation.*;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
-@Command({"nozomi", "noz"})
+@Singleton
+@Command({"noz"})
 public class ShopCommands {
 
     private final ShopService shopService;
@@ -35,6 +34,7 @@ public class ShopCommands {
 
     @Subcommand("daily <page>")
     @CommandPermission("nozomi.daily")
+    @Description("This opens the shop")
     public void daily(final @NonNull Player sender, @Default("1") @Range(min = 1) final int page) {
         shopGuiManager.open(sender, page);
     }

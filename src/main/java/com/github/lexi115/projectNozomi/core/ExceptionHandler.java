@@ -10,7 +10,10 @@ import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.exception.BukkitExceptionHandler;
 import revxrsal.commands.bukkit.exception.SenderNotPlayerException;
+import revxrsal.commands.exception.InvalidHelpPageException;
+import revxrsal.commands.exception.InvalidIntegerException;
 import revxrsal.commands.exception.NoPermissionException;
+import revxrsal.commands.exception.UnknownCommandException;
 
 @Singleton
 public class ExceptionHandler extends BukkitExceptionHandler {
@@ -32,12 +35,28 @@ public class ExceptionHandler extends BukkitExceptionHandler {
         sender.error(messageUtils.getPrefix() + messageUtils.get("errors.players-only"));
     }
 
+    @Override
+    public void onUnknownCommand(final @NotNull UnknownCommandException e, final @NotNull BukkitCommandActor sender) {
+        sender.error(messageUtils.getPrefix() + messageUtils.get("errors.unknown-command"));
+    }
+
+    @Override
+    public void onInvalidInteger(final @NotNull InvalidIntegerException e, final @NotNull BukkitCommandActor sender) {
+        sender.error(messageUtils.getPrefix() + messageUtils.get("errors.invalid-arguments"));
+    }
+
+    @Override
+    public void onInvalidHelpPage(final @NotNull InvalidHelpPageException e, final @NotNull BukkitCommandActor sender) {
+        var exception = new InvalidPageException(e.page(), e.numberOfPages());
+        onInvalidPage(exception, sender);
+    }
+
     @HandleException
     public void onInvalidPage(final @NonNull InvalidPageException e, final @NonNull BukkitCommandActor sender) {
         var placeholders = new PlaceholderMap()
                 .set("page", e.getPage())
                 .set("totalPages", e.getTotalPages())
-                .get();
+                .map();
         sender.error(messageUtils.getPrefix() + messageUtils.get("errors.invalid-page", placeholders));
     }
 }

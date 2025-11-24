@@ -51,6 +51,6 @@ public class MessageUtils {
             final @NonNull Map<String, String> placeholders
     ) {
         var message = messagesConfig.getString(path, defaultString);
-        return stringUtils.colorize(stringUtils.fillPlaceholders(message, placeholders));
+        return stringUtils.format(message, placeholders);
     }
 }

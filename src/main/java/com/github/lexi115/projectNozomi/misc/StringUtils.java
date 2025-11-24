@@ -31,4 +31,12 @@ public class StringUtils {
     public String colorize(final @NonNull String text) {
         return ChatColor.translateAlternateColorCodes('&', text);
     }
+
+    public String format(final @NonNull String text) {
+        return colorize(fillPlaceholders(text, Map.of()));
+    }
+
+    public String format(final @NonNull String text, final @NonNull Map<String, String> placeholders) {
+        return colorize(fillPlaceholders(text, placeholders));
+    }
 }

@@ -169,7 +169,7 @@ public class ShopGui implements Listener {
         var placeholders = new PlaceholderMap()
                 .set("page", page)
                 .set("totalPages", totalPages)
-                .get();
+                .map();
         inventory.setItem(currentPageElement.getSlot(),
                 itemMapper.toItemStack(currentPageElement, 1, placeholders));
     }
@@ -197,7 +197,7 @@ public class ShopGui implements Listener {
         var placeholders = new PlaceholderMap()
                 .set("amount", item.getAmount())
                 .set("itemName", itemName)
-                .get();
+                .map();
         if (shopService.sellItem(player, item)) {
             player.sendMessage(messageUtils.getPrefix() + messageUtils.get("info.item-sold", placeholders));
         } else {

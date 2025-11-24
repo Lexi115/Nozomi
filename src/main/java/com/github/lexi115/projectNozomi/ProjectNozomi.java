@@ -15,10 +15,20 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import lombok.Getter;
+import lombok.NonNull;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import revxrsal.commands.bukkit.BukkitLamp;
+import revxrsal.commands.bukkit.actor.BukkitCommandActor;
+import revxrsal.commands.command.Potential;
+import revxrsal.commands.exception.NoPermissionException;
+import revxrsal.commands.exception.UnknownCommandException;
+import revxrsal.commands.node.DispatcherSettings;
+import revxrsal.commands.stream.StringStream;
+
+import java.util.List;
+import java.util.Objects;
 
 @Singleton
 @Getter
@@ -125,8 +135,31 @@ public final class ProjectNozomi extends JavaPlugin {
     private void registerCommands() {
         var lamp = BukkitLamp.builder(this)
                 .exceptionHandler(exceptionHandler)
+                .dispatcherSettings(this::getDispatcherSettings)
                 .build();
         lamp.register(injector.getInstance(PluginCommands.class));
         lamp.register(injector.getInstance(ShopCommands.class));
+    }
+
+    private void getDispatcherSettings(
+            final @NonNull DispatcherSettings.Builder<BukkitCommandActor> settings) {
+        settings
+                .maximumFailedAttempts(10)
+                .failureHandler(this::getFailureHandler);
+    }
+
+    private void getFailureHandler(
+            final BukkitCommandActor sender,
+            final List<Potential<BukkitCommandActor>> failedAttempts,
+            final StringStream input
+    ) {
+        for (var attempt : failedAttempts) {
+            if (attempt.error() instanceof NoPermissionException) {
+                var error = Objects.requireNonNull((NoPermissionException) attempt.error());
+                exceptionHandler.onNoPermission(error, sender);
+                return;
+            }
+        }
+        exceptionHandler.onUnknownCommand(new UnknownCommandException(input.toString()), sender);
     }
 }
