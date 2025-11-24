@@ -17,7 +17,7 @@ import revxrsal.commands.help.Help;
 
 @Singleton
 @Command({"noz"})
-public class PluginCommands {
+public class PluginCommands implements Commands {
 
     private final ProjectNozomi plugin;
 
@@ -35,7 +35,10 @@ public class PluginCommands {
     @Subcommand("info")
     @CommandPermission("nozomi.info")
     public void info(final @NonNull BukkitCommandActor sender) {
-        sender.reply("Project Nozomi by Lexi115");
+        var pluginDescription = plugin.getDescription();
+        var infoMessage = String.format("&a%s v%s &7by &e%s &c❤️",
+                pluginDescription.getName(), pluginDescription.getVersion(), pluginDescription.getAuthors().getFirst());
+        sender.reply(stringUtils.colorize(infoMessage));
     }
 
     @Subcommand("reload")
