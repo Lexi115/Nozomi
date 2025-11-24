@@ -13,7 +13,7 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @Singleton
 @Command({"noz"})
-public class ShopCommands {
+public class ShopCommands implements Commands {
 
     private final ShopService shopService;
 

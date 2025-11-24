@@ -17,7 +17,7 @@ import revxrsal.commands.help.Help;
 
 @Singleton
 @Command({"noz"})
-public class PluginCommands {
+public class PluginCommands implements Commands {
 
     private final ProjectNozomi plugin;
 
@@ -35,7 +35,10 @@ public class PluginCommands {
     @Subcommand("info")
     @CommandPermission("nozomi.info")
     public void info(final @NonNull BukkitCommandActor sender) {
-        sender.reply("Project Nozomi by Lexi115");
+        var pluginDescription = plugin.getDescription();
+        var infoMessage = String.format("&a%s v%s &7by &e%s &c❤️",
+                pluginDescription.getName(), pluginDescription.getVersion(), pluginDescription.getAuthors().getFirst());
+        sender.reply(stringUtils.colorize(infoMessage));
     }
 
     @Subcommand("reload")
@@ -52,25 +55,23 @@ public class PluginCommands {
             final @Range(min = 1) @Default("1") int page,
             final Help.RelatedCommands<BukkitCommandActor> commands
     ) {
-        var list = commands.paginate(page, 10);
+        var commandsPerPage = 10;
+        var list = commands.paginate(page, commandsPerPage);
         var placeholders = new PlaceholderMap();
         var sb = new StringBuilder();
+        // Header
         sb.append(stringUtils.colorize(messageUtils.get("help.header"))).append('\n');
-        String usage;
-        String[] splitUsage;
-        String description;
-        for (var command : list) {
-            usage = command.usage();
-            splitUsage = usage.split(" ");
-            description = messageUtils.get("help.descriptions." + splitUsage[splitUsage.length > 1 ? 1 : 0]);
-            placeholders.set("command", usage);
-            placeholders.set("description", description);
+        // Entries
+        list.forEach(command -> {
+            var usage = command.usage();
+            var splitUsage = usage.split(" ");
+            var description = messageUtils.get("help.descriptions." + splitUsage[splitUsage.length > 1 ? 1 : 0]);
+            placeholders.set("command", usage).set("description", description);
             sb.append(stringUtils.format(messageUtils.get("help.entry"), placeholders.map())).append('\n');
-        }
+        });
+        // Footer
         placeholders.clear();
-        placeholders
-                .set("page", page)
-                .set("totalPages", commands.numberOfPages(10));
+        placeholders.set("page", page).set("totalPages", commands.numberOfPages(commandsPerPage));
         sb.append(stringUtils.colorize(messageUtils.get("help.footer", placeholders.map())));
         sender.reply(sb.toString());
     }

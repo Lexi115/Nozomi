@@ -1,4 +1,4 @@
-package com.github.lexi115.projectNozomi.core;
+package com.github.lexi115.projectNozomi.commands;
 
 import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
@@ -16,12 +16,12 @@ import revxrsal.commands.exception.NoPermissionException;
 import revxrsal.commands.exception.UnknownCommandException;
 
 @Singleton
-public class ExceptionHandler extends BukkitExceptionHandler {
+public class CommandExceptionHandler extends BukkitExceptionHandler {
 
     private final MessageUtils messageUtils;
 
     @Inject
-    public ExceptionHandler(final MessageUtils messageUtils) {
+    public CommandExceptionHandler(final MessageUtils messageUtils) {
         this.messageUtils = messageUtils;
     }
 
@@ -55,8 +55,7 @@ public class ExceptionHandler extends BukkitExceptionHandler {
     public void onInvalidPage(final @NonNull InvalidPageException e, final @NonNull BukkitCommandActor sender) {
         var placeholders = new PlaceholderMap()
                 .set("page", e.getPage())
-                .set("totalPages", e.getTotalPages())
-                .map();
-        sender.error(messageUtils.getPrefix() + messageUtils.get("errors.invalid-page", placeholders));
+                .set("totalPages", e.getTotalPages());
+        sender.error(messageUtils.getPrefix() + messageUtils.get("errors.invalid-page", placeholders.map()));
     }
 }
