@@ -97,10 +97,9 @@ public class ShopGuiManager {
             final Material defaultMaterial
     ) {
         return GuiElement.builder()
-                .name(stringUtils.colorize(section.getString(path + ".name", "")))
-                .material(Material.matchMaterial(
-                        section.getString(path + ".material", defaultMaterial.name())))
+                .name(section.getString(path + ".name", ""))
                 .lore(section.getStringList(path + ".lore"))
+                .material(Material.matchMaterial(section.getString(path + ".material", defaultMaterial.name())))
                 .slot(slot)
                 .build();
     }

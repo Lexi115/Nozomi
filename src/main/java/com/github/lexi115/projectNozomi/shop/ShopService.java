@@ -128,16 +128,11 @@ public class ShopService {
     }
 
     private ShopItem parseItemFromConfig(final @NonNull ConfigurationSection section, final String key) {
-        var name = section.getString(key + ".name");
-        var amount = section.getInt(key + ".amount", 1);
-        var placeholders = new PlaceholderMap().set("name", name).set("amount", amount).map();
-        var displayName = stringUtils.fillPlaceholders(
-                section.getString(key + ".display-name", ""), placeholders);
         return ShopItem.builder()
                 .id(key)
-                .name(name)
-                .displayName(displayName)
-                .amount(amount)
+                .name(section.getString(key + ".name"))
+                .displayName(section.getString(key + ".display-name"))
+                .amount(section.getInt(key + ".amount", 1))
                 .lore(section.getStringList(key + ".lore"))
                 .material(Material.matchMaterial(section.getString(key + ".material", Material.AIR.name())))
                 .rewards(rewardUtils.parseFrom(section.getStringList(key + ".rewards")))

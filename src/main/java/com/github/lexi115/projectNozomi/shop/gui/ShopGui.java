@@ -147,12 +147,17 @@ public class ShopGui implements Listener {
         ShopItem currentItem;
         var placeholders = new PlaceholderMap();
         var iterator = dailyItemsList.iterator();
+        String itemName;
         for (int i = 0; iterator.hasNext() && i < (page * pageSize); i++) {
             currentItem = iterator.next();
             slotIndex = itemSlots.length == 0 ? slotIndex + 1 : itemSlots[i];
             if (slotIndex >= 0 && slotIndex <= lastAvailableSlot) {
+                itemName = currentItem.getName();
+                if (itemName == null) {
+                    itemName = currentItem.getMaterial().toString();
+                }
                 placeholders
-                        .set("name", currentItem.getName())
+                        .set("name", itemName)
                         .set("amount", currentItem.getAmount());
                 inventory.setItem(slotIndex, itemMapper.toItemStack(currentItem, 1, placeholders.map()));
                 slotsMap.put(slotIndex, currentItem);
@@ -172,10 +177,9 @@ public class ShopGui implements Listener {
         // Current page
         var placeholders = new PlaceholderMap()
                 .set("page", page)
-                .set("totalPages", totalPages)
-                .map();
+                .set("totalPages", totalPages);
         inventory.setItem(currentPageElement.getSlot(),
-                itemMapper.toItemStack(currentPageElement, 1, placeholders));
+                itemMapper.toItemStack(currentPageElement, 1, placeholders.map()));
     }
 
     private void checkForNavigationButtonClick(final int slotClicked) {
@@ -200,10 +204,9 @@ public class ShopGui implements Listener {
         }
         var placeholders = new PlaceholderMap()
                 .set("amount", item.getAmount())
-                .set("name", itemName)
-                .map();
+                .set("name", itemName);
         if (shopService.sellItem(player, item)) {
-            player.sendMessage(messageUtils.getPrefix() + messageUtils.get("info.item-sold", placeholders));
+            player.sendMessage(messageUtils.getPrefix() + messageUtils.get("info.item-sold", placeholders.map()));
         } else {
             player.sendMessage(messageUtils.getPrefix() + messageUtils.get("errors.not-enough-items"));
         }
