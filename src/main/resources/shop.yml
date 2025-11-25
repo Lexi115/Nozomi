@@ -8,13 +8,19 @@ shop:
       - 6
     navigation:
       previous-page:
-        name: 'Previous page'
+        name: '&cPrevious page'
+        lore:
+          - '&7Go to previous page.'
         material: ARROW
       next-page:
-        name: 'Next page'
+        name: '&aNext page'
+        lore:
+          - '&7Go to next page.'
         material: ARROW
       current-page:
-        name: 'Page %page% of %totalPages%'
+        name: '&ePage %page% of %totalPages%'
+        lore:
+          - '&7You are on page &e%page%.'
         material: COMPASS
 
   items:
@@ -52,9 +58,13 @@ shop:
         - cmd:gamemode adventure
 
     diamond:
-      name: Diamond
+      name: '&b&lDiamond'
+      display-name: '%name%&r &6x&e%amount%'
       material: DIAMOND
       amount: 1
+      lore:
+        - '&aBeautiful %name%'
+        - 'Just give me &6%amount% &fof them'
       rewards:
         - cmd:tell %player% O compà, vendi i diamanti? Sei pazzo?
         - cmd:give %player% minecraft:experience_bottle 3
@@ -85,6 +95,7 @@ shop:
 
     lapis-lazuli:
       name: Lapis Lazuli
+      display-name: 'Nig %amount% %name%'
       material: LAPIS_LAZULI
       amount: 6
       rewards:

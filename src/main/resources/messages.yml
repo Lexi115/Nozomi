@@ -1,6 +1,6 @@
 prefix: '&aNozomi &8» &r'
 info:
-  item-sold: '&7You sold &6%amount% &e%itemName%&7!'
+  item-sold: '&7You sold &6%amount% &e%name%&7!'
   items-refreshed: '&7Items refreshed!'
   reloaded: '&7Plugin reloaded!'
 help:

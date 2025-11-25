@@ -16,10 +16,15 @@ public class ShopItem implements Item {
 
     private final String name;
 
+    private final String displayName;
+
     private final Material material;
 
     private final int amount;
 
     @Builder.Default
     private final List<Reward> rewards = new ArrayList<>();
+
+    @Builder.Default
+    private final List<String> lore = new ArrayList<>();
 }

@@ -100,6 +100,7 @@ public class ShopGuiManager {
                 .name(stringUtils.colorize(section.getString(path + ".name", "")))
                 .material(Material.matchMaterial(
                         section.getString(path + ".material", defaultMaterial.name())))
+                .lore(section.getStringList(path + ".lore"))
                 .slot(slot)
                 .build();
     }

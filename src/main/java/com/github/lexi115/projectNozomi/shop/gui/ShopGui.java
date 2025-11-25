@@ -145,12 +145,16 @@ public class ShopGui implements Listener {
                 .limit(pageSize)
                 .toList();
         ShopItem currentItem;
+        var placeholders = new PlaceholderMap();
         var iterator = dailyItemsList.iterator();
         for (int i = 0; iterator.hasNext() && i < (page * pageSize); i++) {
             currentItem = iterator.next();
             slotIndex = itemSlots.length == 0 ? slotIndex + 1 : itemSlots[i];
             if (slotIndex >= 0 && slotIndex <= lastAvailableSlot) {
-                inventory.setItem(slotIndex, itemMapper.toItemStack(currentItem));
+                placeholders
+                        .set("name", currentItem.getName())
+                        .set("amount", currentItem.getAmount());
+                inventory.setItem(slotIndex, itemMapper.toItemStack(currentItem, 1, placeholders.map()));
                 slotsMap.put(slotIndex, currentItem);
             }
         }
@@ -196,7 +200,7 @@ public class ShopGui implements Listener {
         }
         var placeholders = new PlaceholderMap()
                 .set("amount", item.getAmount())
-                .set("itemName", itemName)
+                .set("name", itemName)
                 .map();
         if (shopService.sellItem(player, item)) {
             player.sendMessage(messageUtils.getPrefix() + messageUtils.get("info.item-sold", placeholders));

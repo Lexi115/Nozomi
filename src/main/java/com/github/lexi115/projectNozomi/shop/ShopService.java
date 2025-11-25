@@ -4,6 +4,7 @@ import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.misc.InventoryUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
 import com.github.lexi115.projectNozomi.misc.SaveFileException;
+import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.github.lexi115.projectNozomi.shop.rewards.RewardUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -24,6 +25,8 @@ public class ShopService {
 
     private final Shop shop;
 
+    private final StringUtils stringUtils;
+
     private final RewardUtils rewardUtils;
 
     private final InventoryUtils inventoryUtils;
@@ -32,11 +35,13 @@ public class ShopService {
     public ShopService(
             final ProjectNozomi plugin,
             final Shop shop,
+            final StringUtils stringUtils,
             final RewardUtils rewardUtils,
             final InventoryUtils inventoryUtils
     ) {
         this.plugin = plugin;
         this.shop = shop;
+        this.stringUtils = stringUtils;
         this.rewardUtils = rewardUtils;
         this.inventoryUtils = inventoryUtils;
     }
@@ -123,11 +128,18 @@ public class ShopService {
     }
 
     private ShopItem parseItemFromConfig(final @NonNull ConfigurationSection section, final String key) {
+        var name = section.getString(key + ".name");
+        var amount = section.getInt(key + ".amount", 1);
+        var placeholders = new PlaceholderMap().set("name", name).set("amount", amount).map();
+        var displayName = stringUtils.fillPlaceholders(
+                section.getString(key + ".display-name", ""), placeholders);
         return ShopItem.builder()
                 .id(key)
-                .name(section.getString(key + ".name"))
+                .name(name)
+                .displayName(displayName)
+                .amount(amount)
+                .lore(section.getStringList(key + ".lore"))
                 .material(Material.matchMaterial(section.getString(key + ".material", Material.AIR.name())))
-                .amount(section.getInt(key + ".amount", 1))
                 .rewards(rewardUtils.parseFrom(section.getStringList(key + ".rewards")))
                 .build();
     }

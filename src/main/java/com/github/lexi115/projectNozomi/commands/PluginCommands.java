@@ -53,7 +53,7 @@ public class PluginCommands implements Commands {
     public void help(
             final @NonNull BukkitCommandActor sender,
             final @Range(min = 1) @Default("1") int page,
-            final Help.RelatedCommands<BukkitCommandActor> commands
+            final @NonNull Help.RelatedCommands<BukkitCommandActor> commands
     ) {
         var commandsPerPage = 10;
         var list = commands.paginate(page, commandsPerPage);

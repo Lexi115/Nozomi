@@ -48,7 +48,8 @@ public final class ProjectNozomi extends JavaPlugin {
     @Inject
     private ShopGuiManager shopGuiManager;
 
-    @Inject @Named("dailyRefreshTask")
+    @Inject
+    @Named("dailyRefreshTask")
     private Task dailyRefreshTask;
 
     @Inject
