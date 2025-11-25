@@ -8,6 +8,7 @@ import com.github.lexi115.projectNozomi.shop.ShopNotFoundException;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import lombok.NonNull;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -47,7 +48,7 @@ public class ShopGuiManager {
     }
 
     public void open(final Player player, final int page) {
-        var shopGui = new ShopGui(plugin, shopService, itemMapper, messageUtils,
+        var shopGui = new ShopGui(plugin, shopService, itemMapper, stringUtils, messageUtils,
                 player, page, this, getGuiDetails());
         shopGui.open();
         openGuis.add(shopGui);
@@ -91,13 +92,13 @@ public class ShopGuiManager {
     }
 
     private GuiElement createGuiElement(
-            final ConfigurationSection section,
+            final @NonNull ConfigurationSection section,
             final String path,
             final int slot,
-            final Material defaultMaterial
+            final @NonNull Material defaultMaterial
     ) {
         return GuiElement.builder()
-                .name(section.getString(path + ".name", ""))
+                .name(section.getString(path + ".name", "&r"))
                 .lore(section.getStringList(path + ".lore"))
                 .material(Material.matchMaterial(section.getString(path + ".material", defaultMaterial.name())))
                 .slot(slot)

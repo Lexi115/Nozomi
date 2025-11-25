@@ -4,7 +4,6 @@ import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.misc.InventoryUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
 import com.github.lexi115.projectNozomi.misc.SaveFileException;
-import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.github.lexi115.projectNozomi.shop.rewards.RewardUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -25,8 +24,6 @@ public class ShopService {
 
     private final Shop shop;
 
-    private final StringUtils stringUtils;
-
     private final RewardUtils rewardUtils;
 
     private final InventoryUtils inventoryUtils;
@@ -35,13 +32,11 @@ public class ShopService {
     public ShopService(
             final ProjectNozomi plugin,
             final Shop shop,
-            final StringUtils stringUtils,
             final RewardUtils rewardUtils,
             final InventoryUtils inventoryUtils
     ) {
         this.plugin = plugin;
         this.shop = shop;
-        this.stringUtils = stringUtils;
         this.rewardUtils = rewardUtils;
         this.inventoryUtils = inventoryUtils;
     }
@@ -97,12 +92,14 @@ public class ShopService {
     }
 
     public boolean sellItem(final @NonNull Player player, final @NonNull ShopItem item) {
-        if (!inventoryUtils.removeItems(player.getInventory(), item.getMaterial(), item.getAmount())) {
+        var amount = item.getAmount();
+        if (amount < 0) {
+            throw new InvalidAmountException(amount);
+        }
+        if (!inventoryUtils.removeItems(player.getInventory(), item.getMaterial(), amount)) {
             return false;
         }
-        var placeholders = new PlaceholderMap()
-                .set("player", player.getName())
-                .map();
+        var placeholders = new PlaceholderMap().set("player", player.getName()).map();
         item.getRewards().forEach(reward -> {
             if (!reward.give(player, placeholders)) {
                 throw new SellItemException("Could not give all rewards!");

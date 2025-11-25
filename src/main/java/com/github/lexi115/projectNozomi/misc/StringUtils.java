@@ -29,7 +29,11 @@ public class StringUtils {
     }
 
     public String colorize(final @NonNull String text) {
-        return ChatColor.translateAlternateColorCodes('&', text);
+        return colorize(text, '&');
+    }
+
+    public String colorize(final @NonNull String text, final char colorChar) {
+        return ChatColor.translateAlternateColorCodes(colorChar, text);
     }
 
     public String format(final @NonNull String text) {
@@ -38,5 +42,24 @@ public class StringUtils {
 
     public String format(final @NonNull String text, final @NonNull Map<String, String> placeholders) {
         return colorize(fillPlaceholders(text, placeholders));
+    }
+
+    public String toUserFriendly(final @NonNull String raw) {
+        var split = raw.trim().split("_");
+        for (int i = 0; i < split.length; i++) {
+            split[i] = capitalize(split[i].toLowerCase());
+        }
+        return String.join(" ", split);
+    }
+
+    public String capitalize(final @NonNull String text) {
+        if (text.isBlank()) {
+            return text;
+        }
+        char firstChar = text.charAt(0);
+        if (firstChar >= 97 && firstChar <= 122) {
+            return (char) (firstChar - 32) + (text.length() > 1 ? text.substring(1) : "");
+        }
+        return text;
     }
 }
