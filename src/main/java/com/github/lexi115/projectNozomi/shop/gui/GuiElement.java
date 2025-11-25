@@ -6,14 +6,22 @@ import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Material;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
 public class GuiElement implements Item {
 
-    private String name;
+    private final String name;
 
-    private Material material;
+    private final String displayName;
 
-    private int slot;
+    private final Material material;
+
+    private final int slot;
+
+    @Builder.Default
+    private final List<String> lore = new ArrayList<>();
 }

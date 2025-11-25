@@ -1,11 +1,15 @@
 package com.github.lexi115.projectNozomi.shop.gui;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
+import com.github.lexi115.projectNozomi.misc.MessageUtils;
+import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
+import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.github.lexi115.projectNozomi.shop.ItemMapper;
 import com.github.lexi115.projectNozomi.shop.ShopItem;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -15,10 +19,12 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class ShopGui implements Listener {
 
@@ -29,6 +35,10 @@ public class ShopGui implements Listener {
     private final ShopService shopService;
 
     private final ItemMapper itemMapper;
+
+    private final StringUtils stringUtils;
+
+    private final MessageUtils messageUtils;
 
     private final Map<Integer, ShopItem> slotsMap = new HashMap<>();
 
@@ -54,6 +64,8 @@ public class ShopGui implements Listener {
             final ProjectNozomi plugin,
             final @NonNull ShopService shopService,
             final ItemMapper itemMapper,
+            final StringUtils stringUtils,
+            final MessageUtils messageUtils,
             final Player player,
             final int page,
             final ShopGuiManager guiManager,
@@ -62,6 +74,8 @@ public class ShopGui implements Listener {
         this.plugin = plugin;
         this.shopService = shopService;
         this.itemMapper = itemMapper;
+        this.stringUtils = stringUtils;
+        this.messageUtils = messageUtils;
         this.player = player;
         this.page = page;
         this.guiManager = guiManager;
@@ -72,7 +86,7 @@ public class ShopGui implements Listener {
         this.dailyItems = shopService.getDailyItems();
         this.totalPages = (int) Math.ceil(dailyItems.size() / (double) guiDetails.getPageSize());
         if (page < 1 || page > totalPages) {
-            throw new InvalidPageException();
+            throw new InvalidPageException(page, totalPages);
         }
         this.shopInventory = createShopInventory();
         registerEvents();
@@ -92,11 +106,7 @@ public class ShopGui implements Listener {
                 checkForNavigationButtonClick(event.getRawSlot());
                 return;
             }
-            if (shopService.sellItem(player, clickedShopItem)) {
-                System.out.println("sold item");
-            } else {
-                System.out.println("item not sold");
-            }
+            sellItem(player, clickedShopItem);
         }
     }
 
@@ -125,33 +135,49 @@ public class ShopGui implements Listener {
 
     private @NonNull Inventory createShopInventory() {
         var inventory = Bukkit.createInventory(null, guiDetails.getGuiSize(), guiDetails.getTitle());
-        putDailyItems(inventory, dailyItems);
+        putShopItems(inventory, dailyItems);
         putUiElements(inventory);
         return inventory;
     }
 
-    private void putDailyItems(
+    private void putShopItems(
             final @NonNull Inventory inventory,
-            final @NonNull Collection<ShopItem> dailyItems
+            final @NonNull Collection<ShopItem> items
     ) {
         var lastAvailableSlot = guiDetails.getLastAvailableSlot();
         var pageSize = guiDetails.getPageSize();
         var itemSlots = guiDetails.getItemSlots();
         var slotIndex = itemSlots.length == 0 ? -1 : itemSlots[0];
-        var dailyItemsList = dailyItems.stream()
+        var itemsList = items.stream()
                 .skip((long) (page - 1) * pageSize)
                 .limit(pageSize)
                 .toList();
-        ShopItem currentItem;
-        var iterator = dailyItemsList.iterator();
+        var iterator = itemsList.iterator();
         for (int i = 0; iterator.hasNext() && i < (page * pageSize); i++) {
-            currentItem = iterator.next();
+            var currentItem = iterator.next();
+            if (currentItem.getMaterial() == Material.AIR) {
+                continue;
+            }
             slotIndex = itemSlots.length == 0 ? slotIndex + 1 : itemSlots[i];
             if (slotIndex >= 0 && slotIndex <= lastAvailableSlot) {
-                inventory.setItem(slotIndex, itemMapper.toItemStack(currentItem));
-                slotsMap.put(slotIndex, currentItem);
+                putShopItem(inventory, currentItem, slotIndex);
             }
         }
+    }
+
+    private void putShopItem(
+            final @NotNull Inventory inventory,
+            final @NonNull ShopItem item,
+            final int slotIndex
+    ) {
+        String materialName;
+        materialName = stringUtils.toUserFriendly(item.getMaterial().toString());
+        var placeholders = new PlaceholderMap()
+                .set("name", Optional.ofNullable(item.getName()).orElse(materialName))
+                .set("material", materialName)
+                .set("amount", item.getAmount());
+        inventory.setItem(slotIndex, itemMapper.toItemStack(item, 1, placeholders.map()));
+        slotsMap.put(slotIndex, item);
     }
 
     private void putUiElements(final @NonNull Inventory inventory) {
@@ -164,11 +190,11 @@ public class ShopGui implements Listener {
             inventory.setItem(nextPageElement.getSlot(), itemMapper.toItemStack(nextPageElement));
         }
         // Current page
-        var placeholders = new HashMap<String, String>();
-        placeholders.put("page", String.valueOf(page));
-        placeholders.put("totalPages", String.valueOf(totalPages));
+        var placeholders = new PlaceholderMap()
+                .set("page", page)
+                .set("totalPages", totalPages);
         inventory.setItem(currentPageElement.getSlot(),
-                itemMapper.toItemStack(currentPageElement, 1, placeholders));
+                itemMapper.toItemStack(currentPageElement, 1, placeholders.map()));
     }
 
     private void checkForNavigationButtonClick(final int slotClicked) {
@@ -178,6 +204,19 @@ public class ShopGui implements Listener {
         } else if (slotClicked == nextPageElement.getSlot() && page < totalPages) {
             close();
             guiManager.open(player, page + 1);
+        }
+    }
+
+    private void sellItem(final @NonNull Player player, final @NonNull ShopItem item) {
+        var materialName = stringUtils.toUserFriendly(item.getMaterial().toString());
+        var placeholders = new PlaceholderMap()
+                .set("name", Optional.ofNullable(item.getName()).orElse(materialName))
+                .set("material", materialName)
+                .set("amount", item.getAmount());
+        if (shopService.sellItem(player, item)) {
+            player.sendMessage(messageUtils.getPrefix() + messageUtils.get("info.item-sold", placeholders.map()));
+        } else {
+            player.sendMessage(messageUtils.getPrefix() + messageUtils.get("errors.not-enough-items"));
         }
     }
 

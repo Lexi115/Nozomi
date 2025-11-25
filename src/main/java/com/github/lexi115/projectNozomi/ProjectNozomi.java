@@ -1,12 +1,14 @@
 package com.github.lexi115.projectNozomi;
 
+import com.github.lexi115.projectNozomi.commands.CommandDispatcher;
 import com.github.lexi115.projectNozomi.commands.PluginCommands;
 import com.github.lexi115.projectNozomi.commands.ShopCommands;
 import com.github.lexi115.projectNozomi.extensions.VaultExtension;
 import com.github.lexi115.projectNozomi.injection.SimpleBinderModule;
+import com.github.lexi115.projectNozomi.misc.ConfigUtils;
+import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
-import com.github.lexi115.projectNozomi.misc.ConfigUtils;
 import com.github.lexi115.projectNozomi.tasks.Task;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -16,7 +18,6 @@ import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
-import revxrsal.commands.bukkit.BukkitLamp;
 
 @Singleton
 @Getter
@@ -30,6 +31,8 @@ public final class ProjectNozomi extends JavaPlugin {
 
     private FileConfiguration messagesConfig;
 
+    private VaultExtension vaultExtension;
+
     @Inject
     private Logger log;
 
@@ -37,15 +40,21 @@ public final class ProjectNozomi extends JavaPlugin {
     private ConfigUtils configUtils;
 
     @Inject
+    private MessageUtils messageUtils;
+
+    @Inject
     private ShopService shopService;
 
     @Inject
     private ShopGuiManager shopGuiManager;
 
-    @Inject @Named("dailyRefreshTask")
+    @Inject
+    @Named("dailyRefreshTask")
     private Task dailyRefreshTask;
 
-    private VaultExtension vaultExtension;
+    @Inject
+    @Named("lamp")
+    private CommandDispatcher commandDispatcher;
 
     @Override
     public void onEnable() {
@@ -83,6 +92,7 @@ public final class ProjectNozomi extends JavaPlugin {
         dailyItemsConfig = configUtils.loadConfig("daily.yml");
         shopConfig = configUtils.loadConfig("shop.yml");
         messagesConfig = configUtils.loadConfig("messages.yml");
+        messageUtils.loadConfig();
         log.info("Loaded configs");
     }
 
@@ -114,8 +124,7 @@ public final class ProjectNozomi extends JavaPlugin {
     }
 
     private void registerCommands() {
-        var lamp = BukkitLamp.builder(this).build();
-        lamp.register(injector.getInstance(PluginCommands.class));
-        lamp.register(injector.getInstance(ShopCommands.class));
+        commandDispatcher.register(injector.getInstance(PluginCommands.class));
+        commandDispatcher.register(injector.getInstance(ShopCommands.class));
     }
 }

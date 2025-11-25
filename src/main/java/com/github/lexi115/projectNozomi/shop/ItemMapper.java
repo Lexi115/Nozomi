@@ -37,8 +37,14 @@ public class ItemMapper {
         if (itemMeta != null) {
             var name = item.getName();
             if (name != null) {
-                itemMeta.setItemName(stringUtils.fillPlaceholders(item.getName(), placeholders));
+                itemMeta.setItemName(stringUtils.format(name, placeholders));
             }
+            var displayName = item.getDisplayName();
+            if (displayName != null) {
+                itemMeta.setDisplayName(stringUtils.format(displayName, placeholders));
+            }
+            var lore = item.getLore().stream().map(row -> stringUtils.format(row, placeholders)).toList();
+            itemMeta.setLore(lore);
             itemStack.setItemMeta(itemMeta);
         }
         return itemStack;

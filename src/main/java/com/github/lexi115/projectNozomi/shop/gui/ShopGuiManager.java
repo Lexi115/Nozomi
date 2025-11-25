@@ -1,12 +1,16 @@
 package com.github.lexi115.projectNozomi.shop.gui;
 
-import com.github.lexi115.projectNozomi.shop.ItemMapper;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import com.github.lexi115.projectNozomi.ProjectNozomi;
+import com.github.lexi115.projectNozomi.misc.MessageUtils;
+import com.github.lexi115.projectNozomi.misc.StringUtils;
+import com.github.lexi115.projectNozomi.shop.ItemMapper;
 import com.github.lexi115.projectNozomi.shop.ShopNotFoundException;
 import com.github.lexi115.projectNozomi.shop.ShopService;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import lombok.NonNull;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -22,17 +26,30 @@ public class ShopGuiManager {
 
     private final ItemMapper itemMapper;
 
+    private final MessageUtils messageUtils;
+
+    private final StringUtils stringUtils;
+
     private final Set<ShopGui> openGuis = new HashSet<>();
 
     @Inject
-    public ShopGuiManager(final ProjectNozomi plugin, final ShopService shopService, final ItemMapper itemMapper) {
+    public ShopGuiManager(
+            final ProjectNozomi plugin,
+            final ShopService shopService,
+            final ItemMapper itemMapper,
+            final MessageUtils messageUtils,
+            final StringUtils stringUtils
+    ) {
         this.plugin = plugin;
         this.shopService = shopService;
         this.itemMapper = itemMapper;
+        this.messageUtils = messageUtils;
+        this.stringUtils = stringUtils;
     }
 
     public void open(final Player player, final int page) {
-        var shopGui = new ShopGui(plugin, shopService, itemMapper, player, page, this, getGuiDetails());
+        var shopGui = new ShopGui(plugin, shopService, itemMapper, stringUtils, messageUtils,
+                player, page, this, getGuiDetails());
         shopGui.open();
         openGuis.add(shopGui);
     }
@@ -60,30 +77,31 @@ public class ShopGuiManager {
         var pageSize = itemSlots.length == 0
                 ? lastAvailableSlot + 1 : Math.min(lastAvailableSlot + 1, itemSlots.length);
         return ShopGuiDetails.builder()
-                .title(section.getString("title", "?"))
+                .title(stringUtils.colorize(section.getString("title", "?")))
                 .guiSize(guiSize)
                 .pageSize(pageSize)
                 .lastAvailableSlot(lastAvailableSlot)
                 .itemSlots(itemSlots)
-                .previousPage(GuiElement.builder()
-                        .name(section.getString("navigation.previous-page.name", "Previous Page"))
-                        .material(Material.matchMaterial(
-                                section.getString("navigation.previous-page.material", Material.ARROW.name())))
-                        .slot(guiSize - 6)
-                        .build())
-                .nextPage(GuiElement.builder()
-                        .name(section.getString("navigation.next-page.name", "Next Page"))
-                        .material(Material.matchMaterial(
-                                section.getString("navigation.next-page.material", Material.ARROW.name())))
-                        .slot(guiSize - 4)
-                        .build())
-                .currentPage(GuiElement.builder()
-                        .name(section.getString("navigation.current-page.name",
-                                "Page %page% of %totalPages%"))
-                        .material(Material.matchMaterial(
-                                section.getString("navigation.current-page.material", Material.COMPASS.name())))
-                        .slot(guiSize - 5)
-                        .build())
+                .previousPage(createGuiElement(
+                        section, "navigation.previous-page", guiSize - 6, Material.ARROW))
+                .nextPage(createGuiElement(
+                        section, "navigation.next-page", guiSize - 4, Material.ARROW))
+                .currentPage(createGuiElement(
+                        section, "navigation.current-page", guiSize - 5, Material.COMPASS))
+                .build();
+    }
+
+    private GuiElement createGuiElement(
+            final @NonNull ConfigurationSection section,
+            final String path,
+            final int slot,
+            final @NonNull Material defaultMaterial
+    ) {
+        return GuiElement.builder()
+                .name(section.getString(path + ".name", "&r"))
+                .lore(section.getStringList(path + ".lore"))
+                .material(Material.matchMaterial(section.getString(path + ".material", defaultMaterial.name())))
+                .slot(slot)
                 .build();
     }
 }
