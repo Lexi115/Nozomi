@@ -9,3 +9,4 @@ softdepend: [ Vault ]
 libraries:
   - org.xerial:sqlite-jdbc:3.51.0.0
   - com.zaxxer:HikariCP:7.0.2
+  - org.slf4j:slf4j-api:2.0.17
