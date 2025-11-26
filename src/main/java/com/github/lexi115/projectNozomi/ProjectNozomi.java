@@ -74,13 +74,15 @@ public final class ProjectNozomi extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        initLogger();
+        setupLogging();
         try {
-            loadDatabase();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            setupDatabase();
+        } catch (SQLException e) {
+            log.error("Could not load database! Disabling plugin...", e);
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
-        setupDependencyInjection();
+        setupInjection();
         loadConfigs();
         printStartupBanner();
         loadExtensions();
@@ -96,16 +98,16 @@ public final class ProjectNozomi extends JavaPlugin {
         try {
             databaseManager.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            log.error("Error while closing database connection!", e);
         }
         log.info("ProjectNozomi is disabled!");
     }
 
-    private void initLogger() {
+    private void setupLogging() {
         BukkitLoggerFactory.provideBukkitLogger(this.getLogger());
     }
 
-    private void loadDatabase() throws SQLException {
+    private void setupDatabase() throws SQLException {
         var dbPath = getDataFolder().getAbsolutePath() + "/nozomi.db";
         databaseManager = new DatabaseManager("jdbc:sqlite:" + dbPath);
         connectionSource = databaseManager.getConnectionSource();
@@ -119,7 +121,7 @@ public final class ProjectNozomi extends JavaPlugin {
         log.info("Reloaded plugin");
     }
 
-    private void setupDependencyInjection() {
+    private void setupInjection() {
         var binderModule = new SimpleBinderModule(this);
         injector = binderModule.createInjector();
         injector.injectMembers(this);
