@@ -42,8 +42,8 @@ public class LampCommandDispatcher implements CommandDispatcher {
     }
 
     @Override
-    public void register(final Commands object) {
-        lamp.register(object);
+    public void register(final Commands commands) {
+        lamp.register(commands);
     }
 
     private void getDispatcherSettings(

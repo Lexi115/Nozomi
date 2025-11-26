@@ -1,5 +1,6 @@
 package com.github.lexi115.projectNozomi;
 
+import com.djaytan.bukkit.slf4j.api.BukkitLoggerFactory;
 import com.github.lexi115.projectNozomi.commands.CommandDispatcher;
 import com.github.lexi115.projectNozomi.commands.PluginCommands;
 import com.github.lexi115.projectNozomi.commands.ShopCommands;
@@ -65,6 +66,7 @@ public final class ProjectNozomi extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        initLogger();
         injectFields();
         loadConfigs();
         printStartupBanner();
@@ -75,16 +77,14 @@ public final class ProjectNozomi extends JavaPlugin {
         log.info("ProjectNozomi is enabled!");
     }
 
-    private void printStartupBanner() {
-        var bannerRows = constantsConfig.getStringList("info.startup-banner");
-        var placeholders = new PlaceholderMap().set("version", getDescription().getVersion());
-        bannerRows.forEach(row -> log.info(stringUtils.format(row, placeholders.map())));
-    }
-
     @Override
     public void onDisable() {
         dailyRefreshTask.stop();
         log.info("ProjectNozomi is disabled!");
+    }
+
+    private void initLogger() {
+        BukkitLoggerFactory.provideBukkitLogger(this.getLogger());
     }
 
     public void reloadPlugin() {
@@ -113,6 +113,20 @@ public final class ProjectNozomi extends JavaPlugin {
         log.info("Loaded configs");
     }
 
+    private void printStartupBanner() {
+        var bannerRows = constantsConfig.getStringList("info.startup-banner");
+        var placeholders = new PlaceholderMap().set("version", getDescription().getVersion());
+        bannerRows.forEach(row -> log.info(stringUtils.format(row, placeholders.map())));
+    }
+
+    private void loadExtensions() {
+        // Vault API (used for money rewards)
+        vaultExtension = new VaultExtension(this);
+        if (vaultExtension.setup()) {
+            log.info("Vault loaded");
+        }
+    }
+
     private void loadShop() {
         shopGuiManager.closeAll();
         shopService.loadShopFromConfig();
@@ -129,14 +143,6 @@ public final class ProjectNozomi extends JavaPlugin {
         } else {
             dailyRefreshTask.stop();
             log.info("Stopped auto refresh task");
-        }
-    }
-
-    private void loadExtensions() {
-        // Vault API (used for money rewards)
-        vaultExtension = new VaultExtension(this);
-        if (vaultExtension.setup()) {
-            log.info("Vault loaded");
         }
     }
 
