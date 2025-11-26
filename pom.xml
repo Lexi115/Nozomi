@@ -52,10 +52,6 @@
                             <minimizeJar>true</minimizeJar>
                             <relocations>
                                 <relocation>
-                                    <pattern>com.google.inject</pattern>
-                                    <shadedPattern>com.github.lexi115.projectNozomi.lib.guice</shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>net.kyori</pattern>
                                     <shadedPattern>com.github.lexi115.projectNozomi.lib.kyori</shadedPattern>
                                 </relocation>
@@ -73,6 +69,12 @@
                                         <exclude>META-INF/*.RSA</exclude>
                                         <exclude>META-INF/LICENSE*</exclude>
                                         <exclude>META-INF/NOTICE*</exclude>
+                                        <exclude>META-INF/*.txt</exclude>
+
+                                        <exclude>META-INF/*.kotlin_module</exclude>
+
+                                        <exclude>about.html</exclude>
+                                        <exclude>module-info.class</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -112,6 +114,7 @@
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
             <version>7.0.0</version>
+            <scope>provided</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
         <dependency>
