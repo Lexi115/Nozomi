@@ -7,6 +7,8 @@ import com.github.lexi115.projectNozomi.extensions.VaultExtension;
 import com.github.lexi115.projectNozomi.injection.SimpleBinderModule;
 import com.github.lexi115.projectNozomi.misc.ConfigUtils;
 import com.github.lexi115.projectNozomi.misc.MessageUtils;
+import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
+import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import com.github.lexi115.projectNozomi.tasks.Task;
@@ -25,6 +27,8 @@ public final class ProjectNozomi extends JavaPlugin {
 
     private Injector injector;
 
+    private FileConfiguration constantsConfig;
+
     private FileConfiguration dailyItemsConfig;
 
     private FileConfiguration shopConfig;
@@ -35,6 +39,9 @@ public final class ProjectNozomi extends JavaPlugin {
 
     @Inject
     private Logger log;
+
+    @Inject
+    private StringUtils stringUtils;
 
     @Inject
     private ConfigUtils configUtils;
@@ -59,12 +66,19 @@ public final class ProjectNozomi extends JavaPlugin {
     @Override
     public void onEnable() {
         injectFields();
-        loadExtensions();
         loadConfigs();
+        printStartupBanner();
+        loadExtensions();
         loadShop();
         loadTasks();
         registerCommands();
         log.info("ProjectNozomi is enabled!");
+    }
+
+    private void printStartupBanner() {
+        var bannerRows = constantsConfig.getStringList("info.startup-banner");
+        var placeholders = new PlaceholderMap().set("version", getDescription().getVersion());
+        bannerRows.forEach(row -> log.info(stringUtils.format(row, placeholders.map())));
     }
 
     @Override
@@ -89,9 +103,12 @@ public final class ProjectNozomi extends JavaPlugin {
 
     private void loadConfigs() {
         saveDefaultConfig();
-        dailyItemsConfig = configUtils.loadConfig("daily.yml");
-        shopConfig = configUtils.loadConfig("shop.yml");
-        messagesConfig = configUtils.loadConfig("messages.yml");
+        if (constantsConfig == null) {
+            constantsConfig = configUtils.loadConfig("constants.yml");
+        }
+        dailyItemsConfig = configUtils.saveAndLoadConfig("daily.yml");
+        shopConfig = configUtils.saveAndLoadConfig("shop.yml");
+        messagesConfig = configUtils.saveAndLoadConfig("messages.yml");
         messageUtils.loadConfig();
         log.info("Loaded configs");
     }
@@ -124,6 +141,7 @@ public final class ProjectNozomi extends JavaPlugin {
     }
 
     private void registerCommands() {
+        commandDispatcher.setup();
         commandDispatcher.register(injector.getInstance(PluginCommands.class));
         commandDispatcher.register(injector.getInstance(ShopCommands.class));
     }

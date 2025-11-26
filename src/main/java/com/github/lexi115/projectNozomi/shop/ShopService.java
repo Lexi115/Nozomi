@@ -3,7 +3,7 @@ package com.github.lexi115.projectNozomi.shop;
 import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.misc.InventoryUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
-import com.github.lexi115.projectNozomi.misc.SaveFileException;
+import com.github.lexi115.projectNozomi.misc.RuntimeIOException;
 import com.github.lexi115.projectNozomi.shop.rewards.RewardUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -74,7 +74,7 @@ public class ShopService {
         try {
             dailyItemsConfig.save(plugin.getDataFolder() + "/daily.yml");
         } catch (IOException e) {
-            throw new SaveFileException(e);
+            throw new RuntimeIOException(e);
         }
     }
 

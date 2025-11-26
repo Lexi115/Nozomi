@@ -7,6 +7,7 @@ import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.NonNull;
+import org.bukkit.configuration.file.FileConfiguration;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Default;
 import revxrsal.commands.annotation.Range;
@@ -25,20 +26,26 @@ public class PluginCommands implements Commands {
 
     private final MessageUtils messageUtils;
 
+    private final FileConfiguration constantsConfig;
+
     @Inject
     public PluginCommands(final ProjectNozomi plugin, final StringUtils stringUtils, final MessageUtils messageUtils) {
         this.plugin = plugin;
         this.stringUtils = stringUtils;
         this.messageUtils = messageUtils;
+        this.constantsConfig = plugin.getConstantsConfig();
     }
 
     @Subcommand("info")
     @CommandPermission("nozomi.info")
     public void info(final @NonNull BukkitCommandActor sender) {
         var pluginDescription = plugin.getDescription();
-        var infoMessage = String.format("&a%s v%s &7by &e%s &c❤️",
-                pluginDescription.getName(), pluginDescription.getVersion(), pluginDescription.getAuthors().getFirst());
-        sender.reply(stringUtils.colorize(infoMessage));
+        var placeholders = new PlaceholderMap()
+                .set("name", pluginDescription.getName())
+                .set("version", pluginDescription.getVersion())
+                .set("author", pluginDescription.getAuthors().getFirst());
+        var infoMessage = constantsConfig.getString("info.command-message", "");
+        sender.reply(stringUtils.format(infoMessage, placeholders.map()));
     }
 
     @Subcommand("reload")
@@ -55,7 +62,7 @@ public class PluginCommands implements Commands {
             final @Range(min = 1) @Default("1") int page,
             final @NonNull Help.RelatedCommands<BukkitCommandActor> commands
     ) {
-        var commandsPerPage = 10;
+        var commandsPerPage = constantsConfig.getInt("help.commands-per-page");
         var list = commands.paginate(page, commandsPerPage);
         var placeholders = new PlaceholderMap();
         var sb = new StringBuilder();

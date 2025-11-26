@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.InputStreamReader;
 
 @Singleton
 public class ConfigUtils {
@@ -19,15 +20,24 @@ public class ConfigUtils {
         this.plugin = plugin;
     }
 
-    public @NonNull FileConfiguration loadConfig(final @NonNull String filename) {
+    public @NonNull FileConfiguration saveAndLoadConfig(final @NonNull String filename) {
         var dataFolder = plugin.getDataFolder();
         var configFile = new File(dataFolder + "/" + filename);
         if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-            throw new SaveFileException("Could not create data folder!");
+            throw new RuntimeIOException("Could not create data folder!");
         }
         if (!configFile.exists()) {
             plugin.saveResource(filename, false);
         }
         return YamlConfiguration.loadConfiguration(configFile);
+    }
+
+    public @NonNull FileConfiguration loadConfig(final @NonNull String filename) {
+        var stream = plugin.getResource(filename);
+        if (stream == null) {
+            throw new RuntimeIOException("Could not load resource stream!");
+        }
+        var reader = new InputStreamReader(stream);
+        return YamlConfiguration.loadConfiguration(reader);
     }
 }

@@ -1,0 +1,16 @@
+info:
+  startup-banner:
+    - '##############'
+    - '     __                        _ '
+    - '  /\ \ \___ _______  _ __ ___ (_)'
+    - ' /  \/ / _ \_  / _ \| ''_ ` _ \| |'
+    - '/ /\  / (_) / / (_) | | | | | | |'
+    - '\_\ \/ \___/___\___/|_| |_| |_|_|'
+    - 'Version: %version%'
+    - ""
+    - '##############'
+  command-message: '&a%name% %version% &7by &e%author% &c❤️'
+command-dispatcher:
+  maximum-failed-attempts: 10
+help:
+  commands-per-page: 10
