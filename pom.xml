@@ -56,14 +56,6 @@
                                     <shadedPattern>com.github.lexi115.projectNozomi.lib.guice</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>com.zaxxer.hikari</pattern>
-                                    <shadedPattern>com.github.lexi115.projectNozomi.lib.hikari</shadedPattern>
-                                </relocation>
-                                <relocation>
-                                    <pattern>com.j256.ormlite</pattern>
-                                    <shadedPattern>com.github.lexi115.projectNozomi.lib.ormlite</shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>net.kyori</pattern>
                                     <shadedPattern>com.github.lexi115.projectNozomi.lib.kyori</shadedPattern>
                                 </relocation>
@@ -132,6 +124,7 @@
             <groupId>com.djaytan.bukkit</groupId>
             <artifactId>bukkit-slf4j</artifactId>
             <version>3.1.2</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.github.revxrsal</groupId>
@@ -169,6 +162,7 @@
             <groupId>com.cronutils</groupId>
             <artifactId>cron-utils</artifactId>
             <version>9.2.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.MilkBowl</groupId>
@@ -188,11 +182,13 @@
             <groupId>com.j256.ormlite</groupId>
             <artifactId>ormlite-jdbc</artifactId>
             <version>6.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>7.0.2</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

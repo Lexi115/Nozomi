@@ -39,7 +39,7 @@ public abstract class CronTask implements Runnable {
                 delayMillis = 0;
             }
             long delayTicks = (long) Math.ceil(delayMillis / 50.0);
-            this.currentTask = Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+            this.currentTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 try {
                     this.run();
                 } catch (Exception e) {
