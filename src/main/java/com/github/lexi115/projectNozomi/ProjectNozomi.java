@@ -4,6 +4,7 @@ import com.djaytan.bukkit.slf4j.api.BukkitLoggerFactory;
 import com.github.lexi115.projectNozomi.commands.CommandDispatcher;
 import com.github.lexi115.projectNozomi.commands.PluginCommands;
 import com.github.lexi115.projectNozomi.commands.ShopCommands;
+import com.github.lexi115.projectNozomi.database.DatabaseManager;
 import com.github.lexi115.projectNozomi.extensions.VaultExtension;
 import com.github.lexi115.projectNozomi.injection.SimpleBinderModule;
 import com.github.lexi115.projectNozomi.misc.ConfigUtils;
@@ -17,10 +18,13 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import com.j256.ormlite.support.ConnectionSource;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
+
+import java.sql.SQLException;
 
 @Singleton
 @Getter
@@ -37,6 +41,10 @@ public final class ProjectNozomi extends JavaPlugin {
     private FileConfiguration messagesConfig;
 
     private VaultExtension vaultExtension;
+
+    private DatabaseManager databaseManager;
+
+    private ConnectionSource connectionSource;
 
     @Inject
     private Logger log;
@@ -67,7 +75,12 @@ public final class ProjectNozomi extends JavaPlugin {
     @Override
     public void onEnable() {
         initLogger();
-        injectFields();
+        try {
+            loadDatabase();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        setupDependencyInjection();
         loadConfigs();
         printStartupBanner();
         loadExtensions();
@@ -80,11 +93,22 @@ public final class ProjectNozomi extends JavaPlugin {
     @Override
     public void onDisable() {
         dailyRefreshTask.stop();
+        try {
+            databaseManager.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         log.info("ProjectNozomi is disabled!");
     }
 
     private void initLogger() {
         BukkitLoggerFactory.provideBukkitLogger(this.getLogger());
+    }
+
+    private void loadDatabase() throws SQLException {
+        var dbPath = getDataFolder().getAbsolutePath() + "/nozomi.db";
+        databaseManager = new DatabaseManager("jdbc:sqlite:" + dbPath);
+        connectionSource = databaseManager.getConnectionSource();
     }
 
     public void reloadPlugin() {
@@ -95,7 +119,7 @@ public final class ProjectNozomi extends JavaPlugin {
         log.info("Reloaded plugin");
     }
 
-    private void injectFields() {
+    private void setupDependencyInjection() {
         var binderModule = new SimpleBinderModule(this);
         injector = binderModule.createInjector();
         injector.injectMembers(this);
