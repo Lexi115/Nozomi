@@ -1,7 +1,6 @@
 package com.github.lexi115.projectNozomi.commands;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
-import com.github.lexi115.projectNozomi.database.entities.ShopUses;
 import com.github.lexi115.projectNozomi.database.services.ShopUsesService;
 import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
@@ -17,8 +16,6 @@ import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 import revxrsal.commands.help.Help;
-
-import java.util.Random;
 
 @Singleton
 @Command({"noz"})
@@ -54,10 +51,7 @@ public class PluginCommands implements Commands {
         var infoMessage = constantsConfig.getString("info.command-message", "");
         sender.reply(stringUtils.format(infoMessage, placeholders.map()));
 
-        var uses = new ShopUses();
-        uses.setPlayerUuid(String.valueOf(new Random().nextInt(10000)));
-        uses.setUses(20);
-        shopUsesService.add(uses);
+        shopUsesService.savePlayer(sender.uniqueId(), 30);
     }
 
     @Subcommand("reload")

@@ -17,4 +17,12 @@ public class ShopUses {
 
     @DatabaseField(canBeNull = false, defaultValue = "0")
     private int uses;
+
+    @DatabaseField(version = true)
+    private int version;
+
+    public ShopUses(final String playerUuid, final int uses) {
+        this.playerUuid = playerUuid;
+        this.uses = uses;
+    }
 }
