@@ -19,3 +19,4 @@ errors:
   players-only: '&cYou must be a player to execute this command!'
   unknown-command: '&cUnknown command!'
   invalid-arguments: '&cOne or more arguments provided are invalid!'
+  invalid-player: '&cInvalid player!'

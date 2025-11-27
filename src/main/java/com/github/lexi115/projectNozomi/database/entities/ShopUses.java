@@ -12,17 +12,23 @@ import lombok.Setter;
 @Setter
 public class ShopUses {
 
+    public static final int UNLIMITED = -1;
+
     @DatabaseField(id = true)
     private String playerUuid;
 
     @DatabaseField(canBeNull = false, defaultValue = "0")
     private int uses;
 
+    @DatabaseField(canBeNull = false)
+    private String refreshId;
+
     @DatabaseField(version = true)
     private int version;
 
-    public ShopUses(final String playerUuid, final int uses) {
+    public ShopUses(final String playerUuid, final int uses, final String refreshId) {
         this.playerUuid = playerUuid;
         this.uses = uses;
+        this.refreshId = refreshId;
     }
 }

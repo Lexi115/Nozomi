@@ -1,7 +1,6 @@
 package com.github.lexi115.projectNozomi.commands;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
-import com.github.lexi115.projectNozomi.database.services.ShopUsesService;
 import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
 import com.github.lexi115.projectNozomi.misc.StringUtils;
@@ -29,15 +28,16 @@ public class PluginCommands implements Commands {
 
     private final FileConfiguration constantsConfig;
 
-    private final ShopUsesService shopUsesService;
-
     @Inject
-    public PluginCommands(final ProjectNozomi plugin, final StringUtils stringUtils, final MessageUtils messageUtils, final ShopUsesService shopUsesService) {
+    public PluginCommands(
+            final @NonNull ProjectNozomi plugin,
+            final StringUtils stringUtils,
+            final MessageUtils messageUtils
+    ) {
         this.plugin = plugin;
         this.stringUtils = stringUtils;
         this.messageUtils = messageUtils;
         this.constantsConfig = plugin.getConstantsConfig();
-        this.shopUsesService = shopUsesService;
     }
 
     @Subcommand("info")
@@ -50,8 +50,6 @@ public class PluginCommands implements Commands {
                 .set("author", pluginDescription.getAuthors().getFirst());
         var infoMessage = constantsConfig.getString("info.command-message", "");
         sender.reply(stringUtils.format(infoMessage, placeholders.map()));
-
-        shopUsesService.savePlayer(sender.uniqueId(), 30);
     }
 
     @Subcommand("reload")

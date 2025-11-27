@@ -51,7 +51,8 @@ public class ShopService {
     }
 
     public void loadDailyItemsFromConfig() {
-        var configDailyItemsIds = plugin.getDailyItemsConfig().getStringList("daily-items");
+        var config = plugin.getDailyItemsConfig();
+        var configDailyItemsIds = config.getStringList("daily-items");
         var itemsMap = shop.getItems().stream().collect(Collectors.toMap(ShopItem::getId, i -> i));
         shop.clearDailyItems();
         configDailyItemsIds.forEach(itemId -> {
@@ -60,8 +61,11 @@ public class ShopService {
                 shop.addDailyItem(shopItem);
             }
         });
+        var configRefreshId = config.getString("refresh-id");
+        shop.setRefreshId(configRefreshId);
         var dailyItems = shop.getDailyItems();
-        if (configDailyItemsIds.isEmpty() || dailyItems.isEmpty()) {
+        if (configDailyItemsIds.isEmpty() || dailyItems.isEmpty()
+                || configRefreshId == null || configRefreshId.isBlank()) {
             refreshDailyItems();
             saveDailyItemsInConfig();
         }
@@ -71,6 +75,7 @@ public class ShopService {
         var idList = shop.getDailyItems().stream().map(ShopItem::getId).toList();
         var dailyItemsConfig = plugin.getDailyItemsConfig();
         dailyItemsConfig.set("daily-items", idList);
+        dailyItemsConfig.set("refresh-id", shop.getRefreshId());
         try {
             dailyItemsConfig.save(plugin.getDataFolder() + "/daily.yml");
         } catch (IOException e) {
@@ -89,9 +94,11 @@ public class ShopService {
         for (int i = 0; i < dailyItemsAmount; i++) {
             shop.addDailyItem(shopItems.get(i));
         }
+        shop.regenerateRefreshId();
     }
 
     public boolean sellItem(final @NonNull Player player, final @NonNull ShopItem item) {
+        System.out.println("shop refresh id: " + shop.getRefreshId());
         var amount = item.getAmount();
         if (amount < 0) {
             throw new InvalidAmountException(amount);

@@ -3,6 +3,7 @@ package com.github.lexi115.projectNozomi.shop;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.*;
 
@@ -14,10 +15,14 @@ public class Shop {
 
     private final Set<ShopItem> dailyItems;
 
+    @Setter
+    private String refreshId;
+
     @Inject
     public Shop() {
         this.items = new ArrayList<>();
         this.dailyItems = new LinkedHashSet<>();
+        this.refreshId = null;
     }
 
     public ShopItem getItem(final int index) {
@@ -46,5 +51,10 @@ public class Shop {
 
     public int getTotalDailyItems() {
         return dailyItems.size();
+    }
+
+    public String regenerateRefreshId() {
+        refreshId = UUID.randomUUID().toString();
+        return refreshId;
     }
 }

@@ -9,6 +9,7 @@ import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.exception.BukkitExceptionHandler;
+import revxrsal.commands.bukkit.exception.InvalidPlayerException;
 import revxrsal.commands.bukkit.exception.SenderNotPlayerException;
 import revxrsal.commands.exception.InvalidHelpPageException;
 import revxrsal.commands.exception.InvalidIntegerException;
@@ -49,6 +50,11 @@ public class CommandExceptionHandler extends BukkitExceptionHandler {
     public void onInvalidHelpPage(final @NotNull InvalidHelpPageException e, final @NotNull BukkitCommandActor sender) {
         var exception = new InvalidPageException(e.page(), e.numberOfPages());
         onInvalidPage(exception, sender);
+    }
+
+    @Override
+    public void onInvalidPlayer(final @NonNull InvalidPlayerException e, final @NonNull BukkitCommandActor sender) {
+        sender.error(messageUtils.getPrefix() + messageUtils.get("errors.invalid-player"));
     }
 
     @HandleException

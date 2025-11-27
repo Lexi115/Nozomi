@@ -103,6 +103,14 @@ public final class ProjectNozomi extends JavaPlugin {
         log.info("ProjectNozomi is disabled!");
     }
 
+    public void reloadPlugin() {
+        reloadConfig();
+        loadConfigs();
+        loadShop();
+        loadTasks();
+        log.info("Reloaded plugin");
+    }
+
     private void setupLogging() {
         BukkitLoggerFactory.provideBukkitLogger(this.getLogger());
     }
@@ -111,14 +119,6 @@ public final class ProjectNozomi extends JavaPlugin {
         var dbPath = getDataFolder().getAbsolutePath() + "/nozomi.db";
         databaseManager = new DatabaseManager("jdbc:sqlite:" + dbPath);
         connectionSource = databaseManager.getConnectionSource();
-    }
-
-    public void reloadPlugin() {
-        reloadConfig();
-        loadConfigs();
-        loadShop();
-        loadTasks();
-        log.info("Reloaded plugin");
     }
 
     private void setupInjection() {
