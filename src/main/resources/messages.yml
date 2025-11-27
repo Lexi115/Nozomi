@@ -15,6 +15,7 @@ help:
 errors:
   invalid-page: '&cThis page is invalid (page %page% of %totalPages%)!'
   not-enough-items: '&cNot enough items!'
+  no-more-uses: '&cYou have no more uses!'
   no-permission: '&cYou do not have the permission to do that!'
   players-only: '&cYou must be a player to execute this command!'
   unknown-command: '&cUnknown command!'

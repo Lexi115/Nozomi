@@ -1,6 +1,7 @@
 package com.github.lexi115.projectNozomi.database.services;
 
 import com.github.lexi115.projectNozomi.database.entities.ShopUses;
+import com.github.lexi115.projectNozomi.shop.Shop;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.j256.ormlite.dao.Dao;
@@ -8,13 +9,10 @@ import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import lombok.NonNull;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.slf4j.Logger;
-import revxrsal.commands.bukkit.exception.InvalidPlayerException;
 
 import java.sql.SQLException;
-import java.util.UUID;
 
 @Singleton
 public class ShopUsesService {
@@ -23,19 +21,27 @@ public class ShopUsesService {
 
     private final Dao<ShopUses, String> dao;
 
+    private final Shop shop;
+
     @Inject
-    public ShopUsesService(final ConnectionSource connectionSource, final Logger log) throws SQLException {
+    public ShopUsesService(
+            final ConnectionSource connectionSource,
+            final Logger log,
+            final Shop shop
+    ) throws SQLException {
         this.log = log;
+        this.shop = shop;
         TableUtils.createTableIfNotExists(connectionSource, ShopUses.class);
-        dao = DaoManager.createDao(connectionSource, ShopUses.class);
+        this.dao = DaoManager.createDao(connectionSource, ShopUses.class);
     }
 
-    public boolean savePlayer(
-            final @NonNull String uuid,
+    public ShopUses savePlayerUses(
+            final @NonNull Player player,
             final int uses,
             final @NonNull String refreshId
     ) {
         try {
+            var uuid = player.getUniqueId().toString();
             int rowsAffected;
             var record = dao.queryForId(uuid);
             if (record == null) {
@@ -43,45 +49,43 @@ public class ShopUsesService {
                 rowsAffected = dao.create(record);
             } else {
                 record.setUses(uses);
+                record.setRefreshId(refreshId);
                 rowsAffected = dao.update(record);
             }
-            return rowsAffected > 0;
+            if (rowsAffected == 0) {
+                throw new SQLException("Race condition");
+            }
+            return record;
         } catch (SQLException e) {
             log.error("Error while saving player uses in database:", e);
-            return false;
+            return null;
         }
     }
 
-    public int getPlayerUses(final @NonNull String uuid) {
+    public int getPlayerUses(final @NonNull Player player) {
         try {
+            var uuid = player.getUniqueId().toString();
             var record = dao.queryForId(uuid);
-            if (record == null) {
-                return 0;
+            var shopRefreshId = shop.getRefreshId();
+            if (record == null || !record.getRefreshId().equals(shopRefreshId)) {
+                record = savePlayerUses(player, getPlayerMaxUses(player), shopRefreshId);
             }
             return record.getUses();
-        } catch (SQLException e) {
+        } catch (SQLException | NullPointerException e) {
             return 0;
         }
     }
 
-    public int getPlayerMaxUses(final @NonNull String uuid) {
-        var player = Bukkit.getPlayer(UUID.fromString(uuid));
-        if (player == null) {
-            throw new InvalidPlayerException("Player not found");
-        }
-        return getPlayerMaxUsesFromPermissions(player);
-    }
-
-    private int getPlayerMaxUsesFromPermissions(final @NonNull Player player) {
+    public int getPlayerMaxUses(final @NonNull Player player) {
         var playerPermissions = player.getEffectivePermissions();
         String permString;
         var maxUses = ShopUses.UNLIMITED;
         for (var perm : playerPermissions) {
             permString = perm.getPermission();
-            if (permString.equals("nozomi.uses.max.unlimited")) {
+            if (permString.equals("nozomi.uses.max.unlimited") && perm.getValue()) {
                 return ShopUses.UNLIMITED;
             }
-            if (permString.matches("nozomi\\.uses\\.max\\.\\d+")) {
+            if (permString.matches("nozomi\\.uses\\.max\\.\\d+") && perm.getValue()) {
                 maxUses = Math.max(maxUses, Integer.parseInt(permString.split("\\.")[3]));
             }
         }

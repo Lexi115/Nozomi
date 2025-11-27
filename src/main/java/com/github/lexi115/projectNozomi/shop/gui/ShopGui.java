@@ -4,9 +4,7 @@ import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
 import com.github.lexi115.projectNozomi.misc.StringUtils;
-import com.github.lexi115.projectNozomi.shop.ItemMapper;
-import com.github.lexi115.projectNozomi.shop.ShopItem;
-import com.github.lexi115.projectNozomi.shop.ShopService;
+import com.github.lexi115.projectNozomi.shop.*;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -213,10 +211,13 @@ public class ShopGui implements Listener {
                 .set("name", Optional.ofNullable(item.getName()).orElse(materialName))
                 .set("material", materialName)
                 .set("amount", item.getAmount());
-        if (shopService.sellItem(player, item)) {
+        try {
+            shopService.sellItem(player, item);
             player.sendMessage(messageUtils.getPrefix() + messageUtils.get("info.item-sold", placeholders.map()));
-        } else {
+        } catch (NotEnoughItemsException e) {
             player.sendMessage(messageUtils.getPrefix() + messageUtils.get("errors.not-enough-items"));
+        } catch (ShopUsesException e) {
+            player.sendMessage(messageUtils.getPrefix() + messageUtils.get("errors.no-more-uses"));
         }
     }
 

@@ -1,6 +1,7 @@
 package com.github.lexi115.projectNozomi.shop;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
+import com.github.lexi115.projectNozomi.database.services.ShopUsesService;
 import com.github.lexi115.projectNozomi.misc.InventoryUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
 import com.github.lexi115.projectNozomi.misc.RuntimeIOException;
@@ -24,6 +25,8 @@ public class ShopService {
 
     private final Shop shop;
 
+    private final ShopUsesService shopUsesService;
+
     private final RewardUtils rewardUtils;
 
     private final InventoryUtils inventoryUtils;
@@ -32,11 +35,13 @@ public class ShopService {
     public ShopService(
             final ProjectNozomi plugin,
             final Shop shop,
+            final ShopUsesService shopUsesService,
             final RewardUtils rewardUtils,
             final InventoryUtils inventoryUtils
     ) {
         this.plugin = plugin;
         this.shop = shop;
+        this.shopUsesService = shopUsesService;
         this.rewardUtils = rewardUtils;
         this.inventoryUtils = inventoryUtils;
     }
@@ -87,7 +92,7 @@ public class ShopService {
         int dailyItemsAmount = plugin.getConfig().getInt("daily-items.amount", 3);
         var shopItems = shop.getItems();
         if (shop.getTotalItems() < dailyItemsAmount) {
-            throw new NotEnoughItemsException();
+            throw new NotEnoughItemsException("Not enough shop items to choose as daily items!");
         }
         Collections.shuffle(shopItems);
         shop.clearDailyItems();
@@ -97,14 +102,17 @@ public class ShopService {
         shop.regenerateRefreshId();
     }
 
-    public boolean sellItem(final @NonNull Player player, final @NonNull ShopItem item) {
-        System.out.println("shop refresh id: " + shop.getRefreshId());
+    public void sellItem(final @NonNull Player player, final @NonNull ShopItem item) {
         var amount = item.getAmount();
         if (amount < 0) {
             throw new InvalidAmountException(amount);
         }
+        var playerShopUses = shopUsesService.getPlayerUses(player);
+        if (playerShopUses == 0) {
+            throw new ShopUsesException("No more shop uses for this player!");
+        }
         if (!inventoryUtils.removeItems(player.getInventory(), item.getMaterial(), amount)) {
-            return false;
+            throw new NotEnoughItemsException("Not enough items in inventory!");
         }
         var placeholders = new PlaceholderMap().set("player", player.getName()).map();
         item.getRewards().forEach(reward -> {
@@ -112,7 +120,9 @@ public class ShopService {
                 throw new SellItemException("Could not give all rewards!");
             }
         });
-        return true;
+        if (playerShopUses > 0) {
+            shopUsesService.savePlayerUses(player, playerShopUses - 1, shop.getRefreshId());
+        }
     }
 
     public Collection<ShopItem> getItems() {
