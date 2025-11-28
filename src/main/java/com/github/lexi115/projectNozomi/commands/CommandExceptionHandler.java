@@ -27,7 +27,7 @@ public class CommandExceptionHandler extends BukkitExceptionHandler {
     }
 
     @Override
-    public void onNoPermission(final @NotNull NoPermissionException e, final @NotNull BukkitCommandActor sender) {
+    public void onNoPermission(final NoPermissionException e, final @NotNull BukkitCommandActor sender) {
         sender.error(messageUtils.getPrefix() + messageUtils.get("errors.no-permission"));
     }
 
@@ -47,14 +47,14 @@ public class CommandExceptionHandler extends BukkitExceptionHandler {
     }
 
     @Override
-    public void onInvalidHelpPage(final @NotNull InvalidHelpPageException e, final @NotNull BukkitCommandActor sender) {
-        var exception = new InvalidPageException(e.page(), e.numberOfPages());
-        onInvalidPage(exception, sender);
+    public void onInvalidPlayer(final @NonNull InvalidPlayerException e, final @NonNull BukkitCommandActor sender) {
+        sender.error(messageUtils.getPrefix() + messageUtils.get("errors.invalid-player"));
     }
 
     @Override
-    public void onInvalidPlayer(final @NonNull InvalidPlayerException e, final @NonNull BukkitCommandActor sender) {
-        sender.error(messageUtils.getPrefix() + messageUtils.get("errors.invalid-player"));
+    public void onInvalidHelpPage(final @NotNull InvalidHelpPageException e, final @NotNull BukkitCommandActor sender) {
+        var exception = new InvalidPageException(e.page(), e.numberOfPages());
+        onInvalidPage(exception, sender);
     }
 
     @HandleException

@@ -53,8 +53,7 @@ public class Shop {
         return dailyItems.size();
     }
 
-    public String regenerateRefreshId() {
+    public void regenerateRefreshId() {
         refreshId = UUID.randomUUID().toString();
-        return refreshId;
     }
 }

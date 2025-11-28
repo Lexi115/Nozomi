@@ -38,6 +38,8 @@ public class ShopGui implements Listener {
 
     private final MessageUtils messageUtils;
 
+    private final ShopExceptionHandler shopExceptionHandler;
+
     private final Map<Integer, ShopItem> slotsMap = new HashMap<>();
 
     private final Player player;
@@ -64,6 +66,7 @@ public class ShopGui implements Listener {
             final ItemMapper itemMapper,
             final StringUtils stringUtils,
             final MessageUtils messageUtils,
+            final ShopExceptionHandler shopExceptionHandler,
             final Player player,
             final int page,
             final ShopGuiManager guiManager,
@@ -74,6 +77,7 @@ public class ShopGui implements Listener {
         this.itemMapper = itemMapper;
         this.stringUtils = stringUtils;
         this.messageUtils = messageUtils;
+        this.shopExceptionHandler = shopExceptionHandler;
         this.player = player;
         this.page = page;
         this.guiManager = guiManager;
@@ -215,9 +219,9 @@ public class ShopGui implements Listener {
             shopService.sellItem(player, item);
             player.sendMessage(messageUtils.getPrefix() + messageUtils.get("info.item-sold", placeholders.map()));
         } catch (NotEnoughItemsException e) {
-            player.sendMessage(messageUtils.getPrefix() + messageUtils.get("errors.not-enough-items"));
-        } catch (ShopUsesException e) {
-            player.sendMessage(messageUtils.getPrefix() + messageUtils.get("errors.no-more-uses"));
+            shopExceptionHandler.onNotEnoughItems(e, player);
+        } catch (NoUsesException e) {
+            shopExceptionHandler.onNoUses(e, player);
         }
     }
 

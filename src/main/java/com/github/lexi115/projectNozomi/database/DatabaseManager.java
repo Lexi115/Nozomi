@@ -45,8 +45,4 @@ public class DatabaseManager implements AutoCloseable {
             throw new SQLException(e);
         }
     }
-
-    public ConnectionSource getConnectionSource() {
-        return connectionSource;
-    }
 }

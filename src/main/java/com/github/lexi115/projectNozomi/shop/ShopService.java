@@ -109,14 +109,14 @@ public class ShopService {
         }
         var playerShopUses = shopUsesService.getPlayerUses(player);
         if (playerShopUses == 0) {
-            throw new ShopUsesException("No more shop uses for this player!");
+            throw new NoUsesException("No more shop uses for this player!");
         }
         if (!inventoryUtils.removeItems(player.getInventory(), item.getMaterial(), amount)) {
             throw new NotEnoughItemsException("Not enough items in inventory!");
         }
-        var placeholders = new PlaceholderMap().set("player", player.getName()).map();
+        var placeholders = new PlaceholderMap().set("player", player.getName());
         item.getRewards().forEach(reward -> {
-            if (!reward.give(player, placeholders)) {
+            if (!reward.give(player, placeholders.map())) {
                 throw new SellItemException("Could not give all rewards!");
             }
         });

@@ -4,6 +4,7 @@ import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.github.lexi115.projectNozomi.shop.ItemMapper;
+import com.github.lexi115.projectNozomi.shop.ShopExceptionHandler;
 import com.github.lexi115.projectNozomi.shop.ShopNotFoundException;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.google.inject.Inject;
@@ -30,6 +31,8 @@ public class ShopGuiManager {
 
     private final StringUtils stringUtils;
 
+    private final ShopExceptionHandler shopExceptionHandler;
+
     private final Set<ShopGui> openGuis = new HashSet<>();
 
     @Inject
@@ -38,17 +41,19 @@ public class ShopGuiManager {
             final ShopService shopService,
             final ItemMapper itemMapper,
             final MessageUtils messageUtils,
-            final StringUtils stringUtils
+            final StringUtils stringUtils,
+            final ShopExceptionHandler shopExceptionHandler
     ) {
         this.plugin = plugin;
         this.shopService = shopService;
         this.itemMapper = itemMapper;
         this.messageUtils = messageUtils;
         this.stringUtils = stringUtils;
+        this.shopExceptionHandler = shopExceptionHandler;
     }
 
     public void open(final Player player, final int page) {
-        var shopGui = new ShopGui(plugin, shopService, itemMapper, stringUtils, messageUtils,
+        var shopGui = new ShopGui(plugin, shopService, itemMapper, stringUtils, messageUtils, shopExceptionHandler,
                 player, page, this, getGuiDetails());
         shopGui.open();
         openGuis.add(shopGui);
