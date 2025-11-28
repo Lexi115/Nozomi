@@ -29,7 +29,11 @@ public class PluginCommands implements Commands {
     private final FileConfiguration constantsConfig;
 
     @Inject
-    public PluginCommands(final ProjectNozomi plugin, final StringUtils stringUtils, final MessageUtils messageUtils) {
+    public PluginCommands(
+            final @NonNull ProjectNozomi plugin,
+            final StringUtils stringUtils,
+            final MessageUtils messageUtils
+    ) {
         this.plugin = plugin;
         this.stringUtils = stringUtils;
         this.messageUtils = messageUtils;

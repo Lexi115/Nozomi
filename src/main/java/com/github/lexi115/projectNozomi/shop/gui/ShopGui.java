@@ -4,9 +4,7 @@ import com.github.lexi115.projectNozomi.ProjectNozomi;
 import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
 import com.github.lexi115.projectNozomi.misc.StringUtils;
-import com.github.lexi115.projectNozomi.shop.ItemMapper;
-import com.github.lexi115.projectNozomi.shop.ShopItem;
-import com.github.lexi115.projectNozomi.shop.ShopService;
+import com.github.lexi115.projectNozomi.shop.*;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -40,6 +38,8 @@ public class ShopGui implements Listener {
 
     private final MessageUtils messageUtils;
 
+    private final ShopExceptionHandler shopExceptionHandler;
+
     private final Map<Integer, ShopItem> slotsMap = new HashMap<>();
 
     private final Player player;
@@ -66,6 +66,7 @@ public class ShopGui implements Listener {
             final ItemMapper itemMapper,
             final StringUtils stringUtils,
             final MessageUtils messageUtils,
+            final ShopExceptionHandler shopExceptionHandler,
             final Player player,
             final int page,
             final ShopGuiManager guiManager,
@@ -76,6 +77,7 @@ public class ShopGui implements Listener {
         this.itemMapper = itemMapper;
         this.stringUtils = stringUtils;
         this.messageUtils = messageUtils;
+        this.shopExceptionHandler = shopExceptionHandler;
         this.player = player;
         this.page = page;
         this.guiManager = guiManager;
@@ -213,10 +215,13 @@ public class ShopGui implements Listener {
                 .set("name", Optional.ofNullable(item.getName()).orElse(materialName))
                 .set("material", materialName)
                 .set("amount", item.getAmount());
-        if (shopService.sellItem(player, item)) {
+        try {
+            shopService.sellItem(player, item);
             player.sendMessage(messageUtils.getPrefix() + messageUtils.get("info.item-sold", placeholders.map()));
-        } else {
-            player.sendMessage(messageUtils.getPrefix() + messageUtils.get("errors.not-enough-items"));
+        } catch (NotEnoughItemsException e) {
+            shopExceptionHandler.onNotEnoughItems(e, player);
+        } catch (NoUsesException e) {
+            shopExceptionHandler.onNoUses(e, player);
         }
     }
 

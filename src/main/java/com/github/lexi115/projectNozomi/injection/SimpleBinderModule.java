@@ -9,6 +9,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
+import com.j256.ormlite.support.ConnectionSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,7 @@ public class SimpleBinderModule extends AbstractModule {
     protected void configure() {
         bind(ProjectNozomi.class).toInstance(plugin);
         bind(Logger.class).toInstance(LoggerFactory.getLogger(plugin.getName()));
+        bind(ConnectionSource.class).toInstance(plugin.getConnectionSource());
         bind(Task.class).annotatedWith(Names.named("dailyRefreshTask")).to(DailyRefreshTask.class);
         bind(CommandDispatcher.class).annotatedWith(Names.named("lamp")).to(LampCommandDispatcher.class);
     }

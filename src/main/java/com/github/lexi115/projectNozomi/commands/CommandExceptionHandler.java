@@ -9,6 +9,7 @@ import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.exception.BukkitExceptionHandler;
+import revxrsal.commands.bukkit.exception.InvalidPlayerException;
 import revxrsal.commands.bukkit.exception.SenderNotPlayerException;
 import revxrsal.commands.exception.InvalidHelpPageException;
 import revxrsal.commands.exception.InvalidIntegerException;
@@ -26,7 +27,7 @@ public class CommandExceptionHandler extends BukkitExceptionHandler {
     }
 
     @Override
-    public void onNoPermission(final @NotNull NoPermissionException e, final @NotNull BukkitCommandActor sender) {
+    public void onNoPermission(final NoPermissionException e, final @NotNull BukkitCommandActor sender) {
         sender.error(messageUtils.getPrefix() + messageUtils.get("errors.no-permission"));
     }
 
@@ -43,6 +44,11 @@ public class CommandExceptionHandler extends BukkitExceptionHandler {
     @Override
     public void onInvalidInteger(final @NotNull InvalidIntegerException e, final @NotNull BukkitCommandActor sender) {
         sender.error(messageUtils.getPrefix() + messageUtils.get("errors.invalid-arguments"));
+    }
+
+    @Override
+    public void onInvalidPlayer(final @NonNull InvalidPlayerException e, final @NonNull BukkitCommandActor sender) {
+        sender.error(messageUtils.getPrefix() + messageUtils.get("errors.invalid-player"));
     }
 
     @Override

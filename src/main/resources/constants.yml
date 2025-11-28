@@ -9,7 +9,7 @@ info:
     - 'Version: %version%'
     - ""
     - '##############'
-  command-message: '&a%name% %version% &7by &e%author% &c❤️'
+  command-message: '&a%name% %version% &7by &e%author% &c❤'
 command-dispatcher:
   maximum-failed-attempts: 10
 help:
