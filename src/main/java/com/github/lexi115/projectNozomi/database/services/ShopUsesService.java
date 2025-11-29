@@ -14,15 +14,36 @@ import org.slf4j.Logger;
 
 import java.sql.SQLException;
 
+/**
+ * Service class that keeps track of players' shop uses, interacting directly with the database.
+ */
 @Singleton
 public class ShopUsesService {
 
+    /**
+     * The plugin's logger.
+     */
     private final Logger log;
 
+    /**
+     * DAO used to interact with the <code>shop_uses</code> database table.
+     */
     private final Dao<ShopUses, String> dao;
 
+    /**
+     * The shop.
+     */
     private final Shop shop;
 
+    /**
+     * Constructor.
+     *
+     * @param connectionSource The ORMLite connection source.
+     * @param log The plugin's logger.
+     * @param shop The shop.
+     * @throws SQLException if things go wrong while creating the related table or DAO.
+     * @since 1.0
+     */
     @Inject
     public ShopUsesService(
             final ConnectionSource connectionSource,
@@ -35,6 +56,15 @@ public class ShopUsesService {
         this.dao = DaoManager.createDao(connectionSource, ShopUses.class);
     }
 
+    /**
+     * Saves an amount of shop uses for a certain player. If the entry already exists, it will be updated instead.
+     *
+     * @param player The target player.
+     * @param uses The amount of uses.
+     * @param refreshId The shop's <code>refreshId</code>.
+     * @return the saved {@link ShopUses} record object.
+     * @since 1.0
+     */
     public ShopUses savePlayerUses(
             final @NonNull Player player,
             final int uses,
@@ -62,6 +92,15 @@ public class ShopUsesService {
         }
     }
 
+    /**
+     * Returns the amount of shop uses left for a certain player. If it can't find the entry or the
+     * <code>refreshId</code> doesn't match the shop's current <code>refreshId</code>, it will generate a new
+     * one, while setting the maximum amount of shop uses that player can have (based on his permissions).
+     *
+     * @param player The target player.
+     * @return The amount of shop uses left for that player.
+     * @since 1.0
+     */
     public int getPlayerUses(final @NonNull Player player) {
         try {
             var uuid = player.getUniqueId().toString();
@@ -76,6 +115,14 @@ public class ShopUsesService {
         }
     }
 
+    /**
+     * Returns the maximum amount of shop uses a player can have (based on his permissions). If the player has the
+     * <code>nozomi.uses.max.unlimited</code> permission, it will return -1.
+     *
+     * @param player The target player.
+     * @return The maximum amount of shop uses for that player, or -1 if he has unlimited uses.
+     * @since 1.0
+     */
     public int getPlayerMaxUses(final @NonNull Player player) {
         var playerPermissions = player.getEffectivePermissions();
         String permString;
