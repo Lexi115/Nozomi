@@ -21,11 +21,7 @@ public class ConfigUtils {
     }
 
     public @NonNull FileConfiguration saveAndLoadConfig(final @NonNull String filename) {
-        var dataFolder = plugin.getDataFolder();
-        var configFile = new File(dataFolder + "/" + filename);
-        if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-            throw new RuntimeIOException("Could not create data folder!");
-        }
+        var configFile = new File(plugin.getDataFolder() + "/" + filename);
         if (!configFile.exists()) {
             plugin.saveResource(filename, false);
         }

@@ -7,10 +7,7 @@ import com.github.lexi115.projectNozomi.commands.ShopCommands;
 import com.github.lexi115.projectNozomi.database.DatabaseManager;
 import com.github.lexi115.projectNozomi.extensions.VaultExtension;
 import com.github.lexi115.projectNozomi.injection.SimpleBinderModule;
-import com.github.lexi115.projectNozomi.misc.ConfigUtils;
-import com.github.lexi115.projectNozomi.misc.MessageUtils;
-import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
-import com.github.lexi115.projectNozomi.misc.StringUtils;
+import com.github.lexi115.projectNozomi.misc.*;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import com.github.lexi115.projectNozomi.tasks.Task;
@@ -24,6 +21,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 
+import java.io.File;
 import java.sql.SQLException;
 
 @Singleton
@@ -74,6 +72,7 @@ public final class ProjectNozomi extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        createDataFolder();
         setupLogging();
         try {
             setupDatabase();
@@ -109,6 +108,13 @@ public final class ProjectNozomi extends JavaPlugin {
         loadShop();
         loadTasks();
         log.info("Reloaded plugin");
+    }
+
+    private void createDataFolder() {
+        var dataFolder = getDataFolder();
+        if (!dataFolder.exists() && !dataFolder.mkdirs()) {
+            throw new RuntimeIOException("Could not create data folder!");
+        }
     }
 
     private void setupLogging() {
