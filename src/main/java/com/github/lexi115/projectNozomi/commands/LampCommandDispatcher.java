@@ -18,31 +18,64 @@ import revxrsal.commands.stream.StringStream;
 
 import java.util.List;
 
+/**
+ * Command dispatcher managed by the Lamp framework.
+ *
+ * @author Lexi115
+ * @since 1.0
+ */
 @Singleton
 public class LampCommandDispatcher implements CommandDispatcher {
 
+    /**
+     * The plugin instance.
+     */
     private final ProjectNozomi plugin;
 
-    private final CommandExceptionHandler exceptionHandler;
+    /**
+     * The command exception handler.
+     */
+    private final CommandExceptionHandler commandExceptionHandler;
 
+    /**
+     * The Lamp framework object.
+     */
     private Lamp<BukkitCommandActor> lamp;
 
+    /**
+     * Constructor.
+     *
+     * @param plugin The plugin instance.
+     * @param commandExceptionHandler The command exception handler.
+     * @since 1.0
+     */
     @Inject
-    public LampCommandDispatcher(final ProjectNozomi plugin, final CommandExceptionHandler exceptionHandler) {
+    public LampCommandDispatcher(final ProjectNozomi plugin, final CommandExceptionHandler commandExceptionHandler) {
         this.plugin = plugin;
-        this.exceptionHandler = exceptionHandler;
+        this.commandExceptionHandler = commandExceptionHandler;
     }
 
+    /**
+     * Sets up the dispatcher.
+     *
+     * @since 1.0
+     */
     @Override
     public void setup() {
         if (this.lamp == null) {
             this.lamp = BukkitLamp.builder(plugin)
-                    .exceptionHandler(exceptionHandler)
+                    .exceptionHandler(commandExceptionHandler)
                     .dispatcherSettings(this::getDispatcherSettings)
                     .build();
         }
     }
 
+    /**
+     * Registers a set of commands.
+     *
+     * @param commands The commands to register.
+     * @since 1.0
+     */
     @Override
     public void register(final Commands commands) {
         lamp.register(commands);
@@ -64,33 +97,33 @@ public class LampCommandDispatcher implements CommandDispatcher {
         for (var attempt : failedAttempts) {
             var error = attempt.error();
             if (error instanceof NoPermissionException) {
-                handleException(NoPermissionException.class, error, sender, exceptionHandler::onNoPermission);
+                handleError(NoPermissionException.class, error, sender, commandExceptionHandler::onNoPermission);
                 return;
             } else if (error instanceof InvalidPlayerException) {
-                handleException(InvalidPlayerException.class, error, sender, exceptionHandler::onInvalidPlayer);
+                handleError(InvalidPlayerException.class, error, sender, commandExceptionHandler::onInvalidPlayer);
                 return;
             } else if (error instanceof InvalidIntegerException) {
-                handleException(InvalidIntegerException.class, error, sender, exceptionHandler::onInvalidInteger);
+                handleError(InvalidIntegerException.class, error, sender, commandExceptionHandler::onInvalidInteger);
                 return;
             } else if (error instanceof SenderNotPlayerException) {
-                handleException(SenderNotPlayerException.class, error, sender, exceptionHandler::onSenderNotPlayer);
+                handleError(SenderNotPlayerException.class, error, sender, commandExceptionHandler::onSenderNotPlayer);
                 return;
             }
         }
-        exceptionHandler.onUnknownCommand(new UnknownCommandException(input.toString()), sender);
+        commandExceptionHandler.onUnknownCommand(new UnknownCommandException(input.toString()), sender);
     }
 
-    private <T extends Throwable> void handleException(
+    private <T extends Throwable> void handleError(
             final @NonNull Class<T> clazz,
             final Throwable e,
             final BukkitCommandActor actor,
-            final HandlerMethod<T> method) {
+            final Handler<T> handler) {
         if (clazz.isInstance(e)) {
-            method.handle(clazz.cast(e), actor);
+            handler.handle(clazz.cast(e), actor);
         }
     }
 
-    interface HandlerMethod<T extends Throwable> {
+    interface Handler<T extends Throwable> {
         void handle(T e, BukkitCommandActor actor);
     }
 }

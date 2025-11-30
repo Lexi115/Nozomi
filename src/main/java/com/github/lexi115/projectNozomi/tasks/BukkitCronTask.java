@@ -12,17 +12,43 @@ import org.slf4j.Logger;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-public abstract class CronTask implements Runnable {
+/**
+ * A Bukkit synchronous task that is scheduled based on a cron expression. Runs on the server's main thread.
+ *
+ * @author Lexi115
+ * @since 1.0
+ */
+public abstract class BukkitCronTask implements Runnable {
 
+    /**
+     * The plugin instance.
+     */
     private final JavaPlugin plugin;
 
+    /**
+     * The plugin's logger.
+     */
     private final Logger log;
 
+    /**
+     * The execution time.
+     */
     private final ExecutionTime executionTime;
 
+    /**
+     * The currently scheduled task.
+     */
     private BukkitTask currentTask;
 
-    public CronTask(final JavaPlugin plugin, final Logger log, final String cronExpression) {
+    /**
+     * Constructor.
+     *
+     * @param plugin The plugin instance.
+     * @param log The plugin's logger.
+     * @param cronExpression The cron expression.
+     * @since 1.0
+     */
+    public BukkitCronTask(final JavaPlugin plugin, final Logger log, final String cronExpression) {
         this.plugin = plugin;
         this.log = log;
         var parser = new CronParser(CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ));
@@ -30,6 +56,11 @@ public abstract class CronTask implements Runnable {
         this.executionTime = ExecutionTime.forCron(cron);
     }
 
+    /**
+     * Schedules the task.
+     *
+     * @since 1.0
+     */
     public void schedule() {
         var now = ZonedDateTime.now();
         var nextExecution = executionTime.nextExecution(now);
@@ -51,6 +82,11 @@ public abstract class CronTask implements Runnable {
         }
     }
 
+    /**
+     * Cancels the task if it's still running.
+     *
+     * @since 1.0
+     */
     public void cancel() {
         if (currentTask != null && !currentTask.isCancelled()) {
             currentTask.cancel();
