@@ -1,10 +1,12 @@
 package com.github.lexi115.projectNozomi.shop.rewards;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
+import com.github.lexi115.projectNozomi.misc.ItemUtils;
 import com.github.lexi115.projectNozomi.misc.StringUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.NonNull;
+import org.bukkit.Material;
 
 import java.util.List;
 
@@ -28,16 +30,23 @@ public class RewardUtils {
     private final StringUtils stringUtils;
 
     /**
+     * The item utility class.
+     */
+    private final ItemUtils itemUtils;
+
+    /**
      * Constructor.
      *
      * @param plugin      The plugin instance.
      * @param stringUtils The string utility class.
+     * @param itemUtils   The item utility class.
      * @since 1.0
      */
     @Inject
-    public RewardUtils(final ProjectNozomi plugin, final StringUtils stringUtils) {
+    public RewardUtils(final ProjectNozomi plugin, final StringUtils stringUtils, final ItemUtils itemUtils) {
         this.plugin = plugin;
         this.stringUtils = stringUtils;
+        this.itemUtils = itemUtils;
     }
 
     /**
@@ -80,6 +89,11 @@ public class RewardUtils {
         } else if (string.startsWith("money:")) {
             return new MoneyReward(plugin.getVaultExtension(),
                     Double.parseDouble(string.replaceFirst("money:", "").trim()));
+
+            // Item reward
+        } else if (string.startsWith("item:")) {
+            var split = string.replaceFirst("item:", "").trim().split(":");
+            return new ItemReward(itemUtils, Material.matchMaterial(split[0]), Integer.parseInt(split[1]));
         }
         throw new InvalidRewardException();
     }

@@ -9,7 +9,9 @@ import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.NonNull;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Default;
 import revxrsal.commands.annotation.Range;
@@ -26,6 +28,11 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 @Singleton
 @Command({"noz"})
 public class ShopCommands implements Commands {
+
+    /**
+     * The plugin instance.
+     */
+    private final JavaPlugin plugin;
 
     /**
      * The shop service.
@@ -60,6 +67,7 @@ public class ShopCommands implements Commands {
     /**
      * Constructor.
      *
+     * @param plugin                  The plugin instance.
      * @param shopService             The shop service.
      * @param shopUsesService         The shop uses service.
      * @param shopGuiManager          The shop GUI manager.
@@ -70,6 +78,7 @@ public class ShopCommands implements Commands {
      */
     @Inject
     public ShopCommands(
+            final JavaPlugin plugin,
             final ShopService shopService,
             final ShopUsesService shopUsesService,
             final ShopGuiManager shopGuiManager,
@@ -77,6 +86,7 @@ public class ShopCommands implements Commands {
             final CommandUtils commandUtils,
             final CommandExceptionHandler commandExceptionHandler
     ) {
+        this.plugin = plugin;
         this.shopService = shopService;
         this.shopUsesService = shopUsesService;
         this.shopGuiManager = shopGuiManager;
@@ -121,6 +131,9 @@ public class ShopCommands implements Commands {
         shopService.refreshDailyItems();
         shopService.saveDailyItemsInConfig();
         sender.reply(messageUtils.getPrefix() + messageUtils.get("info.items-refreshed"));
+        if (plugin.getConfig().getBoolean("daily-items.announce-refresh-in-chat")) {
+            Bukkit.broadcastMessage(messageUtils.getPrefix() + messageUtils.get("info.shop-refreshed"));
+        }
     }
 
     /**

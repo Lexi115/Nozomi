@@ -1,7 +1,6 @@
 package com.github.lexi115.projectNozomi.shop.rewards;
 
 import com.github.lexi115.projectNozomi.misc.StringUtils;
-import com.github.lexi115.projectNozomi.shop.RewardGiveException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
