@@ -1,6 +1,7 @@
 package com.github.lexi115.projectNozomi.shop.rewards;
 
 import com.github.lexi115.projectNozomi.extensions.VaultExtension;
+import com.github.lexi115.projectNozomi.shop.RewardGiveException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
@@ -31,11 +32,13 @@ public class MoneyReward implements Reward {
      *
      * @param player       The target player
      * @param placeholders The placeholders map.
-     * @return <code>true</code> if the operation was successful, <code>false</code> otherwise.
+     * @throws RewardGiveException if reward could not be given due to an error.
      * @since 1.0
      */
     @Override
-    public boolean give(final @NonNull Player player, final Map<String, String> placeholders) {
-        return vault.isEnabled() && vault.deposit(player, amount);
+    public void give(final @NonNull Player player, final @NonNull Map<String, String> placeholders) {
+        if (!vault.isEnabled() || !vault.deposit(player, amount)) {
+            throw new RewardGiveException("Could not give money reward to " + player.getName());
+        }
     }
 }

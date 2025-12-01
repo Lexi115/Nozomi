@@ -18,8 +18,7 @@ public interface Reward {
      *
      * @param player       The target player
      * @param placeholders The placeholders map.
-     * @return <code>true</code> if the operation was successful, <code>false</code> otherwise.
      * @since 1.0
      */
-    boolean give(@NonNull Player player, Map<String, String> placeholders);
+    void give(@NonNull Player player, @NonNull Map<String, String> placeholders);
 }

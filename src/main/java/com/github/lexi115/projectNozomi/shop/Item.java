@@ -8,6 +8,12 @@ import org.bukkit.Material;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A generic item.
+ *
+ * @author Lexi115
+ * @since 1.0
+ */
 @Getter
 @SuperBuilder
 public abstract class Item {

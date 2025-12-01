@@ -1,6 +1,7 @@
 package com.github.lexi115.projectNozomi.shop.rewards;
 
 import com.github.lexi115.projectNozomi.misc.StringUtils;
+import com.github.lexi115.projectNozomi.shop.RewardGiveException;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.bukkit.Bukkit;
@@ -32,18 +33,21 @@ public class CommandReward implements Reward {
      *
      * @param player       The target player
      * @param placeholders The placeholders map.
-     * @return <code>true</code> if the operation was successful, <code>false</code> otherwise.
+     * @throws RewardGiveException if reward could not be given due to an error.
      * @since 1.0
      */
     @Override
-    public boolean give(final @NonNull Player player, final Map<String, String> placeholders) {
+    public void give(final @NonNull Player player, final @NonNull Map<String, String> placeholders) {
         var command = stringUtils.fillPlaceholders(rawCommand, placeholders);
+        var rewardGiven = false;
         // If command starts with a slash, then it is executed by the player rather than the console
         if (command.startsWith("/")) {
-            return player.performCommand(command.replaceFirst("/", ""));
+            rewardGiven = player.performCommand(command.replaceFirst("/", ""));
         } else {
-            var console = Bukkit.getConsoleSender();
-            return Bukkit.dispatchCommand(console, command);
+            rewardGiven = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        }
+        if (!rewardGiven) {
+            throw new RewardGiveException("Could not execute command: " + command);
         }
     }
 }

@@ -10,6 +10,9 @@ import java.util.List;
 
 /**
  * Utility class for reward-related operations.
+ *
+ * @author Lexi115
+ * @since 1.0
  */
 @Singleton
 public class RewardUtils {

@@ -38,7 +38,8 @@ public class ShopExceptionHandler {
      * @param sender The victim user.
      * @since 1.0
      */
-    public void onNotEnoughItems(final @NonNull NotEnoughItemsException e, final @NonNull CommandSender sender) {
+    public void onInsufficientAmount(
+            final @NonNull InsufficientAmountException e, final @NonNull CommandSender sender) {
         sender.sendMessage(messageUtils.getPrefix() + messageUtils.get("errors.not-enough-items"));
     }
 
@@ -49,7 +50,8 @@ public class ShopExceptionHandler {
      * @param sender The victim user.
      * @since 1.0
      */
-    public void onNoUses(final @NonNull NoUsesException e, final @NonNull CommandSender sender) {
+    public void onNoShopUsesLeft(
+            final @NonNull NoShopUsesLeftException e, final @NonNull CommandSender sender) {
         sender.sendMessage(messageUtils.getPrefix() + messageUtils.get("errors.no-more-uses"));
     }
 }

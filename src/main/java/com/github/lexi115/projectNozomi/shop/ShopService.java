@@ -1,6 +1,7 @@
 package com.github.lexi115.projectNozomi.shop;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
+import com.github.lexi115.projectNozomi.database.entities.ShopUses;
 import com.github.lexi115.projectNozomi.database.services.ShopUsesService;
 import com.github.lexi115.projectNozomi.misc.InventoryUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
@@ -139,6 +140,7 @@ public class ShopService {
     /**
      * Saves the current daily items in the <code>daily.yml</code> config file.
      *
+     * @throws RuntimeIOException If an I/O error occurs.
      * @since 1.0
      */
     public void saveDailyItemsInConfig() {
@@ -156,13 +158,14 @@ public class ShopService {
     /**
      * Refreshes the daily items and regenerates the shop's <code>refreshId</code>.
      *
+     * @throws NotEnoughShopItemsException If there aren't enough items in the shop to choose as daily items.
      * @since 1.0
      */
     public void refreshDailyItems() {
         int dailyItemsAmount = plugin.getConfig().getInt("daily-items.amount", 3);
         var shopItems = shop.getItems();
         if (shop.getTotalItems() < dailyItemsAmount) {
-            throw new NotEnoughItemsException("Not enough shop items to choose as daily items!");
+            throw new NotEnoughShopItemsException("Not enough shop items to choose as daily items!");
         }
         Collections.shuffle(shopItems);
         shop.clearDailyItems();
@@ -178,32 +181,29 @@ public class ShopService {
      *
      * @param player The player selling the item.
      * @param item The item to sell.
-     * @throws NoUsesException If player has no shop uses left.
-     * @throws NotEnoughItemsException If player doesn't have enough items to sell in his inventory.
-     * @throws SellItemException If one or more rewards couldn't be given to the player.
+     * @throws InvalidShopItemAmountException If the shop item amount is negative.
+     * @throws NoShopUsesLeftException If player has no shop uses left.
+     * @throws InsufficientAmountException If player doesn't have enough items to sell in his inventory.
+     * @throws RewardGiveException If one or more rewards couldn't be given to the player.
      * @since 1.0
      */
     public void sellItem(final @NonNull Player player, final @NonNull ShopItem item) {
         var amount = item.getAmount();
         if (amount < 0) {
-            throw new InvalidAmountException(amount);
+            throw new InvalidShopItemAmountException(amount);
         }
         var playerShopUses = shopUsesService.getPlayerUses(player);
         if (playerShopUses == 0) {
-            throw new NoUsesException("No more shop uses for this player!");
+            throw new NoShopUsesLeftException("No more shop uses for this player!");
         }
         if (!inventoryUtils.removeItems(player.getInventory(), item.getMaterial(), amount)) {
-            throw new NotEnoughItemsException("Not enough items in inventory!");
+            throw new InsufficientAmountException("Not enough items in inventory!");
         }
-        var placeholders = new PlaceholderMap().set("player", player.getName());
-        item.getRewards().forEach(reward -> {
-            if (!reward.give(player, placeholders.map())) {
-                throw new SellItemException("Could not give all rewards!");
-            }
-        });
-        if (playerShopUses > 0) {
-            shopUsesService.savePlayerUses(player, playerShopUses - 1, shop.getRefreshId());
-        }
+        var placeholders = new PlaceholderMap()
+                .set("player", player.getName());
+        item.getRewards().forEach(reward -> reward.give(player, placeholders.map()));
+        var newShopUses = playerShopUses != ShopUses.UNLIMITED ? playerShopUses - 1 : ShopUses.UNLIMITED;
+        shopUsesService.savePlayerUses(player, newShopUses, shop.getRefreshId());
     }
 
     /**

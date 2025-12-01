@@ -329,10 +329,10 @@ public class ShopGui implements Listener {
         try {
             shopService.sellItem(player, item);
             player.sendMessage(messageUtils.getPrefix() + messageUtils.get("info.item-sold", placeholders.map()));
-        } catch (NotEnoughItemsException e) {
-            shopExceptionHandler.onNotEnoughItems(e, player);
-        } catch (NoUsesException e) {
-            shopExceptionHandler.onNoUses(e, player);
+        } catch (InsufficientAmountException e) {
+            shopExceptionHandler.onInsufficientAmount(e, player);
+        } catch (NoShopUsesLeftException e) {
+            shopExceptionHandler.onNoShopUsesLeft(e, player);
         }
     }
 
