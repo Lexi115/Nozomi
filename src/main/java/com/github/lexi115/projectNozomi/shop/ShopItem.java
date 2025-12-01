@@ -3,28 +3,29 @@ package com.github.lexi115.projectNozomi.shop;
 import com.github.lexi115.projectNozomi.shop.rewards.Reward;
 import lombok.Builder;
 import lombok.Getter;
-import org.bukkit.Material;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * An item that can be sold in the shop.
+ *
+ * @author Lexi115
+ * @since 1.0
+ */
 @Getter
-@Builder
-public class ShopItem implements Item {
+@SuperBuilder
+public class ShopItem extends Item {
 
-    private final String id;
-
-    private final String name;
-
-    private final String displayName;
-
-    private final Material material;
-
+    /**
+     * The amount required to sell this item.
+     */
     private final int amount;
 
+    /**
+     * The list of rewards given to the player upon successfully selling this item.
+     */
     @Builder.Default
     private final List<Reward> rewards = new ArrayList<>();
-
-    @Builder.Default
-    private final List<String> lore = new ArrayList<>();
 }

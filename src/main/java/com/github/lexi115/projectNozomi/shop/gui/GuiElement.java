@@ -1,27 +1,23 @@
 package com.github.lexi115.projectNozomi.shop.gui;
 
 import com.github.lexi115.projectNozomi.shop.Item;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Material;
+import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * An interactable GUI (inventory) element, often used for page navigation buttons.
+ *
+ * @author Lexi115
+ * @since 1.0
+ */
 @Getter
 @Setter
-@Builder
-public class GuiElement implements Item {
+@SuperBuilder
+public class GuiElement extends Item {
 
-    private final String name;
-
-    private final String displayName;
-
-    private final Material material;
-
+    /**
+     * The inventory slot that will be occupied by the element.
+     */
     private final int slot;
-
-    @Builder.Default
-    private final List<String> lore = new ArrayList<>();
 }

@@ -284,11 +284,10 @@ public class ShopGui implements Listener {
             final @NonNull ShopItem item,
             final int slotIndex
     ) {
-        String materialName;
-        materialName = stringUtils.toUserFriendly(item.getMaterial().toString());
+        var friendlyMaterialName = stringUtils.toUserFriendly(item.getMaterial().toString());
         var placeholders = new PlaceholderMap()
-                .set("name", Optional.ofNullable(item.getName()).orElse(materialName))
-                .set("material", materialName)
+                .set("name", Optional.ofNullable(item.getName()).orElse(friendlyMaterialName))
+                .set("material", friendlyMaterialName)
                 .set("amount", item.getAmount());
         inventory.setItem(slotIndex, itemMapper.toItemStack(item, 1, placeholders.map()));
         slotsMap.put(slotIndex, item);
