@@ -117,7 +117,8 @@ public class LampCommandDispatcher implements CommandDispatcher {
             final @NonNull Class<T> clazz,
             final Throwable e,
             final BukkitCommandActor actor,
-            final Handler<T> handler) {
+            final Handler<T> handler
+    ) {
         if (clazz.isInstance(e)) {
             handler.handle(clazz.cast(e), actor);
         }
