@@ -1,4 +1,6 @@
 package com.github.lexi115.projectNozomi.commands;
 
-public interface Commands {
-}
+/**
+ * Commands marker interface.
+ */
+public interface Commands { }

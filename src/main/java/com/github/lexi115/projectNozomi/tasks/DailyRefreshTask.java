@@ -7,19 +7,50 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 
+/**
+ * A task that auto-refreshes the daily items in the shop periodically (period is defined through a cron expression
+ * stored in the <code>config.yml</code> file).
+ *
+ * @author Lexi115
+ * @since 1.0
+ */
 @Singleton
 public class DailyRefreshTask implements Task {
 
+    /**
+     * The plugin instance.
+     */
     private final ProjectNozomi plugin;
 
+    /**
+     * The shop service.
+     */
     private final ShopService shopService;
 
+    /**
+     * The shop GUI manager.
+     */
     private final ShopGuiManager shopGuiManager;
 
+    /**
+     * The plugin's logger.
+     */
     private final Logger log;
 
-    private CronTask cronTask;
+    /**
+     * The actual cron task that will be executed.
+     */
+    private BukkitCronTask cronTask;
 
+    /**
+     * Constructor.
+     *
+     * @param plugin The plugin instance.
+     * @param shopService The shop service.
+     * @param shopGuiManager The shop GUI manager.
+     * @param log The plugin's logger
+     * @since 1.0
+     */
     @Inject
     public DailyRefreshTask(
             final ProjectNozomi plugin,
@@ -33,9 +64,14 @@ public class DailyRefreshTask implements Task {
         this.log = log;
     }
 
+    /**
+     * Starts the task.
+     *
+     * @since 1.0
+     */
     @Override
     public void start() {
-        cronTask = new CronTask(plugin, log, getCronExpression()) {
+        cronTask = new BukkitCronTask(plugin, log, getCronExpression()) {
             @Override
             public void run() {
                 shopGuiManager.closeAll();
@@ -47,6 +83,11 @@ public class DailyRefreshTask implements Task {
         cronTask.schedule();
     }
 
+    /**
+     * Stops the task.
+     *
+     * @since 1.0
+     */
     @Override
     public void stop() {
         if (cronTask != null) {
@@ -54,6 +95,11 @@ public class DailyRefreshTask implements Task {
         }
     }
 
+    /**
+     * Restarts the task (if it's already started).
+     *
+     * @since 1.0
+     */
     @Override
     public void restart() {
         stop();
