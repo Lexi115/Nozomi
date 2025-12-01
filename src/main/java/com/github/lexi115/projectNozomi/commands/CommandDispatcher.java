@@ -7,6 +7,7 @@ package com.github.lexi115.projectNozomi.commands;
  * @since 1.0
  */
 public interface CommandDispatcher {
+
     /**
      * Sets up the dispatcher.
      *

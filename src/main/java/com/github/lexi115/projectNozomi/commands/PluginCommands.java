@@ -77,12 +77,16 @@ public class PluginCommands implements Commands {
             var usage = command.usage();
             var splitUsage = usage.split(" ");
             var description = messageUtils.get("help.descriptions." + splitUsage[splitUsage.length > 1 ? 1 : 0]);
-            placeholders.set("command", usage).set("description", description);
+            placeholders
+                    .set("command", usage)
+                    .set("description", description);
             sb.append(stringUtils.format(messageUtils.get("help.entry"), placeholders.map())).append('\n');
         });
         // Footer
-        placeholders.clear();
-        placeholders.set("page", page).set("totalPages", commands.numberOfPages(commandsPerPage));
+        placeholders
+                .clear()
+                .set("page", page)
+                .set("totalPages", commands.numberOfPages(commandsPerPage));
         sb.append(stringUtils.colorize(messageUtils.get("help.footer", placeholders.map())));
         sender.reply(sb.toString());
     }
