@@ -1,6 +1,23 @@
+#      __                        _
+#   /\ \ \___ _______  _ __ ___ (_)
+#  /  \/ / _ \_  / _ \| '_ ` _ \| |
+# / /\  / (_) / / (_) | | | | | | |
+# \_\ \/ \___/___\___/|_| |_| |_|_|
+#
+# Nozomi by Lexi115
+# config.yml - Main configuration
+
+# -- Daily items --
 daily-items:
+  # How many shop items should be chosen to become 'daily items' each refresh?
   amount: 9
+  # Should we announce shop refresh in chat?
   announce-refresh-in-chat: true
+  # -- Auto refresh --
   auto-refresh:
+    # Should we enable the auto shop refresh?
     enabled: true
+    # When should it be refreshed?
+    # Note: this accepts a cron expression value. By default, it's set to refresh periodically at midnight.
+    #       To easily generate a cron expression for your own needs take a look at this: https://crontab.cronhub.io/
     refresh-time: '0 0 0 ? * *'

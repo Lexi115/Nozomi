@@ -1,36 +1,84 @@
+#      __                        _
+#   /\ \ \___ _______  _ __ ___ (_)
+#  /  \/ / _ \_  / _ \| '_ ` _ \| |
+# / /\  / (_) / / (_) | | | | | | |
+# \_\ \/ \___/___\___/|_| |_| |_|_|
+#
+# Nozomi by Lexi115
+# shop.yml - Shop configuration
+
+# -- Shop --
 shop:
+  # -- Shop GUI inventory --
   gui:
+    # What should we call our shop (aka the title of the shop inventory)?
     title: '             &8–• &9&lShop &8•–'
-    rows: 5
-    item-slots: [ ]
+    # How many rows should a page have (excluding the last row, reserved to pagination buttons)?
+    # Allowed values: 1, 2, 3, 4, 5.
+    rows: 1
+    # In which slots should the items appear in the GUI?
+    #   Note: Leave an empty list [] if you want items to appear in succession from left to right, starting from the
+    #         top left corner.
+    #   Allowed values: range from 0 up to 44.
+    #   Example:
+    #     item-slots:
+    #      - 2
+    #      - 4
+    #      - 6
+    item-slots:
+      - 2
+      - 4
+      - 6
+    # -- Navigation buttons --
     navigation:
+      # -- Previous page button --
       previous-page:
+        # How should we name it?
         name: '&cPrevious page'
+        # What about its description (lore)?
         lore:
           - '&7Go to previous page.'
+        # Which material do you want to use to represent this button?
         material: ARROW
+      # -- Next page button --
       next-page:
         name: '&aNext page'
         lore:
           - '&7Go to next page.'
         material: ARROW
+      # -- Current page element --
       current-page:
         name: '&ePage %page% of %totalPages%'
         lore:
           - '&7You are on page &e%page%.'
         material: COMPASS
-
+  # -- Shop items --
+  # This is where you'll add every item you want to load in the shop. They will be randomly chosen as 'daily items'
+  # upon each shop refresh (either automatically by the auto-refresh task or by executing the /noz refresh command).
   items:
+    # The item ID.
     stone:
+      # The item name.
       name: Stone
+      # The item display name in the shop GUI.
       display-name: '&3%name%&r &6x&e%amount%'
+      # The item description (lore) in the shop GUI.
       lore:
         - '&6&l&m––––––––'
         - '&7Click to sell!'
         - '&6&l&m––––––––'
+      # The material.
       material: STONE
+      # The amount required to sell this item.
       amount: 16
+      # The rewards given to the player upon the item gets sold.
+      #   Note: here are all types of reward:
+      #     - cmd:<command> -> executes a console command.
+      #     - cmd:/<command> -> (don't forget the slash '/') executes a player command.
+      #     - item:<material>:<amount> -> gives an item to the player.
+      #     - money:<amount> -> gives money to the player (requires Vault!).
       rewards:
+        - cmd:tell %player% Rock and stone, brother!
         - item:iron_ingot:2
         - money:5
 
