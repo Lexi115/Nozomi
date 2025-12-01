@@ -36,7 +36,7 @@ public class MoneyReward implements Reward {
      */
     @Override
     public void give(final @NonNull Player player, final @NonNull Map<String, String> placeholders) {
-        if (!vault.isEnabled() || !vault.deposit(player, amount)) {
+        if (vault.isEnabled() && !vault.deposit(player, amount)) {
             throw new RewardGiveException("Could not give money reward to " + player.getName());
         }
     }

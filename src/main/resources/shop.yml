@@ -1,11 +1,8 @@
 shop:
   gui:
-    title: '–• &4Shop •–'
-    rows: 1
-    item-slots:
-      - 2
-      - 4
-      - 6
+    title: '             &8–• &9&lShop &8•–'
+    rows: 5
+    item-slots: [ ]
     navigation:
       previous-page:
         name: '&cPrevious page'
@@ -26,246 +23,390 @@ shop:
   items:
     stone:
       name: Stone
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: STONE
       amount: 16
       rewards:
-        - cmd:tell %player% Hai venduto stone, bravo guagliò!
-        - cmd:give %player% minecraft:iron_ingot 2
+        - item:iron_ingot:2
         - money:5
 
     oak-log:
       name: Oak Log
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: OAK_LOG
       amount: 8
       rewards:
-        - cmd:tell %player% Hai spacciato legna, sei un boscaiolo ormai.
         - cmd:xp add %player% 5 points
+        - money:4.50
 
     iron-ingot:
       name: Iron Ingot
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: IRON_INGOT
       amount: 4
       rewards:
-        - cmd:tell %player% Ferro fresco fresco!
-        - cmd:give %player% minecraft:emerald 1
+        - item:gold_nugget:8
+        - money:12
 
     gold-ingot:
       name: Gold Ingot
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: GOLD_INGOT
       amount: 2
       rewards:
-        - cmd:tell %player% Uè, oro pesante!
-        - cmd:gamemode adventure
+        - money:25
+        - item:golden_apple:1
 
     diamond:
-      name: '&b&lDiamond'
-      display-name: '%name%&r &6x&e%amount%'
+      name: Diamond
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: DIAMOND
       amount: 1
-      lore:
-        - '&aBeautiful %name%'
-        - 'Just give me &6%amount% &fof them'
       rewards:
-        - cmd:tell %player% O compà, vendi i diamanti? Sei pazzo?
-        - cmd:give %player% minecraft:experience_bottle 3
+        - money:100
+        - cmd:give %player% experience_bottle 5
 
     coal:
       name: Coal
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: COAL
       amount: 10
       rewards:
-        - cmd:tell %player% Carbone venduto, mo puoi accendere il fuoco.
+        - item:torch:16
         - cmd:xp add %player% 3 points
 
     sand:
       name: Sand
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: SAND
       amount: 12
       rewards:
-        - cmd:/tell %player% Sabbia fresca dalla spiaggia.
-        - cmd:give %player% minecraft:glass 2
+        - item:glass:4
+        - money:3
 
     cobblestone:
       name: Cobblestone
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: COBBLESTONE
       amount: 20
       rewards:
-        - cmd:tell %player% Cobblestone, classico dei classici.
-        - cmd:give %player% minecraft:stone 5
+        - item:stone:5
+        - money:2.50
 
     lapis-lazuli:
       name: Lapis Lazuli
-      display-name: 'Nig %amount% %name%'
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: LAPIS_LAZULI
       amount: 6
       rewards:
-        - cmd:tell %player% Lapis venduti, si colora?
-        - cmd:xp add %player% 8 points
+        - cmd:xp add %player% 15 points
+        - money:8
 
     redstone:
       name: Redstone
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: REDSTONE
       amount: 5
       rewards:
-        - cmd:tell %player% Elettricista in azione!
-        - cmd:give %player% minecraft:repeater 1
+        - item:repeater:1
+        - money:6.50
 
     gravel:
       name: Gravel
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: GRAVEL
       amount: 14
       rewards:
-        - cmd:tell %player% Ghiaia venduta, mo non inciampi più.
-        - cmd:give %player% minecraft:flint 2
+        - item:flint:3
+        - money:2
 
     birch-log:
       name: Birch Log
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: BIRCH_LOG
       amount: 8
       rewards:
-        - cmd:tell %player% Ohh, legno chiaro, finezza proprio.
         - cmd:xp add %player% 4 points
+        - money:4.50
 
     spruce-log:
       name: Spruce Log
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: SPRUCE_LOG
       amount: 8
       rewards:
-        - cmd:tell %player% Legno di montagna, compà.
-        - cmd:give %player% minecraft:stick 6
+        - item:stick:12
+        - money:4.50
 
     raw-copper:
       name: Raw Copper
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: RAW_COPPER
       amount: 10
       rewards:
-        - cmd:tell %player% Cuoppero fresco, bravo o' mastro.
-        - cmd:give %player% minecraft:copper_ingot 3
+        - item:copper_ingot:5
+        - money:9
 
     raw-gold:
       name: Raw Gold
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: RAW_GOLD
       amount: 4
       rewards:
-        - cmd:tell %player% Oro grezzo, o’ riccone.
-        - cmd:xp add %player% 6 points
+        - cmd:xp add %player% 8 points
+        - money:15
 
     raw-iron:
       name: Raw Iron
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: RAW_IRON
       amount: 6
       rewards:
-        - cmd:tell %player% Ferro grezzo, vai forte oggi.
-        - cmd:give %player% minecraft:iron_nugget 8
+        - item:iron_nugget:16
+        - money:10
 
     clay-ball:
       name: Clay Ball
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: CLAY_BALL
       amount: 12
       rewards:
-        - cmd:tell %player% Argilla venduta, mo fai il vasaio?
-        - cmd:give %player% minecraft:brick 2
+        - item:brick:4
+        - money:7
 
     wheat:
       name: Wheat
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: WHEAT
       amount: 10
       rewards:
-        - cmd:tell %player% Grano buono buono, agricoltore!
-        - cmd:give %player% minecraft:bread 2
+        - item:bread:2
+        - money:5
 
     sugar-cane:
       name: Sugar Cane
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: SUGAR_CANE
       amount: 8
       rewards:
-        - cmd:tell %player% Zucchero crudo, dolce dolce compà.
+        - item:sugar:10
         - cmd:xp add %player% 3 points
 
     cactus:
       name: Cactus
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: CACTUS
       amount: 6
       rewards:
-        - cmd:tell %player% Attento a non pungerti, guagliò.
-        - cmd:give %player% minecraft:green_dye 1
+        - item:green_dye:2
+        - money:4
 
     bamboo:
       name: Bamboo
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: BAMBOO
       amount: 12
       rewards:
-        - cmd:tell %player% Bambù? Stai diventando un panda?
-        - cmd:xp add %player% 4 points
+        - item:stick:4
+        - money:3.50
 
     nether-quartz:
       name: Nether Quartz
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: QUARTZ
       amount: 6
       rewards:
-        - cmd:tell %player% Quarzo del Nether, che coraggio!
-        - cmd:give %player% minecraft:quartz_block 1
+        - item:quartz_block:2
+        - money:12.50
 
     netherrack:
       name: Netherrack
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: NETHERRACK
       amount: 20
       rewards:
-        - cmd:tell %player% Pietra infernale, puzza ancora di zolfo.
         - cmd:xp add %player% 2 points
+        - money:1.50
 
     glowstone-dust:
       name: Glowstone Dust
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: GLOWSTONE_DUST
       amount: 5
       rewards:
-        - cmd:tell %player% Polvere luminosa! Stai diventando brillante.
-        - cmd:give %player% minecraft:glowstone 1
+        - item:glowstone:1
+        - money:8
 
     gunpowder:
       name: Gunpowder
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: GUNPOWDER
       amount: 4
       rewards:
-        - cmd:/tell %player% Polvere da sparo? Attento a non fai boom.
-        - cmd:give %player% minecraft:firework_rocket 1
+        - item:firework_rocket:2
+        - money:10
 
     rotten-flesh:
       name: Rotten Flesh
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: ROTTEN_FLESH
       amount: 12
       rewards:
-        - cmd:tell %player% Eww, carne marcia… ma che vendi?!
-        - cmd:xp add %player% 2 points
+        - cmd:xp add %player% 5 points
+        - money:2
 
     ender-pearl:
       name: Ender Pearl
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: ENDER_PEARL
       amount: 2
       rewards:
-        - cmd:tell %player% Le perle degli enderman? Sei pazzo forte.
-        - cmd:give %player% minecraft:experience_bottle 2
+        - money:30
+        - cmd:give %player% experience_bottle 4
 
     prismarine-shard:
       name: Prismarine Shard
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: PRISMARINE_SHARD
       amount: 4
       rewards:
-        - cmd:tell %player% Frammento acquatico, stai subacqueo oggi.
-        - cmd:xp add %player% 7 points
+        - item:prismarine_bricks:2
+        - money:14
 
     slimeball:
       name: Slimeball
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: SLIME_BALL
       amount: 6
       rewards:
-        - cmd:tell %player% Slime appiccicoso… bleah.
-        - cmd:give %player% minecraft:lead 1
+        - item:lead:1
+        - money:11
 
     blaze-rod:
       name: Blaze Rod
+      display-name: '&3%name%&r &6x&e%amount%'
+      lore:
+        - '&6&l&m––––––––'
+        - '&7Click to sell!'
+        - '&6&l&m––––––––'
       material: BLAZE_ROD
       amount: 2
       rewards:
-        - cmd:tell %player% Sta roba scotta, attento!
-        - cmd:give %player% minecraft:blaze_powder 3
+        - item:blaze_powder:5
+        - money:25
