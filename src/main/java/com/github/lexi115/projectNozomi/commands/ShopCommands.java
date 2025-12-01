@@ -10,26 +10,64 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import lombok.NonNull;
 import org.bukkit.entity.Player;
-import revxrsal.commands.annotation.*;
+import revxrsal.commands.annotation.Command;
+import revxrsal.commands.annotation.Default;
+import revxrsal.commands.annotation.Range;
+import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
+/**
+ * Shop-related commands.
+ *
+ * @author Lexi115
+ * @since 1.0
+ */
 @Singleton
 @Command({"noz"})
 public class ShopCommands implements Commands {
 
+    /**
+     * The shop service.
+     */
     private final ShopService shopService;
 
+    /**
+     * The shop uses service.
+     */
     private final ShopUsesService shopUsesService;
 
+    /**
+     * The shop GUI manager.
+     */
     private final ShopGuiManager shopGuiManager;
 
+    /**
+     * The message utility class.
+     */
     private final MessageUtils messageUtils;
 
+    /**
+     * The commands utility class.
+     */
     private final CommandUtils commandUtils;
 
+    /**
+     * The command exception handler.
+     */
     private final CommandExceptionHandler commandExceptionHandler;
 
+    /**
+     * Constructor.
+     *
+     * @param shopService             The shop service.
+     * @param shopUsesService         The shop uses service.
+     * @param shopGuiManager          The shop GUI manager.
+     * @param messageUtils            The message utility class.
+     * @param commandUtils            The commands utility class.
+     * @param commandExceptionHandler The command exception handler.
+     * @since 1.0
+     */
     @Inject
     public ShopCommands(
             final ShopService shopService,
@@ -47,6 +85,14 @@ public class ShopCommands implements Commands {
         this.commandExceptionHandler = commandExceptionHandler;
     }
 
+    /**
+     * Opens the shop GUI for a certain player.
+     *
+     * @param sender The command sender.
+     * @param target The target player.
+     * @param page The shop page.
+     * @since 1.0
+     */
     @Subcommand("shop <target> <page>")
     @CommandPermission("nozomi.shop")
     public void shop(
@@ -62,6 +108,12 @@ public class ShopCommands implements Commands {
         shopGuiManager.open(target, page);
     }
 
+    /**
+     * Refreshes the daily items in the shop.
+     *
+     * @param sender The command sender.
+     * @since 1.0
+     */
     @Subcommand("refresh")
     @CommandPermission("nozomi.refresh")
     public void refresh(final @NonNull BukkitCommandActor sender) {
@@ -71,6 +123,13 @@ public class ShopCommands implements Commands {
         sender.reply(messageUtils.getPrefix() + messageUtils.get("info.items-refreshed"));
     }
 
+    /**
+     * Sends back the amount of shop uses left for a certain player.
+     *
+     * @param sender The command sender.
+     * @param target The target player.
+     * @since 1.0
+     */
     @Subcommand("uses <target>")
     @CommandPermission("nozomi.uses")
     public void uses(final @NonNull BukkitCommandActor sender, final @NonNull @Default("me") Player target) {
