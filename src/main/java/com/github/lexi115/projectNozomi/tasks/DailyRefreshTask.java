@@ -1,10 +1,12 @@
 package com.github.lexi115.projectNozomi.tasks;
 
 import com.github.lexi115.projectNozomi.ProjectNozomi;
+import com.github.lexi115.projectNozomi.misc.MessageUtils;
 import com.github.lexi115.projectNozomi.shop.ShopService;
 import com.github.lexi115.projectNozomi.shop.gui.ShopGuiManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.bukkit.Bukkit;
 import org.slf4j.Logger;
 
 /**
@@ -33,6 +35,11 @@ public class DailyRefreshTask implements Task {
     private final ShopGuiManager shopGuiManager;
 
     /**
+     * The message utility class.
+     */
+    private final MessageUtils messageUtils;
+
+    /**
      * The plugin's logger.
      */
     private final Logger log;
@@ -48,6 +55,7 @@ public class DailyRefreshTask implements Task {
      * @param plugin The plugin instance.
      * @param shopService The shop service.
      * @param shopGuiManager The shop GUI manager.
+     * @param messageUtils The message utility class.
      * @param log The plugin's logger
      * @since 1.0
      */
@@ -56,11 +64,13 @@ public class DailyRefreshTask implements Task {
             final ProjectNozomi plugin,
             final ShopService shopService,
             final ShopGuiManager shopGuiManager,
+            final MessageUtils messageUtils,
             final Logger log
     ) {
         this.plugin = plugin;
         this.shopService = shopService;
         this.shopGuiManager = shopGuiManager;
+        this.messageUtils = messageUtils;
         this.log = log;
     }
 
@@ -77,7 +87,10 @@ public class DailyRefreshTask implements Task {
                 shopGuiManager.closeAll();
                 shopService.refreshDailyItems();
                 shopService.saveDailyItemsInConfig();
-                log.info("[TIMER] Refreshed items");
+                log.info("[Daily Refresh Task] Daily items have been refreshed");
+                if (plugin.getConfig().getBoolean("daily-items.announce-refresh-in-chat")) {
+                    Bukkit.broadcastMessage(messageUtils.getPrefix() + messageUtils.get("info.shop-refreshed"));
+                }
             }
         };
         cronTask.schedule();

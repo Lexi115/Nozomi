@@ -2,6 +2,7 @@ prefix: '&aNozomi &8» &r'
 info:
   item-sold: '&7You sold &6%amount% &e%name%&7!'
   items-refreshed: '&7Items refreshed!'
+  shop-refreshed: '&7Daily items have been refreshed: check out the shop (&b/noz shop&7)!'
   shop-uses-self: '&7You have &6%uses% &7shop uses left.'
   shop-uses-others: '&6%player% &7has &6%uses% &7shop uses left.'
   shop-uses-self-unlimited: '&7You have unlimited shop uses.'

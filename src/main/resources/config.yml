@@ -1,5 +1,6 @@
 daily-items:
   amount: 9
+  announce-refresh-in-chat: true
   auto-refresh:
     enabled: true
     refresh-time: '0 0 0 ? * *'

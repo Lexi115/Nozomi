@@ -6,6 +6,7 @@ import com.github.lexi115.projectNozomi.database.services.ShopUsesService;
 import com.github.lexi115.projectNozomi.misc.InventoryUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
 import com.github.lexi115.projectNozomi.misc.RuntimeIOException;
+import com.github.lexi115.projectNozomi.shop.rewards.RewardGiveException;
 import com.github.lexi115.projectNozomi.shop.rewards.RewardUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

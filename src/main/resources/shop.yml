@@ -1,6 +1,6 @@
 shop:
   gui:
-    title: 'Shupogaki Shop'
+    title: '–• &4Shop •–'
     rows: 1
     item-slots:
       - 2

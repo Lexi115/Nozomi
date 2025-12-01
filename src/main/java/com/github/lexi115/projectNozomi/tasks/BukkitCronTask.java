@@ -41,6 +41,11 @@ public abstract class BukkitCronTask implements Runnable {
     private BukkitTask currentTask;
 
     /**
+     * Last scheduled execution.
+     */
+    private ZonedDateTime lastScheduledExecution;
+
+    /**
      * Constructor.
      *
      * @param plugin The plugin instance.
@@ -63,9 +68,19 @@ public abstract class BukkitCronTask implements Runnable {
      */
     public void schedule() {
         var now = ZonedDateTime.now();
-        var nextExecution = executionTime.nextExecution(now);
-        if (nextExecution.isPresent()) {
-            long delayMillis = ChronoUnit.MILLIS.between(now, nextExecution.get());
+        var nextExecutionOptional = executionTime.nextExecution(now);
+        if (nextExecutionOptional.isPresent()) {
+            var nextExecution = nextExecutionOptional.get();
+            if (lastScheduledExecution != null
+                    && ChronoUnit.SECONDS.between(lastScheduledExecution, nextExecution) < 1) {
+                nextExecutionOptional = executionTime.nextExecution(nextExecution);
+                if (nextExecutionOptional.isEmpty()) {
+                    return;
+                }
+                nextExecution = nextExecutionOptional.get();
+            }
+            this.lastScheduledExecution = nextExecution;
+            long delayMillis = ChronoUnit.MILLIS.between(now, nextExecution);
             if (delayMillis < 0) {
                 delayMillis = 0;
             }

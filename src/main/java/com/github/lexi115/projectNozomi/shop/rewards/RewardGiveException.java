@@ -1,4 +1,4 @@
-package com.github.lexi115.projectNozomi.shop;
+package com.github.lexi115.projectNozomi.shop.rewards;
 
 /**
  * Exception thrown when a reward could not be given to the player due to an error.
