@@ -4,7 +4,7 @@ version: '1.0.0'
 main: com.github.lexi115.projectNozomi.ProjectNozomi
 api-version: '1.21'
 authors: [ Lexi115 ]
-description: Selling system
+description: Simple and lightweight sell shop system.
 softdepend: [ Vault ]
 libraries:
   - org.xerial:sqlite-jdbc:3.51.0.0

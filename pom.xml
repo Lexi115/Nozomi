@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.lexi115</groupId>
-    <artifactId>project-nozomi</artifactId>
+    <artifactId>nozomi</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
