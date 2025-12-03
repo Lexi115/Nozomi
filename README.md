@@ -7,7 +7,7 @@
 <div align="center">
     <img src="https://custom-icon-badges.demolab.com/badge/Java-21-red?style=for-the-badge&labelColor=923434&logo=java&logoColor=white" alt="Java 21">
     <img src="https://custom-icon-badges.demolab.com/badge/SpigotMC-1.21.1-orange?style=for-the-badge&labelColor=884c2b&logo=spigotmc&logoColor=white" alt="SpigotMC 1.21.1">
-    <img src="https://custom-icon-badges.demolab.com/github/actions/workflow/status/Lexi115/nozomi/workflow.yml?style=for-the-badgelabelColor=383838&logo=github&logoColor=white" alt="GitHub Actions Build Status">
+    <img src="https://custom-icon-badges.demolab.com/github/actions/workflow/status/Lexi115/Nozomi/workflow.yml?style=for-the-badge&labelColor=383838&logo=github&logoColor=white" alt="GitHub Actions Build Status">
     <img src="https://custom-icon-badges.demolab.com/badge/License-MIT-blue?style=for-the-badge&labelColor=1f4d68" alt="License MIT">
 </div>
 
