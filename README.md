@@ -1,7 +1,7 @@
 # Nozomi
 
 <div align="center">
-    <img src="docs/images/apothibot-logo.png" width="150" alt="Logo" align="center">
+    <img src="docs/resources/nozomi-logo.svg" width="500" alt="Logo" align="center">
 </div>
 
 **Nozomi** is a simple and lightweight plugin that brings a **sell shop system** to your Spigot Minecraft server. It is
@@ -11,8 +11,7 @@ Players interact with a shop (which refreshes daily by default) to sell their it
 executions, items, money...).
 
 <div align="center">
-    <img src="docs/images/example-1.png" width="300" alt="Example 1" align="center">
-    <img src="docs/images/example-2.png" width="400" alt="Example 1" align="center">
+    <img src="docs/resources/example-1.gif" width="800" alt="Example 1" align="center">
 </div>
 
 ## Features
@@ -23,7 +22,7 @@ executions, items, money...).
 - Highly customizable (each item in the shop can look completely different from the others).
 - Different types of rewards built-in!
 - Limit shop uses per player or group (or leave it as unlimited if you prefer).
-- Items in the shop auto-refresh at midnight (can be changed to any time of the day / week or even be completely
+- **Items in the shop auto-refresh** at midnight (can be changed to any time of the day / week or even be completely
   disabled).
 - Lightweight (the ```.jar``` archive occupies around 1 MB of space!).
 
@@ -39,7 +38,8 @@ executions, items, money...).
 
 To install Nozomi on your own Minecraft server, please follow these steps:
 
-1) Go to the Releases section of this repository and download the latest build (or an older one depending on your
+1) Go to the [Releases](https://github.com/Lexi115/project-nozomi/releases) section of this repository and download the
+   latest build (or an older one depending on your
    server's Minecraft version).
 2) Drag the ```nozomi.jar``` file into the ```plugins``` subdirectory inside your server's folder.
 3) (Optional) Download Vault (link above) and place its ```Vault.jar``` file in the same directory as ```nozomi.jar```.
