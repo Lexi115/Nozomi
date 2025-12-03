@@ -6,7 +6,6 @@ import com.github.lexi115.projectNozomi.database.services.ShopUsesService;
 import com.github.lexi115.projectNozomi.misc.InventoryUtils;
 import com.github.lexi115.projectNozomi.misc.PlaceholderMap;
 import com.github.lexi115.projectNozomi.misc.RuntimeIOException;
-import com.github.lexi115.projectNozomi.shop.rewards.RewardGiveException;
 import com.github.lexi115.projectNozomi.shop.rewards.RewardUtils;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -185,7 +184,6 @@ public class ShopService {
      * @throws InvalidShopItemAmountException If the shop item amount is negative.
      * @throws NoShopUsesLeftException If player has no shop uses left.
      * @throws InsufficientAmountException If player doesn't have enough items to sell in his inventory.
-     * @throws RewardGiveException If one or more rewards couldn't be given to the player.
      * @since 1.0
      */
     public void sellItem(final @NonNull Player player, final @NonNull ShopItem item) {
