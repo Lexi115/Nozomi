@@ -3,18 +3,18 @@
 <div align="center">
     <img src="docs/resources/nozomi-logo.svg" width="500" alt="Logo" align="center">
 </div>
-
+<br />
 <div align="center">
-    <img src="https://img.shields.io/badge/Java-21-red?style=flat&logo=java" alt="Java 21" align="center">
-    <img src="https://img.shields.io/badge/SpigotMC-1.21-yellow?style=flat&logo=spigotmc&logoColor=white" alt="SpigotMC 1.21" align="center">
-    <img src="https://img.shields.io/github/actions/workflow/status/Lexi115/nozomi/workflow.yml?logo=github" alt="GitHub Actions Build Status" align="center">
-    <img src="https://img.shields.io/badge/License-MIT-blue" alt="License MIT" align="center">
+    <img src="https://custom-icon-badges.demolab.com/badge/Java-21-red?style=for-the-badge&labelColor=923434&logo=java&logoColor=white" alt="Java 21">
+    <img src="https://custom-icon-badges.demolab.com/badge/SpigotMC-1.21.1-orange?style=for-the-badge&labelColor=884c2b&logo=spigotmc&logoColor=white" alt="SpigotMC 1.21.1">
+    <img src="https://custom-icon-badges.demolab.com/github/actions/workflow/status/Lexi115/nozomi/workflow.yml?style=for-the-badgelabelColor=383838&logo=github&logoColor=white" alt="GitHub Actions Build Status">
+    <img src="https://custom-icon-badges.demolab.com/badge/License-MIT-blue?style=for-the-badge&labelColor=1f4d68" alt="License MIT">
 </div>
 
+---
 
-**Nozomi** is a simple and lightweight plugin that brings an **item sell shop system** to your Spigot Minecraft server.
-It is
-very easy to configure and ready to use right off the bat.
+**Nozomi is a simple and lightweight plugin that brings an item sell shop system to your Spigot Minecraft server.
+It is very easy to configure and ready to use right off the bat.**
 
 Players interact with a shop (which refreshes daily by default) to sell their items and receive rewards in turn (command
 executions, items, money...).
