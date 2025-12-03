@@ -56,7 +56,7 @@ To install Nozomi on your own Minecraft server, please follow these steps:
 4) Run your server. Everything should already work as intended. If not, check whether the plugin is compatible with your
    Minecraft version.
 
-## Usage
+## 🟢 Usage
 
 Every Nozomi command starts with the ```/noz``` prefix.
 
