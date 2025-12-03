@@ -7,8 +7,7 @@
 <div align="center">
     <img src="https://img.shields.io/badge/Java-21-red?style=flat&logo=java" alt="Java 21" align="center">
     <img src="https://img.shields.io/badge/SpigotMC-1.21-yellow?style=flat&logo=spigotmc&logoColor=white" alt="SpigotMC 1.21" align="center">
-    <img src="https://img.shields.io/github/actions/workflow/status/Lexi115/nozomi/workflow.yml?logo=github
-" alt="GitHub Actions Build Status" align="center">
+    <img src="https://img.shields.io/github/actions/workflow/status/Lexi115/nozomi/workflow.yml?logo=github" alt="GitHub Actions Build Status" align="center">
     <img src="https://img.shields.io/badge/License-MIT-blue" alt="License MIT" align="center">
 </div>
 
