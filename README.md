@@ -1,10 +1,20 @@
-# Nozomi
+# Nozomi • Simple sell shop 💰
 
 <div align="center">
     <img src="docs/resources/nozomi-logo.svg" width="500" alt="Logo" align="center">
 </div>
 
-**Nozomi** is a simple and lightweight plugin that brings a **sell shop system** to your Spigot Minecraft server. It is
+<div align="center">
+    <img src="https://img.shields.io/badge/Java-21-red?style=flat&logo=java" alt="Java 21" align="center">
+    <img src="https://img.shields.io/badge/SpigotMC-1.21-yellow?style=flat&logo=spigotmc&logoColor=white" alt="SpigotMC 1.21" align="center">
+    <img src="https://img.shields.io/github/actions/workflow/status/Lexi115/nozomi/workflows.yml?logo=github
+" alt="GitHub Actions Build Status" align="center">
+    <img src="https://img.shields.io/badge/License-MIT-blue" alt="License MIT" align="center">
+</div>
+
+
+**Nozomi** is a simple and lightweight plugin that brings an **item sell shop system** to your Spigot Minecraft server.
+It is
 very easy to configure and ready to use right off the bat.
 
 Players interact with a shop (which refreshes daily by default) to sell their items and receive rewards in turn (command
@@ -14,19 +24,19 @@ executions, items, money...).
     <img src="docs/resources/example-1.gif" width="800" alt="Example 1" align="center">
 </div>
 
-## Features
+## 🟢 Features
 
 - User-friendly shop interface, **no commands required** (except for the one to open it, of course)!
 - Custom layouts (choose in which slots the items should appear in the shop).
 - Pagination support.
 - Highly customizable (each item in the shop can look completely different from the others).
-- Different types of rewards built-in!
+- Different [types of rewards](#-rewards) built-in!
 - Limit shop uses per player or group (or leave it as unlimited if you prefer).
 - **Items in the shop auto-refresh** at midnight (can be changed to any time of the day / week or even be completely
   disabled).
 - Lightweight (the ```.jar``` archive occupies around 1 MB of space!).
 
-## Installation
+## 🟢 Installation
 
 ### Prerequisites
 
@@ -81,7 +91,7 @@ Every Nozomi command starts with the ```/noz``` prefix.
 - ```/noz info```: prints information about the plugin.
     - **Permission:** ```nozomi.info```
 
-## Rewards
+## 🟢 Rewards
 
 When a player successfully sells an item in the shop, he can receive several types of rewards (configured in the
 ```shop.yml``` file) depending on the item:
@@ -100,10 +110,10 @@ When a player successfully sells an item in the shop, he can receive several typ
     - **Example:** ```money:7.50``` deposits $7.50 into the player's account.
     - **Requires:** Vault
 
-## Contributing
+## 🟢 Contributing
 
 Pull requests are welcome. If it's a major change to the code itself, please open an issue first to discuss it.
 
-## License
+## 🟢 License
 
 [MIT](https://choosealicense.com/licenses/mit/)
