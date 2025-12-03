@@ -1,10 +1,9 @@
 package com.github.lexi115.projectNozomi.database;
 
-import com.j256.ormlite.jdbc.DataSourceConnectionSource;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
+import lombok.NonNull;
 
 import java.sql.SQLException;
 
@@ -15,11 +14,6 @@ import java.sql.SQLException;
  * @since 1.0
  */
 public class DatabaseManager implements AutoCloseable {
-
-    /**
-     * The data source.
-     */
-    private final HikariDataSource dataSource;
 
     /**
      * The ORMLite connection source.
@@ -34,7 +28,7 @@ public class DatabaseManager implements AutoCloseable {
      * @throws SQLException if things go wrong when trying to establish the database connection.
      * @since 1.0
      */
-    public DatabaseManager(final String url) throws SQLException {
+    public DatabaseManager(@NonNull final String url) throws SQLException {
         this(url, null, null);
     }
 
@@ -47,17 +41,12 @@ public class DatabaseManager implements AutoCloseable {
      * @throws SQLException if things go wrong when trying to establish the database connection.
      * @since 1.0
      */
-    public DatabaseManager(final String url, final String username, final String password) throws SQLException {
-        var config = new HikariConfig();
-        config.setJdbcUrl(url);
-        if (username != null) {
-            config.setUsername(username);
-        }
-        if (password != null) {
-            config.setPassword(password);
-        }
-        dataSource = new HikariDataSource(config);
-        connectionSource = new DataSourceConnectionSource(dataSource, url);
+    public DatabaseManager(
+            @NonNull final String url,
+            final String username,
+            final String password
+    ) throws SQLException {
+        connectionSource = new JdbcConnectionSource(url, username, password);
     }
 
     /**
@@ -70,9 +59,6 @@ public class DatabaseManager implements AutoCloseable {
     public void close() throws SQLException {
         if (connectionSource != null) {
             connectionSource.closeQuietly();
-        }
-        if (dataSource != null && !dataSource.isClosed()) {
-            dataSource.close();
         }
     }
 }

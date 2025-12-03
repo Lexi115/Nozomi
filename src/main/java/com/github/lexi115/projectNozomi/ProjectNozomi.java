@@ -187,6 +187,7 @@ public final class ProjectNozomi extends JavaPlugin {
     }
 
     private void setupLogging() {
+        com.j256.ormlite.logger.Logger.setGlobalLogLevel(com.j256.ormlite.logger.Level.OFF);
         BukkitLoggerFactory.provideBukkitLogger(this.getLogger());
     }
 
