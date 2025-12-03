@@ -1,4 +1,4 @@
-# Nozomi • Simple sell shop 💰
+# Nozomi • Simple sell shop plugin 💰
 
 <div align="center">
     <img src="docs/resources/nozomi-logo.svg" width="500" alt="Logo" align="center">
